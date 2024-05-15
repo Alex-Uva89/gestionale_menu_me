@@ -31,6 +31,7 @@ const props = defineProps({
 <style scoped>
         .inbox {
             height: 300px; /* Set the desired fixed height */
+            width: 100%;
             overflow-y: auto; /* Enable vertical scroll if content exceeds the height */
             min-height: calc(100vh - 7rem);
             margin-top: 2rem;
