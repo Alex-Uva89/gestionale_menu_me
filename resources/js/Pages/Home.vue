@@ -51,12 +51,8 @@ function updateCurrentPageComponent(value) {
           <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
           <!-- dynamic component for pages Scante, LaCucina,  Enoteca and preview -->
-          <component :is="currentPageComponent" />
+          <component :is="currentPageComponent" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :categories="categories" :messages="messages" />        
         </div>
-
-
-      
-    
     </div>
 </template>
 
@@ -77,6 +73,7 @@ function updateCurrentPageComponent(value) {
 export default {
   props: {
     messages: Array,
+    categories: Array,
   },
 }
 

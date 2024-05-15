@@ -20,7 +20,7 @@ class MessageController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(): Response
     {
         $messages = Message::all();
 
