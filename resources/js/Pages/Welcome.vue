@@ -35,12 +35,14 @@ function updateNewMessage(value) {
     <Head title="Mamma Elvira" />
     <div class="">
       <div class="bg-gray-50 flex dark:bg-gray-800 h-screen">
-        <Sidebar @venue-name="updateSelectedVenueName" @venue-color="updateSelectedVenueColor" @value-button="updateSelectedValueButton" />
+        <Sidebar :messages="messages" @venue-name="updateSelectedVenueName" @venue-color="updateSelectedVenueColor" @value-button="updateSelectedValueButton" />
         <div class="main-app">
           <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
         </div>
       </div>
+
+      
     
     </div>
 </template>
@@ -57,4 +59,5 @@ export default {
     messages: Array,
   }
 }
+
 </script>

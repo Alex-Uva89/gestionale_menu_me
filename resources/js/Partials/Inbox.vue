@@ -15,8 +15,8 @@ const props = defineProps({
             </span> -->
         </h2>
         <ul>
-            <li v-for="message in messages" :key="message.id" class="flex justify-between cliccable" @click="readMessage(message)">
-                <p :class="{ 'font-bold': !message.is_read }">
+            <li v-for="message in messages" :key="message.id" class="flex justify-between" @click="readMessage(message)">
+                <p :class="{ 'font-bold cliccable': !message.is_read }">
                     {{ message.content }}
                 </p>
                 <div class="btn btn-primary">{{ message.is_read ? '✅' : '🔴' }}</div>
