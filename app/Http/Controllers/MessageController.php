@@ -15,7 +15,7 @@ class MessageController extends Controller
 
     public function show(Message $message): Response
     {
-        return Inertia::render('Welcome', [
+        return Inertia::render('Home', [
             'message' => $message,
         ]);
     }
@@ -24,7 +24,7 @@ class MessageController extends Controller
     {
         $messages = Message::all();
 
-        return Inertia::render('Welcome', [
+        return Inertia::render('Home', [
             'messages' => $messages, //
         ]);
     }
