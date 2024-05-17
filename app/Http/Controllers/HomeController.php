@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\Category;
 use App\Models\Venue;
 
+
 class HomeController extends Controller
 {
     public function index()
@@ -17,7 +18,19 @@ class HomeController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
 
-        // dd($categories->where('name', 'Ristorante'));
+        $categories = Category::find(5);
+        if ($categories === null) {
+            die("Categoria con ID 1 non trovata.");
+        }
+
+   
+        foreach ($categories->venues as $venues) {
+            die($venues->pivot);
+            // dd($venue->pivot->colonna_pivot_2, $venue->pivot->colonna_pivot_1); // Rimuovi questa linea se non è necessaria
+        }
+
+        // Log informazioni utili per il debug
+        \Log::info('Categoria trovata:', ['categoria' => $categories]);
 
         // specific record
         $laCucina = Venue::where('name', 'La Cucina')->firstOrFail();

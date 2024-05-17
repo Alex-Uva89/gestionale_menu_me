@@ -38,7 +38,7 @@ class Venue extends Model
 
     public function categories() 
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)->withPivot('category_id','venue_id');
     }
 
     public function dishes() 
