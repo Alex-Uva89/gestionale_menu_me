@@ -14,7 +14,6 @@ const props = defineProps({
 <div class="section_accordion">
   <section class="accordion overflow-x-hidden">
     <h2 class="p-3"  v-if="categories.length === 0">
-      <!-- icona stellina -->
       ⭐ Inizia <strong class="uppercase">aggiungendo</strong> una categoria
     </h2>
     <div 
@@ -27,16 +26,16 @@ const props = defineProps({
           'text-orange-500': selectedVenueColor === 'grey',
         }" v-for="category in categories">
       <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
-      <!-- creare un tasto x per cancellare la categoria -->
       <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
       <div class="tab__content bg-white">
-        <p>Pure CSS accordion based on the "input:checked + label" style trick.</p>
+        <p>{{  }}</p>
       </div>
     </div>
   
   </section>
-  <section class="add_category" >
-    <div class="p-5 border-2 border-black rounded-t-2xl uppercase text-white text-center font-bold cursor-pointer" 
+
+  <section class="add_category fixed bottom-5 left-80 right-72" >
+    <div class="p-5 w-4/5 border-2 border-black rounded-t-2xl uppercase text-white text-center font-bold cursor-pointer" 
     :class="{
           'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
           'bg-olive': selectedVenueColor === 'green',
@@ -45,15 +44,15 @@ const props = defineProps({
           'text-orange-500': selectedVenueColor === 'grey',
         }">aggiungi categorie</div>
     
-    <div class="bg-white p-5 border-2 border-black rounded-b-2xl">
-      <form class="flex justify-between items-center" @submit.prevent="createCategory(category)">
+    <div class="w-4/5 bg-white p-5 border-2 border-black rounded-b-2xl">
+      <form class="flex justify-between items-center" @submit.prevent="createCategory(category, '1')">
         <input v-model="category.name" type="text" placeholder="Nome categoria" id="inputCategory">
         <div>
           <button type="submit">Salva</button>
           <span> | </span>
           <button type="reset">Annulla</button>
         </div>
-    </form>
+      </form>
     </div>
   
   </section>
@@ -71,21 +70,26 @@ export default {
     category: {
       name: ''
     },
+    venues: []
   }
 },
 methods: {
-  createCategory(category) {
-    axios.post('/api/categories', category)
-    .then(response => {
+  createCategory(category, venueId) {
+    axios.post('/api/categories', {...category, venue_id: venueId })
+   .then(response => {
+    console.log('RESPONSE');
+      console.log(response.data);
       this.category.name = '';
       this.categories.push(response.data);
     })
-    .catch(error => {
+   .catch(error => {
       console.log(error);
     });
   },
-  
-}
+},
+created() {
+    this.venues = this.$inertia.page.props.laCucina;
+  },
 }
 </script>
 

@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    // create table locals
+    // create table venues
     public function up(): void
     {
-        Schema::create('locals', function (Blueprint $table) {
+        Schema::create('venues', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
             $table->string('image')-> nullable();
@@ -28,6 +28,6 @@ return new class extends Migration
     */
     public function down(): void
     {
-        Schema::dropIfExists('locals');   
+        Schema::dropIfExists('venues');   
     }
 };

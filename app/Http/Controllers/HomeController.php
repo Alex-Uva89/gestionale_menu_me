@@ -6,24 +6,55 @@ use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Category;
+use App\Models\Venue;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Recupera i dati dal database
-        $messages = Message::all(); // Assumendo che Message sia il modello per i tuoi messaggi
-        $categories = Category::all(); // Assumendo che Category sia il modello per le tue categorie
+        // fetch data
+        $messages = Message::all(); 
+        $categories = Category::all();
+        $venues = Venue::all();
 
-        // Combina i dati come necessario
-        $data = [
-            'messages' => $messages,
-            'categories' => $categories,
+        // dd($categories->where('name', 'Ristorante'));
+
+        // specific record
+        $laCucina = Venue::where('name', 'La Cucina')->firstOrFail();
+        
+        // smash data
+         $data = [
+             'messages' => $messages,
+             'categories' => $categories,
+             'venues' => $venues,
+             'laCucina' => $laCucina,
             // Aggiungi altri dati qui
-        ];
+         ];
 
-        // Restituisci i dati alla tua app
+        // return data
         return Inertia::render('Home', $data);
+    }
+
+    public function store()
+    {
+        // save data
+        Message::create(request()->validate([
+            'title' => ['required', 'max:255'],
+            'body' => ['required'],
+        ]));
+
+        Category::create(request()->validate([
+            'name' => ['required', 'max:255'],
+        ]));
+
+        Venue::create(request()->validate([
+            'name' => ['required', 'max:255'],
+            'color' => ['nullable', 'max:255'],
+        ]));
+        
+
+        // retdirect to home
+        return redirect()->route('home');
     }
 
     

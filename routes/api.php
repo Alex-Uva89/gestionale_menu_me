@@ -16,10 +16,12 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 
 
 // PUT
+Route::put('/', [HomeController::class, 'update'])->name('update');
 Route::put('/messages/{id}', [MessageController::class, 'update']);
 Route::put('/categories/{id}', [CategoryController::class, 'update']);
 
 // POST
+Route::post('/', [HomeController::class, 'store'])->name('store');
 Route::post('/categories', [CategoryController::class, 'store']);
 
 

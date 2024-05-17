@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\Dish;
 use App\Models\Drink;
 
-class Local extends Model
+class Venue extends Model
 {
     use HasFactory;
 
