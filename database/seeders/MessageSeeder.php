@@ -14,14 +14,15 @@ class MessageSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('messages')->insert([
-            'content' => 'Hello World',
-            'is_read' => false,
-            'read_at' => now(),
-            'sent_at' => now(),
-            'received_at' => now(),
-        ]);
+        // DB::table('messages')->insert([
+        //     'content' => 'Hello World',
+        //     'is_read' => false,
+        //     'read_at' => now(),
+        //     'sent_at' => now(),
+        //     'received_at' => now(),
+        // ]);
         
-        // Message::factory()->count(10)->create();
+        Message::factory()->count(10)->create();
     }
 }
+ 

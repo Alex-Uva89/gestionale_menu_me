@@ -25,4 +25,6 @@ class HomeController extends Controller
         // Restituisci i dati alla tua app
         return Inertia::render('Home', $data);
     }
+
+    
 }

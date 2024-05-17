@@ -43,17 +43,30 @@ class CategoryController extends Controller
                                 ->with('success', 'Categoria aggiornata con successo.');
             }
 
-    public function store(Request $request)
-            {
-                $validatedData = $request->validate([
-                    'name' => 'required',
-                ]);
+    // public function store(Request $request)
+    //         {
+    //             $validatedData = $request->validate([
+    //                 'name' => 'required',
+    //             ]);
 
-                Category::create($validatedData);
+    //             Category::create($validatedData);
 
-                return redirect()->route('categories.index')
-                                ->with('success', 'Categoria creata con successo.');
-            }
+    //             return redirect()->route('categories.index')
+    //                             ->with('success', 'Categoria creata con successo.');
+    //         }
+
+            public function store(Request $request)
+                {
+                    $request->validate([
+                        'name' => 'required',
+                    ]);
+
+                    $category = new Category;
+                    $category->name = $request->name;
+                    $category->save();
+
+                    return response()->json($category, 201);
+                }
 
 
 }
