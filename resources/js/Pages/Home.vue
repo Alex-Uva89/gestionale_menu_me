@@ -37,7 +37,7 @@ function updateNewMessage(value) {
 }
 
 function updateCurrentPageComponent(value) {
-    return currentPageComponent = value === 'Scante' ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : '';
+    return currentPageComponent = value === "'Scante" ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : '';
 }
    
 </script>
