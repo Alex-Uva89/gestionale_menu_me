@@ -88,6 +88,18 @@ class HomeController extends Controller
         return redirect()->route('home');
     }
 
+    public function destroy($id)
+{
+    $category = Category::find($id);
+
+    if ($category) {
+        $category->delete();
+        return response()->json(['message' => 'Category deleted successfully']);
+    } else {
+        return response()->json(['message' => 'Category not found'], 404);
+    }
+}
+
     public function attachVenues(Request $request, $id)
                 {
                     $validatedData = $request->validate([

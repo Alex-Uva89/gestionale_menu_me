@@ -25,7 +25,10 @@ Route::post('/', [HomeController::class, 'store'])->name('store');
 Route::post('/categories', [CategoryController::class, 'store']);
 Route::post('/categories/{id}/venues', [HomeController::class, 'attachVenues']);
 
-
+// DELETE
+Route::delete('/', [HomeController::class, 'destroy'])->name('destroy');
+Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
 
 require __DIR__.'/auth.php';

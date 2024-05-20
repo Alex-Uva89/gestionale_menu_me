@@ -56,9 +56,12 @@ function updateCurrentPageComponent(value) {
             :selectedVenueName="selectedVenueName" 
             :selectedVenueColor="selectedVenueColor" 
             :category_laCucina="category_laCucina" 
+            :category_scante="category_scante"
+            @update:category_enoteca="category_enoteca=$event"
+            :category_enoteca="category_enoteca"
             :categories="categories" 
             :messages="messages"
-            :category_scante="category_scante"/>        
+            />        
         </div>
     </div>
 </template>
@@ -83,6 +86,7 @@ export default {
     categories: Array,
     category_laCucina: Array,
     category_scante: Array,
+    category_enoteca: Array,
   },
 }
 

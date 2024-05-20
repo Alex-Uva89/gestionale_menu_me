@@ -82,7 +82,8 @@ methods: {
         console.log('RESPONSE category');
         console.log(response.data);
         this.category.name = '';
-        this.categories.push(response.data);
+        this.categories = response.data;
+        this.category_scante.push(response.data);
 
         axios.post(`/api/categories/${response.data.id}/venues`, {category_id: category.id, venue_id})
          .then(response => {
@@ -100,9 +101,6 @@ methods: {
 },
 
 },
-created() {
-    this.venues = this.$inertia.page.props.laCucina;
-  },
 }
 </script>
 
