@@ -26,7 +26,7 @@ class VenueSeeder extends Seeder
                 'icon' => '',
             ],
             [
-                'name' => "'Scante'",
+                'name' => "'Scante",
                 'image' => 'img/scante_logo.png',
                 'path' => '',
                 'color' => 'gray',

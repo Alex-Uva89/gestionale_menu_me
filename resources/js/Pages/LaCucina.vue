@@ -5,7 +5,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 const props = defineProps({
     selectedVenueName: String,
     selectedVenueColor: String,
-    categories: Array,
+    category_laCucina: Array,
 });
 
 </script>
@@ -13,9 +13,10 @@ const props = defineProps({
 <template>
 <div class="section_accordion">
   <section class="accordion overflow-x-hidden">
-    <h2 class="p-3"  v-if="categories.length === 0">
+    <h2 class="p-3"  v-if="category_laCucina.length === 0">
       ⭐ Inizia <strong class="uppercase">aggiungendo</strong> una categoria
     </h2>
+    <!-- la categoria si deve vedere SOLO se category.id e category_id in category_laCucina sono uguali -->
     <div 
     class="tab border border-black" 
     :class="{
@@ -24,7 +25,7 @@ const props = defineProps({
           'bg-stone-500': selectedVenueColor === 'grey',
           'bg-enoteca': selectedVenueColor === 'red',
           'text-orange-500': selectedVenueColor === 'grey',
-        }" v-for="category in categories">
+        }" v-for="category in category_laCucina">
       <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
       <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
       <div class="tab__content bg-white">
@@ -45,7 +46,7 @@ const props = defineProps({
         }">aggiungi categorie</div>
     
     <div class="w-4/5 bg-white p-5 border-2 border-black rounded-b-2xl">
-      <form class="flex justify-between items-center" @submit.prevent="createCategory(category, '1')">
+      <form class="flex justify-between items-center" @submit.prevent="createCategory(category, 1)">
         <input v-model="category.name" type="text" placeholder="Nome categoria" id="inputCategory">
         <div>
           <button type="submit">Salva</button>
@@ -57,7 +58,6 @@ const props = defineProps({
   
   </section>
 </div>
-
     
 </template>
 
@@ -68,24 +68,39 @@ export default {
   data() {
   return {
     category: {
-      name: ''
+      name: '',
     },
     venues: []
   }
 },
 methods: {
-  createCategory(category, venueId) {
-    axios.post('/api/categories', {...category, venue_id: venueId })
-   .then(response => {
-    console.log('RESPONSE');
-      console.log(response.data);
-      this.category.name = '';
-      this.categories.push(response.data);
-    })
-   .catch(error => {
-      console.log(error);
-    });
-  },
+  createCategory(category, venue_ids) {
+    // Assumendo che l'ID del locale "La Cucina" sia 1
+    const venue_id = [venue_ids];
+
+    axios.post('/api/categories', {...category})
+     .then(response => {
+        console.log('RESPONSE category');
+        console.log(response.data);
+        this.category.name = '';
+        this.categories.push(response.data);
+
+        // Dopo aver creato la categoria, invia una richiesta POST a /api/categories/{id}/venues
+        axios.post(`/api/categories/${response.data.id}/venues`, {category_id: category.id, venue_id})
+         .then(response => {
+            console.log('RESPONSE venue');
+            console.log(response.data);
+            venue_id.push(response.data);
+          })
+         .catch(error => {
+            console.log(error);
+          });
+      })
+     .catch(error => {
+        console.log(error);
+      });
+},
+
 },
 created() {
     this.venues = this.$inertia.page.props.laCucina;

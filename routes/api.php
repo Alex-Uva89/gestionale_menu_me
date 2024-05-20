@@ -23,6 +23,7 @@ Route::put('/categories/{id}', [CategoryController::class, 'update']);
 // POST
 Route::post('/', [HomeController::class, 'store'])->name('store');
 Route::post('/categories', [CategoryController::class, 'store']);
+Route::post('/categories/{id}/venues', [HomeController::class, 'attachVenues']);
 
 
 
