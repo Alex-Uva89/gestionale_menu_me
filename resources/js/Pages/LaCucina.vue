@@ -16,7 +16,6 @@ const props = defineProps({
     <h2 class="p-3"  v-if="category_laCucina.length === 0">
       ⭐ Inizia <strong class="uppercase">aggiungendo</strong> una categoria
     </h2>
-    <!-- la categoria si deve vedere SOLO se category.id e category_id in category_laCucina sono uguali -->
     <div 
     class="tab border border-black" 
     :class="{
@@ -75,7 +74,6 @@ export default {
 },
 methods: {
   createCategory(category, venue_ids) {
-    // Assumendo che l'ID del locale "La Cucina" sia 1
     const venue_id = [venue_ids];
 
     axios.post('/api/categories', {...category})
@@ -85,7 +83,7 @@ methods: {
         this.category.name = '';
         this.categories.push(response.data);
 
-        // Dopo aver creato la categoria, invia una richiesta POST a /api/categories/{id}/venues
+        
         axios.post(`/api/categories/${response.data.id}/venues`, {category_id: category.id, venue_id})
          .then(response => {
             console.log('RESPONSE venue');

@@ -22,9 +22,9 @@ const props = defineProps({
     :class="{
           'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
           'bg-olive': selectedVenueColor === 'green',
-          'bg-stone-500': selectedVenueColor === 'grey',
+          'bg-stone-500': selectedVenueColor === 'gray',
           'bg-enoteca': selectedVenueColor === 'red',
-          'text-orange-500': selectedVenueColor === 'grey',
+          'text-orange-500': selectedVenueColor === 'gray',
         }" v-for="category in category_scante">
       <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
       <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
@@ -40,9 +40,9 @@ const props = defineProps({
     :class="{
           'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
           'bg-olive': selectedVenueColor === 'green',
-          'bg-stone-500': selectedVenueColor === 'grey',
+          'bg-stone-500': selectedVenueColor === 'gray',
           'bg-enoteca': selectedVenueColor === 'red',
-          'text-orange-500': selectedVenueColor === 'grey',
+          'text-orange-500': selectedVenueColor === 'gray',
         }">aggiungi categorie</div>
     
     <div class="w-4/5 bg-white p-5 border-2 border-black rounded-b-2xl">
@@ -75,7 +75,6 @@ export default {
 },
 methods: {
   createCategory(category, venue_ids) {
-    // Assumendo che l'ID del locale "La Cucina" sia 1
     const venue_id = [venue_ids];
 
     axios.post('/api/categories', {...category})
@@ -85,7 +84,6 @@ methods: {
         this.category.name = '';
         this.categories.push(response.data);
 
-        // Dopo aver creato la categoria, invia una richiesta POST a /api/categories/{id}/venues
         axios.post(`/api/categories/${response.data.id}/venues`, {category_id: category.id, venue_id})
          .then(response => {
             console.log('RESPONSE venue');
