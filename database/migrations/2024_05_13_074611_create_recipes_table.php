@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('process');
 
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

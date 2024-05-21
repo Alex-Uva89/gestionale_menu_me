@@ -1,7 +1,7 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import Dropdown from '@/Components/Dropdown.vue';
 import Modal from '@/Components/Modal.vue';
+import Switch_button from '@/Components/Switch_button.vue';
+
 
 const props = defineProps({
     selectedVenueName: String,
@@ -21,15 +21,10 @@ const props = defineProps({
     <div 
     class="tab border border-black flex justify-between" 
     v-for="category in category_enoteca" :key="category.id">
-        <div class="flex max-h-14 bg-white">
-            <button class="p-3" @click="deleteCategory(category.id)">❌</button>
-            <modal v-if="showModal" @close="showModal = false">
-                <h3>Sei sicuro di voler eliminare questa categoria?</h3>
-                <button @click="deleteCategory">Conferma</button>
-                <button @click="showModal = false">Annulla</button>
-            </modal>
-            <button class="p-3" @click="editCategory(category.id)">Edit</button>
-            <button class="p-3" @click="showCategory(category.id)">Show</button>
+        <div class="flex max-h-14 bg-white items-center gap-3 p-2">
+            <button @click="deleteCategory(category.id)">❌</button>
+            <button @click="editCategory(category.id)">Edit</button>
+            <Switch_button @switchChanged="value => updateIsShowStatus(category.id, value)" />
         </div>
         <div class="box-accordion columns-7xl"
         :class="{
@@ -42,7 +37,11 @@ const props = defineProps({
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
             <div class="tab__content bg-white">
-              <p>{{  }}</p>
+              <div type class="p-4 flex justify-start items-center gap-2">
+                <div class="font-bold text-lg">&#10133</div>
+                <span>Aggiungi piatto</span>
+              </div>
+
             </div>
         </div>
     </div>
@@ -72,7 +71,7 @@ const props = defineProps({
   </section>
 </div>
 
-<section class="section-confirm" v-if="showModal">
+<section class="section-delete" v-if="showDeleteModal">
     <div class="modal-confirm">
         <h2 class="h-20 font-bold text-2xl text-center">
             Sei sicuro di voler eliminare questa categoria?
@@ -80,7 +79,20 @@ const props = defineProps({
         </h2>
         <div class="flex w-100 justify-between p-5">
             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete()">Conferma</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModal = false">Annulla</button>
+            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
+        </div>
+    </div>
+</section>
+
+<section class="section-edit" v-if="showEditModal">
+    <div class="modal-confirm">
+        <h2 class="h-20 font-bold text-2xl text-center">
+            Modifica categoria
+        </h2>
+        <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
+        <div class="flex w-100 justify-between p-5">
+            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(category_enoteca.name)">edit</button>
+            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
         </div>
     </div>
 </section>
@@ -92,6 +104,8 @@ import axios from 'axios';
 export default {
     components: {
         Modal,
+        Switch_button,
+
     },
     props: {
         category_enoteca: Array,
@@ -103,7 +117,8 @@ export default {
     },
     venues: [],
     localCategory_enoteca: this.category_enoteca,
-    showModal: false,
+    showDeleteModal: false,
+    showEditModal: false,
   }
 },
 methods: {
@@ -141,7 +156,7 @@ methods: {
     },
     deleteCategory(id) {
       this.categoryToDelete = id;
-      this.showModal = true;
+      this.showDeleteModal = true;
     },
     confirmDelete() {
         axios.delete(`/api/categories/${this.categoryToDelete}`)
@@ -158,18 +173,29 @@ methods: {
         console.log(error);
         });
 
-        this.showModal = false;
+        this.showDeleteModal = false;
     },
     editCategory(id) {
-      axios.put(`/api/categories/${id}`)
+      this.categoryToEdit = id;
+      this.categoryNameToEdit = this.localCategory_enoteca.find(category => category.id === id).name;
+      this.showEditModal = true;
+    },
+    confirmEdit(value) {
+      axios.put(`/api/categories/${this.categoryToEdit}`, { name: value })
        .then(response => {
-          console.log('RESPONSE edit');
-          console.log(response.data);
+        const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToEdit)
+        if (index !== -1) {
+            this.localCategory_enoteca[index].name = value;
+        } 
+          console.log('INDEX');
+          console.log(index);
           this.category = response.data;
         })
        .catch(error => {
           console.log(error);
         });
+
+        this.showEditModal = false;
     },
     showCategory(id) {
       axios.get(`/api/categories/${id}`)
@@ -182,7 +208,17 @@ methods: {
           console.log(error);
         });
     },
-
+    updateIsShowStatus(categoryId, value) {
+      axios.put(`/api/categories/${categoryId}`, { is_active: value })
+      .then(response => {
+          console.log('RESPONSE update');
+          console.log(response.data);
+          this.category = response.data;
+        })
+      .catch(error => {
+          console.log(error);
+        });
+    },
 },
 
 }
@@ -215,7 +251,7 @@ section.accordion{
   width: 90%;
 }
 
-.section-confirm{
+.section-delete, .section-edit{
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
@@ -233,6 +269,7 @@ section.accordion{
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 }
+
 
 </style>
 

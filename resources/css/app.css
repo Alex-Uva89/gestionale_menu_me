@@ -1,5 +1,6 @@
 @import url('./reset.css');
 @import url('./accordion.css');
+@import url('./typography.css');
 
 @tailwind base;
 @tailwind components;

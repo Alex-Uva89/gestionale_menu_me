@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->text('content');
             $table->string('attachment')->nullable();
-            $table->boolean('is_read')->default(false);
             $table->timestamp('read_at')->nullable();
             $table->timestamp('sent_at')->nullable();
             $table->timestamp('received_at')->nullable();
-
-
+            
+            
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }

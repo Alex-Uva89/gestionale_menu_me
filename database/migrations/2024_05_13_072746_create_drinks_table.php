@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('color');
             $table->string('production_method');
             $table->string('flavour')->nullable();
+            
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

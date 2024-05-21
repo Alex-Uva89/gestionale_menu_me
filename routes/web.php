@@ -15,6 +15,8 @@ Route::get('/', function () {
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
 Route::put('/messages/{id}', [MessageController::class, 'update']);
 Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 

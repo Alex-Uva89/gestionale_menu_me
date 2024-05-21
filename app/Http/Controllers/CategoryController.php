@@ -39,21 +39,8 @@ class CategoryController extends Controller
 
                 $category->update($validatedData);
 
-                return redirect()->route('categories.index')
-                                ->with('success', 'Categoria aggiornata con successo.');
+                return response()->json($category, 200);
             }
-
-    // public function store(Request $request)
-    //         {
-    //             $validatedData = $request->validate([
-    //                 'name' => 'required',
-    //             ]);
-
-    //             Category::create($validatedData);
-
-    //             return redirect()->route('categories.index')
-    //                             ->with('success', 'Categoria creata con successo.');
-    //         }
 
             public function store(Request $request)
                 {
@@ -79,6 +66,22 @@ class CategoryController extends Controller
                         return response()->json(['message' => 'Category not found'], 404);
                     }
                 }
+
+        
+                public function updateIsShowStatus(Request $request, $id)
+                {
+                    $category = Category::findOrFail($id);
+
+                    $validatedData = $request->validate([
+                        'is_active' => 'required|boolean',
+                    ]);
+
+                    $category->is_active = $validatedData['is_active'];
+                    $category->save();
+
+                    return response()->json($category);
+                }
+            
 
                 
 

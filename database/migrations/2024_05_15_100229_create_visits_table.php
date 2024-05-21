@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('isp');
             $table->string('org');
 
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
