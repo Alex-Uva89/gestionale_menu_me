@@ -8,14 +8,16 @@ const props = defineProps({
 
 <template>
     <div class="inbox">
-        <h2>
-            <span>Messaggi</span>
-            <!-- <span v-show="messages.filter(message => !message.read).length > 0" class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                {{ messages.filter(message => !message.read).length }}
-            </span> -->
+        <h2 class=" font-semibold">
+            <span class="text-xl text-gray-500">Hai
+              <strong class="text-2xl"> {{ messages.filter(message => !message.is_read).length }} </strong>
+              messaggi da leggere</span>
         </h2>
         <ul>
-            <li v-for="message in messages" :key="message.id" class="flex justify-between" @click="readMessage(message)">
+            <li v-for="message in messages" 
+                :key="message.id" class="flex justify-between" 
+                :class="message.is_read? 'bg-gray-100': 'bg-blue-200'"
+                @click="readMessage(message)">
                 <p :class="{ 'font-bold cliccable': !message.is_read }">
                     {{ message.content }}
                 </p>
@@ -53,7 +55,6 @@ const props = defineProps({
             li{
                 margin-bottom: 0.5rem;
                 padding: 0.5rem;
-                background-color: #f5f5f5;
                 border-radius: 4px;
             }
             .cliccable {
