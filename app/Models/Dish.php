@@ -16,7 +16,7 @@ class Dish extends Model
     use HasFactory;
 
 
-    protected $fillable = ['name', 'image', 'price', 'description'];
+    protected $fillable = ['name','description','price','image','is_active','venue_id','category_id'];
 
     public function venues()
     {

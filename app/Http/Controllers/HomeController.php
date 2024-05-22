@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Category;
 use App\Models\Venue;
+use App\Models\Dish;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -39,8 +40,11 @@ class HomeController extends Controller
             $query->where('venue_id', $enoteca->id);
         })->get();
 
-        // dd($category_laCucina->toArray());
+        $dish_laCucina_category = Dish::all()->where('venue_id', 1);
+        $dish_scante_category = Dish::all()->where('venue_id', 2);
+        $dish_enoteca_category = Dish::all()->where('venue_id', 3);
 
+        
         // smash data
          $data = [
              'messages' => $messages,
@@ -50,6 +54,9 @@ class HomeController extends Controller
              'category_laCucina' => $category_laCucina->toArray(),
              'category_scante' => $category_scante->toArray(),
              'category_enoteca' => $category_enoteca,
+             'dish_laCucina_category' => $dish_laCucina_category,
+             'dish_scante_category' => $dish_scante_category,
+             'dish_enoteca_category' => $dish_enoteca_category,
             // Aggiungi altri dati qui
          ];
 
@@ -81,6 +88,11 @@ class HomeController extends Controller
         foreach ($validatedData['venue_ids'] as $venueId) {
             $category->venues()->attach($venueId);
         }
+
+        Dish::create(request()->validate([
+            'name' => ['required', 'max:255'],
+            'category_id' => ['required', 'max:255'],
+        ]));
 
         
 

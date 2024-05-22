@@ -60,8 +60,9 @@ function updateCurrentPageComponent(value) {
             @update:category_enoteca="category_enoteca=$event"
             :category_enoteca="category_enoteca"
             :categories="categories" 
+            :dish_enoteca_category="dish_enoteca_category"
             :messages="messages"
-            />        
+            />     
         </div>
     </div>
 </template>
@@ -87,6 +88,7 @@ export default {
     category_laCucina: Array,
     category_scante: Array,
     category_enoteca: Array,
+    dish_enoteca_category: Array,
   },
 }
 

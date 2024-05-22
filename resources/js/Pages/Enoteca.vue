@@ -7,6 +7,7 @@ const props = defineProps({
     selectedVenueName: String,
     selectedVenueColor: String,
     category_enoteca: Array,
+    dish_enoteca_category: Array,
 });
 
 </script>
@@ -19,14 +20,14 @@ const props = defineProps({
     </h2>
    
     <div 
-    class="tab border border-black flex justify-between" 
+    class="tab border border-black flex justify-between bg-white" 
     v-for="category in category_enoteca" :key="category.id">
         <div class="flex max-h-14 bg-white items-center gap-3 p-2">
             <button @click="deleteCategory(category.id)">❌</button>
             <button @click="editCategory(category.id)">Edit</button>
             <Switch_button @switchChanged="value => updateIsShowStatus(category.id, value)" />
         </div>
-        <div class="box-accordion columns-7xl"
+        <div class=" columns-7xl"
         :class="{
           'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
           'bg-olive': selectedVenueColor === 'green',
@@ -37,7 +38,35 @@ const props = defineProps({
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
             <div class="tab__content bg-white">
-              <div type class="p-4 flex justify-start items-center gap-2">
+
+              <div>
+                <ul>
+                  <li v-for="dish in dish_enoteca_category">
+                    <div class="flex justify-between items-center p-4">
+                      <div class="w-full min-h-40 flex items-center">
+                        <div class="w-56">
+                          <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-full h-full object-cover p-2">
+                        </div>
+                        <div class="w-96 flex flex-col">
+                          <span>Nome piatto: </span><span>{{ dish.name }}</span>
+                        </div>
+                        <div class="w-40 flex flex-col">
+                          <span>Prezzo: </span><span>{{ dish.price }} €</span>
+                        </div>
+                        <div  class="w-auto flex flex-col">
+                          <div>Descrizione: </div><div> {{ dish.description }}</div>
+                        </div>
+                      </div>
+                      <div class="w-full flex flex-col gap-2">
+                        <button class="border p-1">edit</button>
+                        <button class="border p-1">delete</button>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div type="button" @click="addDishes(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
                 <div class="font-bold text-lg">&#10133</div>
                 <span>Aggiungi piatto</span>
               </div>
@@ -96,6 +125,44 @@ const props = defineProps({
         </div>
     </div>
 </section>
+
+<section class="section-create-dishes" v-if="showAddDishesModal">
+    <div class="modal-confirm">
+        <h2 class="h-16 font-bold text-2xl text-center">
+            Aggiungi nuovo piatto
+        </h2>
+        <div class="flex flex-col gap-4 flex-wrap">
+          <label for="name">Nome piatto</label>
+          <input type="text" 
+          class="border-2 hover:border-black focus:border-black rounded" 
+          v-model="dish_enoteca_category.name" 
+          :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome piatto'"
+          >
+          <!-- devo aggiungere anche descpription price, image -->
+          <label for="description">Descrizione</label>
+          <textarea 
+          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'descrizione piatto'"
+          class="border-2 hover:border-black focus:border-black rounded"
+          v-model="dish_enoteca_category.description"></textarea>
+          <label for="price">Prezzo</label>
+          <div>
+            <input type="number" 
+            :placeholder="dish_enoteca_category.price ? dish_enoteca_category.price : 'prezzo del piatto'"
+            class="border-2 hover:border-black focus:border-black rounded"
+            v-model="dish_enoteca_category.price"><span> euro</span>
+          </div>
+          <label for="image">Immagine</label>
+          <input type="file"
+          v-on:change="onFileChange" ref="file" accept="image/*">
+
+
+          <div class="flex gap-20 p-10">
+            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmAddDishes()">conferma</button>
+            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showAddDishesModal = false">Annulla</button>
+          </div>
+        </div>
+    </div>
+</section>
 </template>
 
 <script>
@@ -109,6 +176,7 @@ export default {
     },
     props: {
         category_enoteca: Array,
+        dish_enoteca_category: Array,
     },
   data() {
   return {
@@ -119,6 +187,8 @@ export default {
     localCategory_enoteca: this.category_enoteca,
     showDeleteModal: false,
     showEditModal: false,
+    showAddDishesModal: false,
+    dishToCreateId: null,
   }
 },
 methods: {
@@ -161,18 +231,26 @@ methods: {
     confirmDelete() {
         axios.delete(`/api/categories/${this.categoryToDelete}`)
         .then(response => {
-        const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToDelete);
-        if (index !== -1) {
-            this.localCategory_enoteca.splice(index, 1);
-        }
-        console.log('RESPONSE delete');
-        console.log(this.localCategory_enoteca);
-        this.$emit('update:category_enoteca', this.localCategory_enoteca);
+            const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToDelete);
+            if (index !== -1) {
+                this.localCategory_enoteca.splice(index, 1);
+            }
+            console.log('RESPONSE delete');
+            console.log(this.localCategory_enoteca);
+            this.$emit('update:category_enoteca', this.localCategory_enoteca);
+    
+            axios.delete(`/api/dishes/${this.categoryToDelete}`)
+            .then(response => {
+                console.log('Deleted corresponding dishes');
+            })
+            .catch(error => {
+                console.log(error);
+            });
         })
         .catch(error => {
-        console.log(error);
+            console.log(error);
         });
-
+    
         this.showDeleteModal = false;
     },
     editCategory(id) {
@@ -219,6 +297,49 @@ methods: {
           console.log(error);
         });
     },
+    addDishes(id) {
+      this.showAddDishesModal = true;
+      this.dishToCreateId = id;
+    },
+    onFileChange(e) {
+    let files = e.target.files || e.dataTransfer.files;
+    if (!files.length)
+      return;
+    this.createImage(files[0]);
+  },
+  createImage(file) {
+    let reader = new FileReader();
+    let vm = this;
+    reader.onload = (e) => {
+      vm.dish_enoteca_category.image = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+  confirmAddDishes() {
+    let formData = new FormData();
+    formData.append('name', this.dish_enoteca_category.name);
+    formData.append('description', this.dish_enoteca_category.description);
+    formData.append('price', this.dish_enoteca_category.price);
+    formData.append('image', this.dish_enoteca_category.image);
+    formData.append('category_id', this.dishToCreateId);
+    formData.append('venue_id', 3);
+
+    axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      console.log('RESPONSE add');
+      console.log(response.data);
+      this.dish_enoteca_category = response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+    this.showAddDishesModal = false;
+  },
 },
 
 }
@@ -240,6 +361,9 @@ methods: {
 .bg-enoteca {
     background-color: #a51a1a;
 }
+.border-red{
+  border-color: #a51a1a;
+}
 
 section.accordion{
   width: 90%;
@@ -251,7 +375,7 @@ section.accordion{
   width: 90%;
 }
 
-.section-delete, .section-edit{
+.section-delete, .section-edit, .section-create-dishes{
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;

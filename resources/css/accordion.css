@@ -15,11 +15,12 @@
     transition: all 0.35s;
   }
   .tab input:checked ~ .tab__content {
-    max-height: 10rem;
+    max-height: 2800px;
   }
   
   /* Visual styles */
   .accordion {
+    height: fit-content;
     border: 2px solid;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -66,4 +67,8 @@
   75% {
     transform: rotate(90deg) translate(-.25rem);
   }
+}
+
+.line {
+  border-bottom: 2px solid;
 }
