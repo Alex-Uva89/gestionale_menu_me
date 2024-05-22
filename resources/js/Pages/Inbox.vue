@@ -8,8 +8,8 @@ const props = defineProps({
 
 <template>
     <div class="inbox">
-        <h2 class=" font-semibold">
-            <span class="text-xl text-gray-500">Hai
+        <h2 class=" font-semibold p-4 border-4 border-blue-400">
+            <span class="text-xl text-blue-700">Hai
               <strong class="text-2xl"> {{ messages.filter(message => !message.is_read).length }} </strong>
               messaggi da leggere</span>
         </h2>
