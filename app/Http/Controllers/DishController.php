@@ -31,22 +31,22 @@ class DishController extends Controller
 
     //store
     public function store()
-    {
-        $dish = new Dish();
-        $dish->name = request('name');
-        $dish->description = request('description');
-        $dish->price = request('price');
-        $dish->category_id = request('category_id');
-        $dish->venue_id = request('venue_id');
+{
+    $dish = new Dish();
+    $dish->name = request('name');
+    $dish->description = request('description');
+    $dish->price = request('price');
+    $dish->category_id = request('category_id');
+    $dish->venue_id = request('venue_id');
 
-        if (request()->has('image')) {
-            $dish->image = request('image');
-        }
-
-        $dish->save();
-
-        return redirect()->back();
+    if (request()->has('image')) {
+        $dish->image = request('image');
     }
+
+    $dish->save();
+
+    return response()->json($dish, 201);
+}
 
     public function destroyByCategory($categoryId)
     {
@@ -57,5 +57,16 @@ class DishController extends Controller
         }
 
         return response()->json(['success' => 'Dishes deleted successfully'], 200);
+    }
+
+    public function show($id)
+    {
+        $dish = Dish::all();
+
+        if (!$dish) {
+            return response()->json(['error' => 'Dish not found'], 404);
+        }
+
+        return response()->json($dish, 200);
     }
 }
