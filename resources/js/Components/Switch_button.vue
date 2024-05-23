@@ -21,12 +21,14 @@ export default {
   display: inline-block;
   width: 60px;
   height: 34px;
+  z-index: 0;
 }
 
 .switch input { 
   opacity: 0;
   width: 0;
   height: 0;
+  z-index: 0;
 }
 
 .slider {
@@ -37,6 +39,7 @@ export default {
   right: 0;
   bottom: 0;
   background-color: #ccc;
+  z-index: 0;
   -webkit-transition: .4s;
   transition: .4s;
   border: 2px solid #000000;

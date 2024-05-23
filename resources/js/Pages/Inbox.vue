@@ -7,10 +7,10 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="inbox">
-        <h2 class=" font-semibold p-4 border-4 border-blue-400">
+    <div class="inbox relative">
+        <h2 class=" font-semibold p-4 border-4 border-blue-400 sticky top-0 bg-white">
             <span class="text-xl text-blue-700">Hai
-              <strong class="text-2xl"> {{ messages.filter(message => !message.is_read).length }} </strong>
+              <strong class="text-2xl text-black"> {{ messages.filter(message => !message.is_read).length }} </strong>
               messaggi da leggere</span>
         </h2>
         <ul>

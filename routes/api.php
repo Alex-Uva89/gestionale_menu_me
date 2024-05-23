@@ -14,6 +14,7 @@ Route::get('/user', function (Request $request) {
 // GET
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/dishes/{id}', [DishController::class, 'show']);
 
 // PUT
 Route::put('/', [HomeController::class, 'update'])->name('update');

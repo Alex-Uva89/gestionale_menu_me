@@ -17,7 +17,24 @@
   .tab input:checked ~ .tab__content {
     max-height: 2800px;
   }
+
+  .tab .container-dishes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .tab .container-dishes img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
   
+  .tab .buttons {
+    width: 100px;
+  }
+
   /* Visual styles */
   .accordion {
     height: fit-content;

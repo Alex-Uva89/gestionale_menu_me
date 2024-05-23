@@ -12,7 +12,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','venue_id','category_id','is_active'];
+    protected $fillable = ['name','venue_id','category_id','is_active','is_special'];
 
     // relationships with venues
 
