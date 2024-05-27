@@ -1,7 +1,11 @@
 <script>
 export default {
+  props: {
+    value: Boolean
+  },
   methods: {
     toggleSwitch(event) {
+        this.$emit('input', event.target.checked);
         this.$emit('switchChanged', event.target.checked);;
     }
   }
@@ -10,7 +14,7 @@ export default {
 
 <template>
     <label class="switch">
-        <input type="checkbox" @change="toggleSwitch">
+        <input type="checkbox" :checked="value" @change="toggleSwitch">
         <span class="slider round"></span>
     </label>
 </template>

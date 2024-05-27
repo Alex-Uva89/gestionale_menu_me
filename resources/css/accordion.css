@@ -73,6 +73,11 @@
   font-size: 0.75rem;
 }
 
+.tab.category {
+  display:grid;
+  grid-template-columns: .7fr 4fr;
+}
+
 /* Arrow animation */
 .tab input:not(:checked) + .tab__label:hover::after {
   animation: bounce .5s infinite;

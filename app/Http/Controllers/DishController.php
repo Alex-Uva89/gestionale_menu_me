@@ -61,12 +61,15 @@ class DishController extends Controller
 
     public function show($id)
     {
-        $dish = Dish::all();
+        $dish = Dish::where('category_id', $id)->get();
 
         if (!$dish) {
-            return response()->json(['error' => 'Dish not found'], 404);
+            return response()->json(['message' => 'Dish not found GET'], 404);
         }
 
-        return response()->json($dish, 200);
+        return response()->json($dish);
     }
+
+  
+   
 }

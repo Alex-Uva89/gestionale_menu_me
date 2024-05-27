@@ -62,6 +62,8 @@ function updateCurrentPageComponent(value) {
             :categories="categories" 
             :dish_enoteca_category="dish_enoteca_category"
             :messages="messages"
+            @dishAdded="componentKey += 1"
+            :key="componentKey"
             />     
         </div>
     </div>
@@ -89,6 +91,11 @@ export default {
     category_scante: Array,
     category_enoteca: Array,
     dish_enoteca_category: Array,
+  },
+  data() {
+    return {
+      componentKey: 0,
+    };
   },
 }
 
