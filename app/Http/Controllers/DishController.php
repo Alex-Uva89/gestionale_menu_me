@@ -59,16 +59,18 @@ class DishController extends Controller
         return response()->json(['success' => 'Dishes deleted successfully'], 200);
     }
 
-    public function show($id)
-    {
-        $dish = Dish::where('category_id', $id)->get();
+    // public function show($id)
+    // {
+    //     $dish = Dish::where('category_id', $id)->get();
 
-        if (!$dish) {
-            return response()->json(['message' => 'Dish not found GET'], 404);
-        }
+    //     if (!$dish) {
+    //         return response()->json(['message' => 'Dish not found GET'], 404);
+    //     }
 
-        return response()->json($dish);
-    }
+    //     dd($dish);
+
+    //     return response()->json($dish);
+    // }
 
   
    

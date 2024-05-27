@@ -81,7 +81,6 @@ export default {
         showEditModal: false,
         showAddDishesModal: false,
         dishToCreateId: null,
-        filterDishes: [],
       }
     },
     methods: {

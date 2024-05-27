@@ -36,9 +36,13 @@ class HomeController extends Controller
             $query->where('venue_id', $scante->id);
         })->get();
 
-        $category_enoteca = Category::whereHas('venues', function ($query) use ($enoteca) {
+    
+        $category_enoteca = Category::with('dishes')->whereHas('venues', function ($query) use ($enoteca) {
             $query->where('venue_id', $enoteca->id);
         })->get();
+
+
+        // dd($category_enoteca->toArray());
 
         $dish_laCucina_category = Dish::all()->where('venue_id', 1);
         $dish_scante_category = Dish::all()->where('venue_id', 2);

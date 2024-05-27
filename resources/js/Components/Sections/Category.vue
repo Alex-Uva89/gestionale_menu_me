@@ -19,15 +19,15 @@
            'bg-stone-500': selectedVenueColor === 'gray',
            'bg-enoteca': selectedVenueColor === 'red',
            'text-orange-500': selectedVenueColor === 'gray',
-         }" >
+         }" :key="componentKeyli" >
              <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
              <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }} ID: {{ category.id }}</label>
              <div class="tab__content bg-white" >
-                 <ul class="max-w-full">
-                   <li v-for="dish in localDishEnotecaCategory.filter(dish => dish.category_id === category.id)"
-                   class="container-dishes flex items-center p-2 border-b-2 border-black"
+                 <ul class="max-w-full" >
+                   <li v-for="dish in category.dishes"
+                   class="container-dishes flex items-center p-2 border-b-2 border-black" 
                    >
-                         <!-- <div class="flex items-center">
+                         <div class="flex items-center">
                            <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
                          </div>
                          <div class="flex flex-col name">
@@ -42,21 +42,7 @@
                          <div class="flex flex-col gap-2 buttons">
                            <button class="border p-1">edit</button>
                            <button class="border p-1">delete</button>
-                         </div> -->
-                         local enoteca category
-                         <div>
-                          {{ localDishEnotecaCategory }}
                          </div>
-                         local category
-                         <div>
-                          {{ localCategory_enoteca }}
-                         </div>
-                         dish enoteca category
-                         <div>
-                           {{ dish_enoteca_category }}
-                         </div>
-                         
-                         
                    </li>
                  </ul>
             
@@ -158,6 +144,7 @@ export default {
   },
   data() {
     return {
+      componentKeyli: 0,
       showDeleteModal: false,
       categoryToDelete: null,
       showEditModal: false,
@@ -166,7 +153,7 @@ export default {
       showAddDishesModal: false,
       dishToCreateId: null,
       localCategory_enoteca: this.category_enoteca,
-      localDishEnotecaCategory: [...this.dish_enoteca_category],
+      localDishEnotecaCategory: [],
     };
   },
   methods: {
@@ -264,13 +251,15 @@ export default {
           })
           .then(response => {
             if (response.data && response.data.name && response.data.description && response.data.price && response.data.image) {
-
-              this.dish_enoteca_category.push(response.data);
-              this.dish_enoteca_category.filter(dish => dish.category_id === this.dishToCreateId).push(this.dish_enoteca_category);
+              let newDish = response.data;
+              let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
+              if (category) {
+                category.dishes.push(newDish);
+              }
               this.$emit('dishAdded');
-
+              this.componentKeyli++;
             } else {
-                console.error("Server response does not contain expected data");
+              console.error("Server response does not contain expected data");
             }
           })
           .catch(error => {
@@ -280,11 +269,19 @@ export default {
         },
   },
   watch: {
-  category_enoteca(newVal) {
-    this.localCategory_enoteca = newVal;
+    category_enoteca(newVal) {
+      this.localCategory_enoteca = newVal;
+    },
   },
-},
-  
+  created() {
+      this.localDishEnotecaCategory = this.category_enoteca.map(category => {
+          let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
+          return {
+              ...category,
+              dishes: dishes
+          };
+      });
+  },
 };
 </script>
 

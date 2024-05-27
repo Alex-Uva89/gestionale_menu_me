@@ -23,7 +23,7 @@ class Category extends Model
 
     public function dishes() 
     {
-        return $this->hasMany(Dish::class)->withPivot('category_id','dish_id');
+        return $this->hasMany(Dish::class);
     }
 
     public function drinks() 

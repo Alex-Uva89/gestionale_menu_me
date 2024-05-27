@@ -73,7 +73,7 @@ class CategoryController extends Controller
                     $category = Category::findOrFail($id);
 
                     $validatedData = $request->validate([
-                        'is_active' => 'required|boolean',
+                        'is_active' => 'boolean',
                     ]);
 
                     $category->is_active = $validatedData['is_active'];
