@@ -8,6 +8,9 @@ import LaCucina from '@/Pages/LaCucina.vue';
 import Scante from '@/Pages/Scante.vue';
 import Enoteca from '@/Pages/Enoteca.vue';
 import Preview from '@/Pages/Preview.vue';
+import Allergens from '@/Pages/Allergens.vue';
+import Dashboard from '@/Pages/Dashboard.vue';
+import Welcome from '@/Pages/Welcome.vue';
 
 const selectedVenueName = ref('Benvenuto');
 const selectedVenueColor = ref('blue');
@@ -37,7 +40,7 @@ function updateNewMessage(value) {
 }
 
 function updateCurrentPageComponent(value) {
-    return currentPageComponent = value === "'Scante" ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : '';
+    return currentPageComponent = value === "'Scante" ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : value === 'Allergeni' ? Allergens : value === 'Dashboard' ? Dashboard : '';
 }
    
 </script>
@@ -50,8 +53,10 @@ function updateCurrentPageComponent(value) {
         <div class="main-app flex">
           <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
-          <!-- dynamic component for pages Scante, LaCucina,  Enoteca and preview -->
+          
+          <Welcome v-if="currentPageComponent === ''"/>
           <component 
+            v-else
             :is="currentPageComponent" 
             :selectedVenueName="selectedVenueName" 
             :selectedVenueColor="selectedVenueColor" 

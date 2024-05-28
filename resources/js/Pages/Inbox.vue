@@ -8,10 +8,13 @@ const props = defineProps({
 
 <template>
     <div class="inbox relative">
-        <h2 class=" font-semibold p-4 border-4 border-blue-400 sticky top-0 bg-white">
+        <h2 v-if="messages.some(message => !message.is_read)" class=" font-semibold p-4 border-4 border-blue-400 sticky top-0 bg-white">
             <span class="text-xl text-blue-700">Hai
               <strong class="text-2xl text-black"> {{ messages.filter(message => !message.is_read).length }} </strong>
               messaggi da leggere</span>
+        </h2>
+        <h2 v-else class=" font-semibold p-4 border-4 border-blue-400 sticky top-0 bg-white">
+            <span class="text-xl text-blue-700">Non ci sono messaggi da leggere</span>
         </h2>
         <ul>
             <li v-for="message in messages" 
