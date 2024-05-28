@@ -29,16 +29,17 @@ class CategoryController extends Controller
                 ]);
             }
 
-    public function update(Request $request, $id)
+            public function update(Request $request, $id)
             {
                 $category = Category::findOrFail($id);
-
+            
                 $validatedData = $request->validate([
-                    'name' => 'required',
+                    'name' => 'sometimes|required',
+                    'is_active' => 'sometimes|boolean',
                 ]);
-
+            
                 $category->update($validatedData);
-
+            
                 return response()->json($category, 200);
             }
 
@@ -46,10 +47,12 @@ class CategoryController extends Controller
                 {
                     $request->validate([
                         'name' => 'required',
+                        'is_drink' => 'required|boolean',
                     ]);
 
                     $category = new Category;
                     $category->name = $request->name;
+                    $category->is_drink = $request->is_drink;
                     $category->save();
 
                     return response()->json($category, 201);
@@ -68,19 +71,7 @@ class CategoryController extends Controller
                 }
 
         
-                public function updateIsShowStatus(Request $request, $id)
-                {
-                    $category = Category::findOrFail($id);
-
-                    $validatedData = $request->validate([
-                        'is_active' => 'boolean',
-                    ]);
-
-                    $category->is_active = $validatedData['is_active'];
-                    $category->save();
-
-                    return response()->json($category);
-                }
+                
             
 
                 

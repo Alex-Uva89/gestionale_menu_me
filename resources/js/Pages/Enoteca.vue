@@ -1,6 +1,7 @@
 <script setup>
 import Modal from '@/Components/Modal.vue';
 import Category from '@/Components/Sections/Category.vue';
+import CategoryDrink from '@/Components/Sections/CategoryDrink.vue';
 
 
 const props = defineProps({
@@ -18,10 +19,10 @@ const props = defineProps({
 
   <section class="sticky w-full top-0 z-10" >
     
-    <div class=" bg-white p-2 border-2 border-black">
+    <div class=" bg-white p-2 border-2 border-black flex justify-between items-center gap-2">
       <form class="flex justify-between items-center" @submit.prevent="createCategory(3)">
         <div class="flex gap-2 items-center">
-          <label for="inputCategory">Aggiungi categoria</label>
+          <label for="inputCategory">Aggiungi categoria food</label>
           <input v-model="newCategory.name" type="text" placeholder="Nome categoria" id="inputCategory">
         </div>
         
@@ -31,22 +32,57 @@ const props = defineProps({
           <button type="reset">Annulla</button>
         </div>
       </form>
+
+      <form class="flex justify-between items-center" @submit.prevent="createCategoryDrink(3)">
+        <div class="flex gap-2 items-center">
+          <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
+          <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
+          <!-- newCategoryDrink.name -->
+        </div>
+        
+        <div class="flex gap-2 items-center">
+          <button type="submit">Salva</button>
+          <span> | </span>
+          <button type="reset">Annulla</button>
+        </div>
+      </form>
     </div>
     
   </section>
 
-  <Category
-    :category_enoteca="category_enoteca"
-    :selectedVenueColor="selectedVenueColor"
-    :deleteCategory="deleteCategory"
-    :editCategory="editCategory"
-    :updateIsShowStatus="updateIsShowStatus"
-    :dish_enoteca_category="dish_enoteca_category"
-    :addDishes="addDishes"
-    :showAddDishesModal="showAddDishesModal"
-    :componentKey="componentKey"
-    @dishAdded="$emit('dishAdded')"
-  />
+  <section class="flex flex-col justify-between">
+    <h2 class="text-2xl font-bold text-center uppercase m-5">food</h2>
+    <Category
+      :category_enoteca="category_enoteca"
+      :selectedVenueColor="selectedVenueColor"
+      :deleteCategory="deleteCategory"
+      :editCategory="editCategory"
+      :updateIsShowStatus="updateIsShowStatus"
+      :dish_enoteca_category="dish_enoteca_category"
+      :addDishes="addDishes"
+      :showAddDishesModal="showAddDishesModal"
+      :componentKey="componentKey"
+      @dishAdded="$emit('dishAdded')"
+    />
+  
+    <h2 class="text-2xl font-bold text-center uppercase m-5">beverage</h2>
+    <CategoryDrink
+      :category_enoteca="category_enoteca"
+      :selectedVenueColor="selectedVenueColor"
+      :deleteCategory="deleteCategory"
+      :editCategory="editCategory"
+      :updateIsShowStatus="updateIsShowStatus"
+      :dish_enoteca_category="dish_enoteca_category"
+      :addDishes="addDishes"
+      :showAddDishesModal="showAddDishesModal"
+      :componentKey="componentKey"
+      @dishAdded="$emit('dishAdded')"
+    />
+  </section>
+
+
+
+
 
 </div>
 
@@ -64,6 +100,7 @@ export default {
     components: {
         Modal,
         Category,
+        CategoryDrink,
     },
     props: {
         category_enoteca: Array,
@@ -73,6 +110,9 @@ export default {
       return {
         componentKey: 0,
         newCategory: {
+          name: '',
+        },
+        newCategoryDrink: {
           name: '',
         },
         venues: [],
@@ -86,7 +126,7 @@ export default {
     methods: {
         createCategory(venue_ids) {
           const venue_id = [venue_ids];
-          const newCategory = { name: this.newCategory.name};
+          const newCategory = { name: this.newCategory.name, is_drink: false};
 
           axios.post('/api/categories', newCategory)
           .then(response => {
@@ -108,66 +148,30 @@ export default {
               console.log(error);
           });
         },
-        deleteCategory(id) {
-            this.categoryToDelete = id;
-            this.showDeleteModal = true;
-        },
-        confirmDelete() {
-            axios.delete(`/api/dishes/${this.categoryToDelete}`)
-                .then(response => {
-                console.log('Deleted corresponding dishes');
-            
-                axios.delete(`/api/categories/${this.categoryToDelete}`)
-                .then(response => {
-                const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToDelete);
-                if (index !== -1) {
-                    this.localCategory_enoteca.splice(index, 1);
-                }
-                console.log('RESPONSE delete');
-                console.log(this.localCategory_enoteca);
-                this.$emit('update:category_enoteca', this.localCategory_enoteca);
-                })
-                .catch(error => {
-                console.log(error);
-                });
-            })
-            .catch(error => {
-                console.log(error);
-            });
-            
-            this.showDeleteModal = false;
-        },
-        editCategory(id) {
-            this.categoryToEdit = id;
-            this.categoryNameToEdit = this.localCategory_enoteca.find(category => category.id === id).name;
-            this.showEditModal = true;
-        },
-        confirmEdit(value) {
-            axios.put(`/api/categories/${this.categoryToEdit}`, { name: value })
-            .then(response => {
-                const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToEdit)
-                if (index !== -1) {
-                    this.localCategory_enoteca[index].name = value;
-                } 
-                console.log('INDEX');
-                console.log(index);
-                this.category = response.data;
-                })
-            .catch(error => {
-                console.log(error);
-                });
+        createCategoryDrink(venue_ids) {
+          const venue_id = [venue_ids];
+          const newCategoryDrink = { name: this.newCategoryDrink.name, is_drink: true};
 
-                this.showEditModal = false;
-        },
-        updateIsShowStatus(categoryId, value) {
-          axios.put(`/api/categories/${categoryId}`, { is_active: value })
+          axios.post('/api/categories', newCategoryDrink)
           .then(response => {
+
               this.category = response.data;
-            })
+              this.localCategory_enoteca.push(response.data);
+              
+              axios.post(`/api/categories/${response.data.id}/venues`, {category_id: response.data.id, venue_id})
+              .then(response => {
+                  venue_id.push(response.data);
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+
+              this.newCategory.name = '';
+          })
           .catch(error => {
               console.log(error);
-            });
-        }
+          });
+        },
     },
     watch: {
         category_enoteca(newVal) {

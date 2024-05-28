@@ -14,9 +14,17 @@
     overflow: hidden;
     transition: all 0.35s;
   }
+
+  .tab.drink .tab__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s;
+  }
+
   .tab input:checked ~ .tab__content {
     max-height: 2800px;
   }
+
 
   .tab .container-dishes {
     display: grid;

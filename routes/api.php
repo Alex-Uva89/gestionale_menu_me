@@ -22,8 +22,6 @@ Route::get('/dishes/{id}', [DishController::class, 'show']);
 Route::put('/', [HomeController::class, 'update'])->name('update');
 Route::put('/messages/{id}', [MessageController::class, 'update']);
 Route::put('/categories/{id}', [CategoryController::class, 'update']);
-Route::put('/categories/{id}', [CategoryController::class, 'updateIsShowStatus']);
-
 
 // POST
 Route::post('/', [HomeController::class, 'store'])->name('store');

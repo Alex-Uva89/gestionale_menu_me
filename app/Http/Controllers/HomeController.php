@@ -42,8 +42,6 @@ class HomeController extends Controller
         })->get();
 
 
-        // dd($category_enoteca->toArray());
-
         $dish_laCucina_category = Dish::all()->where('venue_id', 1);
         $dish_scante_category = Dish::all()->where('venue_id', 2);
         $dish_enoteca_category = Dish::all()->where('venue_id', 3);
@@ -60,8 +58,7 @@ class HomeController extends Controller
              'category_enoteca' => $category_enoteca,
              'dish_laCucina_category' => $dish_laCucina_category,
              'dish_scante_category' => $dish_scante_category,
-             'dish_enoteca_category' => $dish_enoteca_category,
-            // Aggiungi altri dati qui
+             'dish_enoteca_category' => $dish_enoteca_category
          ];
 
         // return data
@@ -75,20 +72,22 @@ class HomeController extends Controller
             'title' => ['required', 'max:255'],
             'body' => ['required'],
         ]));
-    
+
         Venue::create(request()->validate([
             'name' => ['required', 'max:255'],
             'color' => ['nullable', 'max:255'],
         ]));
-    
+
         $validatedData = $request->validate([
             'name' => ['required', 'max:255'],
+            'is_drink' => ['required', 'boolean'], 
         ]);
-    
+
         $category = new Category;
         $category->name = $validatedData['name'];
+        $category->is_drink = $validatedData['is_drink'];
         $category->save();
-    
+
         foreach ($validatedData['venue_ids'] as $venueId) {
             $category->venues()->attach($venueId);
         }
@@ -98,32 +97,31 @@ class HomeController extends Controller
             'category_id' => ['required', 'max:255'],
         ]));
 
-        
-
         // retdirect to home
         return redirect()->route('home');
     }
 
     public function destroy($id)
-{
-    $category = Category::find($id);
+        {
+            $category = Category::find($id);
 
-    if ($category) {
-        $category->delete();
-        return response()->json(['message' => 'Category deleted successfully']);
-    } else {
-        return response()->json(['message' => 'Category not found'], 404);
-    }
-}
+            if ($category) {
+                $category->delete();
+                return response()->json(['message' => 'Category deleted successfully']);
+            } else {
+                return response()->json(['message' => 'Category not found'], 404);
+            }
+        }
 
     public function attachVenues(Request $request, $id)
                 {
+                    
                     $validatedData = $request->validate([
                         'venue_id' => ['required', 'array']
                     ]);
-
+                    
                     $category = Category::find($id);
-
+                    
                     if ($category) {
                         foreach ($validatedData['venue_id'] as $venueId) {
                             $category->venues()->attach($venueId);

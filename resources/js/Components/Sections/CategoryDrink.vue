@@ -1,65 +1,52 @@
 <template>
     <section class="accordion overflow-x-hidden mx-4" >
-      <h2 class="p-3"  v-if="!category_enoteca.some(category => !category.is_drink)">
-  ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria food
-      </h2>
-      
+    <h2 class="p-3"  v-if="!category_enoteca.some(category => category.is_drink)">
+  ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria beverage
+    </h2>
      <div 
      v-for="category in category_enoteca" 
      :key="category.id">
-     <div 
-     class="tab border border-black category  bg-white" 
-     v-if="!category.is_drink">
-      <div class="flex max-h-14 bg-white justify-evenly items-center gap-3 p-2">
-          <button @click="deleteCategory(category.id)">❌</button>
-          <button @click="editCategory(category.id)">Edit</button>
-          <Switch_button :value="category.is_active === 1" @switchChanged="value => updateIsShowStatus(category.id, value)" />
-      </div>
-      <div
-      :class="{
-        'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
-        'bg-olive': selectedVenueColor === 'green',
-        'bg-stone-500': selectedVenueColor === 'gray',
-        'bg-enoteca': selectedVenueColor === 'red',
-        'text-orange-500': selectedVenueColor === 'gray',
-      }" :key="componentKeyli" >
-          <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
-          <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
-          <div class="tab__content bg-white" >
-              <ul class="max-w-full" >
-                <li v-for="dish in category.dishes"
-                class="container-dishes flex items-center p-2 border-b-2 border-black" 
-                >
-                      <div class="flex items-center">
-                        <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
-                      </div>
-                      <div class="flex flex-col name">
-                        <span>Nome piatto: </span><span>{{ dish.name }}</span>
-                      </div>
-                      <div class="flex flex-col price">
-                        <span>Prezzo: </span><span>{{ dish.price }} €</span>
-                      </div>
-                      <div  class="flex flex-col description">
-                        <div>Descrizione: </div><div> {{ dish.description }}</div>
-                      </div>
-                      <div class="flex flex-col gap-2 buttons">
-                        <button class="border p-1">edit</button>
-                        <button class="border p-1">delete</button>
-                      </div>
-                </li>
-              </ul>
-         
- 
-            <div type="button" @click="addDishes(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
-              <div class="font-bold text-lg">&#10133</div>
-              <span>Aggiungi piatto</span>
-              
+     <div v-if="category.is_drink" class="tab drink border border-black category  bg-white" >
+        <div class="flex max-h-14 bg-white justify-evenly items-center gap-3 p-2">
+            <button @click="deleteCategory(category.id)">❌</button>
+            <button @click="editCategory(category.id)">Edit</button>
+            <Switch_button :value="category.is_active === 1" @switchChanged="value => updateIsShowStatus(category.id, value)" />
+        </div>
+       <div class="bg-yellow-500" :key="componentKeyli" >
+            <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
+            <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
+            <div class="tab__content bg-white" >
+                <ul class="max-w-full" >
+                  <li v-for="dish in category.dishes"
+                  class="container-dishes flex items-center p-2 border-b-2 border-black" >
+                        <div class="flex items-center">
+                          <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
+                        </div>
+                        <div class="flex flex-col name">
+                          <span>Nome piatto: </span><span>{{ dish.name }}</span>
+                        </div>
+                        <div class="flex flex-col price">
+                          <span>Prezzo: </span><span>{{ dish.price }} €</span>
+                        </div>
+                        <div  class="flex flex-col description">
+                          <div>Descrizione: </div><div> {{ dish.description }}</div>
+                        </div>
+                        <div class="flex flex-col gap-2 buttons">
+                          <button class="border p-1">edit</button>
+                          <button class="border p-1">delete</button>
+                        </div>
+                  </li>
+                </ul>
+           
+
+              <div type="button" @click="addDishes(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
+                <div class="font-bold text-lg">&#10133</div>
+                <span>Aggiungi bevanda</span>
+              </div>
+
             </div>
- 
-          </div>
-      </div>
-     </div>
-     
+        </div>
+    </div>
      </div>
    
   
@@ -141,14 +128,14 @@ export default {
   components: {
     Switch_button,
   },
-  name: 'Category',
+  name: 'CategoryDrink',
   props: {
     category_enoteca: Array,
     selectedVenueColor: String,
     dish_enoteca_category: Array,
     is_drink: {
-      type: Boolean,
-      required: true
+        type: Boolean,
+        required: true
     }
   },
   data() {
@@ -199,7 +186,6 @@ export default {
             this.showEditModal = true;  
             this.categoryToEdit = id;
             this.categoryNameToEdit = this.localCategory_enoteca.find(category => category.id === id).name;
-
         },
         confirmEdit(value) {
             axios.put(`/api/categories/${this.categoryToEdit}`, { name: value })
@@ -281,15 +267,6 @@ export default {
     category_enoteca(newVal) {
       this.localCategory_enoteca = newVal;
     },
-  },
-  created() {
-      this.localDishEnotecaCategory = this.category_enoteca.map(category => {
-          let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
-          return {
-              ...category,
-              dishes: dishes
-          };
-      });
   },
 };
 </script>

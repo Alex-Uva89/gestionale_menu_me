@@ -28,6 +28,6 @@ class Category extends Model
 
     public function drinks() 
     {
-        return $this->hasMany(Drink::class);
+        return $this->belongsToMany(Drink::class)->withPivot('category_id','drink_id');
     }
 }
