@@ -64,7 +64,9 @@
                                         ❌
                                     </ButtonCss>
         
-                                    <SwitchButton></SwitchButton>
+                                    <SwitchButton 
+                                    :value="allergen.is_active === 1" 
+                                    @switchChanged="value => updateIsShowStatus(allergen.id, value)" />
                                 </div>
                             </td>
                         </tr>
@@ -190,6 +192,9 @@
 
 import ButtonCss from '@/Components/ButtonCss.vue';
 import SwitchButton from '@/Components/Switch_button.vue';
+import axios from 'axios';
+
+var consoleStyling = 'background: green; color: yellow; font-weight: bold;';
 
 export default {
     components: {
@@ -310,53 +315,46 @@ export default {
             this.isOpenModalEdit = true;
         },
         confirmEditAllergen(value, valueIcon) {
+            let formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('name', value);
+            formData.append('icon', valueIcon);
 
-        
-            if (value  || valueIcon) {
-                if (value === '' || value === null || value === undefined) {
-                    value = this.allergens.find(allergen => allergen.id === this.allergenId).name;
-                }
-        
-                if (valueIcon === '' || valueIcon === null || valueIcon === undefined) {
-                    valueIcon = this.allergens.find(allergen => allergen.id === this.allergenId).icon;
-                }
-        
-                const formData = new FormData();
-                formData.append('name', value);
-                if (valueIcon instanceof File) {
-                    formData.append('icon', valueIcon);
-                }
+            axios.post(`/api/allergens/${this.allergenId}`, formData)
+            .then(response => {
+                const data = response.data.split('\n').pop();
+                const editedAllergen = JSON.parse(data);
 
-        
-                axios.put('/api/allergens/' + this.allergenId, formData , {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(response => {
-                    
-        
-                    const index = this.allergens.findIndex(allergen => allergen.id === this.allergenId);
-        
-                    if (index !== -1) {
-                        const updatedAllergen = {...this.allergens[index]};
-                        if (value) {
-                            updatedAllergen.name = value;
-                        } 
-        
-                        if (valueIcon) {
-                            updatedAllergen.icon = valueIcon;
-                        }
-                        this.allergens.splice(index, 1, updatedAllergen);
-                    }
-                })
-                .catch(error => {
-                    console.log('ERROR');
-                    console.log(error);
-                });
-            }
-        
+                const index = this.allergens.findIndex(allergen => allergen.id === this.allergenId)
+                if (index !== -1) {
+                    const checkFile = () => {
+                        axios.get('/storage/' + editedAllergen.icon)
+                        .then(response => {
+                            this.allergens[index] = editedAllergen; 
+                            this.componenetAllergen++;
+                        })
+                        .catch(error => {
+                            setTimeout(checkFile, 1000);
+                        });
+                    };
+
+                    checkFile();
+                } 
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
             this.isOpenModalEdit = false;
+        },
+        updateIsShowStatus(valueAllergenId, value) {
+          axios.put(`/api/allergens/${valueAllergenId}`, { is_active: value })
+          .then(response => {
+              this.allergen = response.data;
+            })
+          .catch(error => {
+              console.log(error);
+            });
         },
     },
     watch: {

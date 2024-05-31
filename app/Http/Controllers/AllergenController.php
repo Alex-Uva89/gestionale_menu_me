@@ -7,12 +7,14 @@ use App\Models\Allergen;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
- 
+use Illuminate\Support\Facades\Storage;
 
 
 class AllergenController extends Controller
 {
 
+
+    
     public function index(): Response
         {
             $allergens = Allergen::all();
@@ -41,36 +43,40 @@ class AllergenController extends Controller
             return response()->json($allergen, 201);
         }
 
-        
+
+
+    
         public function update(Request $request, $id)
         {
-            
+            $allergen = Allergen::findOrFail($id);
 
-            $allergen = Allergen::find($id);
-
-            $validatedData = $request->validate([
-                'name' => 'sometimes',
+            $request->validate([
+                'name' => 'sometimes|string|max:255',
                 'icon' => 'sometimes|image|mimes:png,svg|max:2048',
+                'is_active' => 'sometimes|boolean',
             ]);
 
-            error_log(print_r($request->has('icon'), true));
-
-            if ($request->has('icon') ) {
-                $icon = $request->file('icon');
-                $iconName = time() . '.' . $icon->getClientOriginalExtension();
-                $iconPath = $icon->storeAs('icons', $iconName, 'public');
-                $validatedData['icon'] = $iconPath;
-            }
-
+            
             if ($request->has('name')) {
-                $validatedData['name'] = $request->name;
+                $allergen->name = $request->name;                
             }
 
-            $allergen->fill($validatedData);
+            if ($request->hasFile('icon')) {
+                Storage::disk('public')->delete($allergen->icon);
+                $iconPath = $request->file('icon')->store('allergens', 'public');
+                $allergen->icon = $iconPath;
+            }
+
+            if ($request->has('is_active')) {
+                $allergen->is_active = $request->is_active;
+            }
+
             $allergen->save();
 
             return response()->json($allergen, 200);
         }
+        
+    
 
 
     

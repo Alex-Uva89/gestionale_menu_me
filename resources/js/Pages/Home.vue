@@ -74,6 +74,7 @@ function updateCurrentPageComponent(value) {
             @dishAdded="componentKey += 1"
             :key="componentKey"
             :allergens="allergens"
+            :updateIsShowStatus="updateIsShowStatus"
             />     
         </div>
 

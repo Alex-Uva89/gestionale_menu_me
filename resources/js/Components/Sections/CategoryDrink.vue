@@ -23,7 +23,7 @@
                           <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
                         </div>
                         <div class="flex flex-col name">
-                          <span>Nome piatto: </span><span>{{ dish.name }}</span>
+                          <span>Nome drink: </span><span>{{ dish.name }}</span>
                         </div>
                         <div class="flex flex-col price">
                           <span>Prezzo: </span><span>{{ dish.price }} €</span>
@@ -59,11 +59,11 @@
             Aggiungi nuovo piatto
         </h2>
         <div class="flex flex-col gap-4 flex-wrap">
-          <label for="name">Nome piatto</label>
+          <label for="name">Nome drink</label>
           <input type="text" 
           class="border-2 hover:border-black focus:border-black rounded" 
           v-model="dish_enoteca_category.name" 
-          :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome piatto'"
+          :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome drink'"
           >
           <!-- devo aggiungere anche descpription price, image -->
           <label for="description">Descrizione</label>

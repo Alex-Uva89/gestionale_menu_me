@@ -27,25 +27,35 @@
           <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
           <div class="tab__content bg-white" >
               <ul class="max-w-full" >
-                <li v-for="dish in category.dishes"
-                class="container-dishes flex items-center p-2 border-b-2 border-black" 
+                <li v-for="dish in category.dishes" 
+                class="border-b-2 border-black p-2"
                 >
-                      <div class="flex items-center">
-                        <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
-                      </div>
-                      <div class="flex flex-col name">
-                        <span>Nome piatto: </span><span>{{ dish.name }}</span>
-                      </div>
-                      <div class="flex flex-col price">
-                        <span>Prezzo: </span><span>{{ dish.price }} €</span>
-                      </div>
-                      <div  class="flex flex-col description">
-                        <div>Descrizione: </div><div> {{ dish.description }}</div>
-                      </div>
-                      <div class="flex flex-col gap-2 buttons">
-                        <button class="border p-1">edit</button>
-                        <button class="border p-1">delete</button>
-                      </div>
+                  <div class="container-dishes flex items-center">
+                    <div class="flex items-center">
+                      <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
+                    </div>
+                    <div class="flex flex-col name">
+                      <span>Nome piatto: </span><span>{{ dish.name }}</span>
+                    </div>
+                    <div class="flex flex-col price">
+                      <span>Prezzo: </span><span>{{ dish.price }} €</span>
+                    </div>
+                    <div  class="flex flex-col description">
+                      <div>Descrizione: </div><div> {{ dish.description }}</div>
+                    </div>
+                    <div class="flex flex-col gap-2 buttons">
+                      <button class="border p-1">edit</button>
+                      <button class="border p-1">delete</button>
+                    </div>
+                  </div>
+                  <div class="flex items-center ps-6 py-3">
+                    Allergeni:
+                    <ul class="flex gap-2">
+                      <li v-for="allergen in allergensArray" class="border border-black rounded-full p-2 ms-2">
+                        {{ allergen.icon }}
+                      </li>      
+                    </ul>
+                  </div>
                 </li>
               </ul>
          
@@ -136,6 +146,7 @@
 <script>
 import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
+import Allergens from '@/Pages/Allergens.vue';
 
 export default {
   components: {
@@ -146,6 +157,7 @@ export default {
     category_enoteca: Array,
     selectedVenueColor: String,
     dish_enoteca_category: Array,
+    allergensArray: Array,
     is_drink: {
       type: Boolean,
       required: true
