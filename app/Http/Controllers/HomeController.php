@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\Category;
 use App\Models\Venue;
 use App\Models\Dish;
+use App\Models\Allergen;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -46,6 +47,7 @@ class HomeController extends Controller
         $dish_scante_category = Dish::all()->where('venue_id', 2);
         $dish_enoteca_category = Dish::all()->where('venue_id', 3);
 
+        $allergens = Allergen::all();
         
         // smash data
          $data = [
@@ -58,7 +60,8 @@ class HomeController extends Controller
              'category_enoteca' => $category_enoteca,
              'dish_laCucina_category' => $dish_laCucina_category,
              'dish_scante_category' => $dish_scante_category,
-             'dish_enoteca_category' => $dish_enoteca_category
+             'dish_enoteca_category' => $dish_enoteca_category,
+             'allergens' => $allergens,
          ];
 
         // return data

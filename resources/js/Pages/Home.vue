@@ -73,24 +73,26 @@ function updateCurrentPageComponent(value) {
             :messages="messages"
             @dishAdded="componentKey += 1"
             :key="componentKey"
+            :allergens="allergens"
             />     
         </div>
 
       </div>
       <div @click="toggleModalInstruction()" class="z-50 modal-instruction absolute w-screen h-screen top-0 right-0 bg-opacity-50 bg-black" :class="{ visible: openModalInstruction }">
-        <div class="focus-modal" :class="{ visible: openModalInstruction }">
+        <div class="focus-modal cursor-pointer" :class="{ visible: openModalInstruction }">
         </div>
-        <div class="focus-instruction" :class="{ visible: openModalInstruction }">
+        <div class="focus-instruction flex flex-col gap-5" :class="{ visible: openModalInstruction }">
+         <span class="text-6xl cursor-pointer">
+           clicca qui per iniziare
+         </span>
          <span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-arrow-return-left text-2xl" viewBox="0 0 26 26">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-arrow-return-left text-2xl cursor-pointer" viewBox="0 0 26 26">
             <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"/>
           </svg>
          </span>
-         <span class="text-6xl">
-           clicca qui per iniziare
-         </span>
         </div>
       </div>
+      
     </div>
 </template>
 
@@ -134,10 +136,12 @@ function updateCurrentPageComponent(value) {
     box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
     visibility: hidden;
     opacity: 0;
-    transition: visibility .5s, opacity .5s linear;
+    transform: scale(10);
+    transition: visibility .5s, opacity .5s, transform .5s linear;
 }
 
 .focus-modal.visible {
+    transform: scale(1);
     visibility: visible;
     opacity: 1;
 }
@@ -166,6 +170,7 @@ export default {
     category_scante: Array,
     category_enoteca: Array,
     dish_enoteca_category: Array,
+    allergens: Array,
   },
   data() {
     return {

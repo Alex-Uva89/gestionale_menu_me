@@ -173,7 +173,6 @@ export default {
         confirmDelete() {
             axios.delete(`/api/dishes/${this.categoryToDelete}`)
                 .then(response => {
-                console.log('Deleted corresponding dishes');
             
                 axios.delete(`/api/categories/${this.categoryToDelete}`)
                 .then(response => {
@@ -181,8 +180,6 @@ export default {
                 if (index !== -1) {
                     this.localCategory_enoteca.splice(index, 1);
                 }
-                console.log('RESPONSE delete');
-                console.log(this.localCategory_enoteca);
                 this.$emit('update:category_enoteca', this.localCategory_enoteca);
                 })
                 .catch(error => {

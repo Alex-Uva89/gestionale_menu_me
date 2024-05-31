@@ -11,7 +11,7 @@ class Allergen extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'icon'];
+    protected $fillable = ['name', 'icon', 'is_active'];
 
     public function dishes()
     {
