@@ -369,6 +369,9 @@ export default {
               console.log(error);
             });
         },
+        setCustomValidity(text) {
+            this.$refs.form.name.setCustomValidity(text);
+        },
     },
     watch: {
         allergens() {
