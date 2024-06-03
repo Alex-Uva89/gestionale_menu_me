@@ -16,7 +16,7 @@
                 </li>
 
                 <li>
-                    <ButtonCss tooltipText="Usa questo tasto per aggiungere un allergene" hoverColor="#444F1F">
+                    <ButtonCss @click="UnderCostruction()" tooltipText="Usa questo tasto per aggiungere un allergene" hoverColor="#444F1F">
                         <div>
                             Mostra Lista
                         </div>
@@ -80,7 +80,7 @@
     <!-- MODALS -->
     <section class="section-create-allergen"  v-if="isOpenModalAllergen">
         <div class="modal-confirm relative">
-            <ButtonCss tooltipText="chiudi" hoverColor="red" class="w-full absolute right-2 top-4" @click="openModalAddAllergen()">
+            <ButtonCss tooltipText="chiudi" hoverColor="#F08080" class="w-full absolute right-2 top-4" @click="openModalAddAllergen()">
                         <div>
                             ❌
                         </div>
@@ -142,7 +142,7 @@
 
     <section class="section-edit-allergen" v-if="isOpenModalEdit">
         <div class="modal-confirm relative">
-            <ButtonCss tooltipText="chiudi" hoverColor="red" class="w-full absolute right-2 top-4" @click="isOpenModalEdit = false">
+            <ButtonCss tooltipText="chiudi" hoverColor="#F08080" class="w-full absolute right-2 top-4" @click="isOpenModalEdit = false">
                         <div>
                             ❌
                         </div>
@@ -177,6 +177,13 @@
         </div>
     </section>
 
+    <ModalAction @click="UnderCostruction()" :showModal="showModalUnderCostruction"> 
+        <div class="modal">
+            <h2 class="text-2xl text-center m-4">Lista Allergeni</h2>
+            <p class="text-center">Questa funzionalità sarà disponibile a breve</p>
+        </div>
+    </ModalAction>
+
     <!-- BUTTON SCROLL -->
 
     <div class="fixed bottom-5 right-5 p-4 "  v-show="isScrollable">
@@ -192,6 +199,7 @@
 
 import ButtonCss from '@/Components/ButtonCss.vue';
 import SwitchButton from '@/Components/Switch_button.vue';
+import ModalAction from '@/Components/ModalAction.vue';
 import axios from 'axios';
 
 var consoleStyling = 'background: green; color: yellow; font-weight: bold;';
@@ -199,7 +207,8 @@ var consoleStyling = 'background: green; color: yellow; font-weight: bold;';
 export default {
     components: {
         ButtonCss,
-        SwitchButton
+        SwitchButton,
+        ModalAction
     },
     props: {
         allergens: {
@@ -219,10 +228,14 @@ export default {
             },
             componenetAllergen: 0,
             isScrollable: false,
-            allergenId: null
+            allergenId: null,
+            showModalUnderCostruction: false
         }
     },
     methods: {
+        UnderCostruction() {
+            this.showModalUnderCostruction = !this.showModalUnderCostruction;
+        },
         openModalAddAllergen() {
             this.isOpenModalAllergen = !this.isOpenModalAllergen;
         },

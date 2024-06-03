@@ -1,6 +1,6 @@
 
 <template>
-    <footer class="fixed bottom-0 left-5 py-5 text-sm text-black dark:text-white/70">
+    <footer class="h-28 fixed bottom-0 left-5 py-5 text-sm text-black dark:text-white/70">
         <div>
             &copy; {{ new Date().getFullYear() }} MammaElvira
         </div>

@@ -11,6 +11,7 @@ import Preview from '@/Pages/Preview.vue';
 import Allergens from '@/Pages/Allergens.vue';
 import Dashboard from '@/Pages/Dashboard.vue';
 import Welcome from '@/Pages/Welcome.vue';
+import Receips from '@/Pages/Receips.vue';
 
 const selectedVenueName = ref('Benvenuto');
 const selectedVenueColor = ref('blue');
@@ -40,7 +41,7 @@ function updateNewMessage(value) {
 }
 
 function updateCurrentPageComponent(value) {
-    return currentPageComponent = value === "'Scante" ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : value === 'Allergeni' ? Allergens : value === 'Dashboard' ? Dashboard : '';
+    return currentPageComponent = value === "'Scante" ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : value === 'Allergeni' ? Allergens : value === 'Dashboard' ? Dashboard : value === 'Ricette' ? Receips : value === 'Home' ? Welcome : '';
 }
    
 </script>
@@ -74,7 +75,10 @@ function updateCurrentPageComponent(value) {
             @dishAdded="componentKey += 1"
             :key="componentKey"
             :allergens="allergens"
+            :receips="receips"
             :updateIsShowStatus="updateIsShowStatus"
+            @changePage="updateCurrentPageComponent"
+            @changeHeader="updateSelectedValueButton"
             />     
         </div>
 
@@ -93,6 +97,8 @@ function updateCurrentPageComponent(value) {
          </span>
         </div>
       </div>
+
+      
       
     </div>
 </template>
@@ -172,6 +178,7 @@ export default {
     category_enoteca: Array,
     dish_enoteca_category: Array,
     allergens: Array,
+    receips: Array,
   },
   data() {
     return {

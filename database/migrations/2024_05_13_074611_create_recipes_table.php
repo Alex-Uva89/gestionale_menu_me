@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('process');
+            $table->string('process', 1500);
 
             $table->boolean('is_active')->default(false);
             $table->timestamps();

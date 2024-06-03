@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Venue;
 use App\Models\Dish;
 use App\Models\Allergen;
+use App\Models\Recipe;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -19,7 +20,7 @@ class HomeController extends Controller
         $messages = Message::all(); 
         $categories = Category::all();
         $venues = Venue::all();
-
+        $receips = Recipe::all();
         
 
         // specific record
@@ -55,6 +56,7 @@ class HomeController extends Controller
              'categories' => $categories,
              'venues' => $venues,
              'laCucina' => $laCucina,
+             'receips' => $receips,
              'category_laCucina' => $category_laCucina->toArray(),
              'category_scante' => $category_scante->toArray(),
              'category_enoteca' => $category_enoteca,
