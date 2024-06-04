@@ -65,7 +65,7 @@
                                     </ButtonCss>
         
                                     <SwitchButton 
-                                    :value="allergen.is_active === 1" 
+                                    :value="allergen.is_active" 
                                     @switchChanged="value => updateIsShowStatus(allergen.id, value)" />
                                 </div>
                             </td>
@@ -363,7 +363,10 @@ export default {
         updateIsShowStatus(valueAllergenId, value) {
           axios.put(`/api/allergens/${valueAllergenId}`, { is_active: value })
           .then(response => {
-              this.allergen = response.data;
+                const index = this.allergens.findIndex(allergen => allergen.id === valueAllergenId);
+                if (index !== -1) {
+                    this.allergens[index].is_active = value;
+                }
             })
           .catch(error => {
               console.log(error);
@@ -386,6 +389,7 @@ export default {
     },
     mounted() {
         this.isListScrollable();
+        this.allergen = [...this.allergens];
     }
 };
 

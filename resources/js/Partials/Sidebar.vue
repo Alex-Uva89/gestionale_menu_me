@@ -17,8 +17,8 @@ defineProps({
    </svg>
 </button>
 
-<aside id="sidebar-multi-level-sidebar" class="top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 border-e-2 border-black" aria-label="Sidebar">
-   <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+<aside id="sidebar-multi-level-sidebar" class="flex flex-col top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 border-e-2 border-black" aria-label="Sidebar">
+   <div class="header-sidebar px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800">
       <ApplicationLogo />
       <ul class="max-h-96 overflow-y-scroll scrolling space-y-2 font-medium">
          <li>
@@ -111,6 +111,11 @@ a:hover {
    scrollbar-color: #003af7 #cccccc00;
 }
 
+.header-sidebar {
+   height: 100%;
+   overflow: scroll;
+   scrollbar-width: none;
+}
 
 
 </style>

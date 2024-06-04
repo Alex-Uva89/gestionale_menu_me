@@ -1,3 +1,17 @@
+<script setup>
+
+const props = defineProps({
+    selectedVenueName: String,
+    selectedVenueColor: String,
+    category_enoteca: Array,
+    dish_enoteca_category: Array,
+    allergens: Array,
+    allergensDishes: Array,
+});
+
+
+</script>
+
 <template>
     <section class="accordion overflow-x-hidden mx-4" >
       <h2 class="p-3"  v-if="!category_enoteca.some(category => !category.is_drink)">
@@ -51,10 +65,17 @@
                   <div class="flex items-center ps-6 py-3">
                     Allergeni:
                     <ul class="flex gap-2">
-                      <li v-for="allergen in allergensArray" class="border border-black rounded-full p-2 ms-2">
-                        {{ allergen.icon }}
-                      </li>      
-                    </ul>
+                      <li 
+                        v-for="allergen in allergens" 
+                        class="border border-black rounded-full p-2 ms-2 cursor-pointer hover:bg-gray-300"
+                        @click="matchDish(dish.id, allergen.id)" 
+                        :id="`${dish.id}-${allergen.id}`"
+                        :class="{'bg-green-500': allergensDishes.some(allergenDish => allergenDish.id === allergen.id && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dish.id))}">
+                        <button>
+                          {{ allergen.name }}
+                        </button>
+                      </li>    
+                  </ul>
                   </div>
                 </li>
               </ul>
@@ -71,8 +92,6 @@
      </div>
      
      </div>
-   
-  
   </section>
 
 
@@ -146,7 +165,7 @@
 <script>
 import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
-import Allergens from '@/Pages/Allergens.vue';
+
 
 export default {
   components: {
@@ -157,7 +176,8 @@ export default {
     category_enoteca: Array,
     selectedVenueColor: String,
     dish_enoteca_category: Array,
-    allergensArray: Array,
+    allergens: Array,
+    allergensDishes: Array,
     is_drink: {
       type: Boolean,
       required: true
@@ -175,6 +195,8 @@ export default {
       dishToCreateId: null,
       localCategory_enoteca: this.category_enoteca,
       localDishEnotecaCategory: [],
+      allergensDishes: this.allergensDishes,
+      isMatch: false,
     };
   },
   methods: {
@@ -285,21 +307,47 @@ export default {
           });
           this.showAddDishesModal = false;
         },
-  },
-  watch: {
-    category_enoteca(newVal) {
-      this.localCategory_enoteca = newVal;
-    },
-  },
-  created() {
-      this.localDishEnotecaCategory = this.category_enoteca.map(category => {
-          let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
-          return {
-              ...category,
-              dishes: dishes
-          };
-      });
-  },
+        matchDish(dishId, allergenId) {
+          const allergenSpecific = document.getElementById(`${dishId}-${allergenId}`);
+          const isMatched = this.allergensDishes.some(allergenDish => allergenDish.id === allergenId && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dishId));
+        
+          if (isMatched) {
+            axios.delete(`/api/allergens/${allergenId}/dishes/${dishId}`)
+            .then(() => {
+              allergenSpecific.classList.remove('bg-green-500');
+              const index = this.allergensDishes.findIndex(allergenDish => allergenDish.id === allergenId);
+              const dishIndex = this.allergensDishes[index].dishes.findIndex(dishAbb => dishAbb.pivot.dish_id === dishId);
+              this.allergensDishes[index].dishes.splice(dishIndex, 1);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          } else {
+            axios.post(`/api/allergens/${allergenId}/dishes`, {
+              dish_id: dishId
+            })
+            .then(() => {
+              allergenSpecific.classList.add('bg-green-500');
+              const index = this.allergensDishes.findIndex(allergenDish => allergenDish.id === allergenId);
+              this.allergensDishes[index].dishes.push({pivot: {dish_id: dishId}});
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          }
+        },
+        created() {
+            this.localDishEnotecaCategory = this.category_enoteca.map(category => {
+                let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
+                return {
+                    ...category,
+                    dishes: dishes
+                };
+            });
+
+            this.allergenDishes = this.allergensDishes;
+        },
+      },
 };
 </script>
 

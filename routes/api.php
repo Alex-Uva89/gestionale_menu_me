@@ -17,8 +17,8 @@ Route::get('/user', function (Request $request) {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/dishes/{id}', [DishController::class, 'show']);
-
-
+Route::get('/allergens/{id}/dishes', [AllergenController::class, 'index']);
+Route::get('/dishes/{dish}/allergens', [DishController::class, 'getAllergens']);
 
 // PUT
 Route::put('/', [HomeController::class, 'update'])->name('update');
@@ -34,6 +34,7 @@ Route::post('/categories/{id}/venues', [HomeController::class, 'attachVenues']);
 Route::post('/dishes/{id}', [DishController::class, 'store']);
 Route::post('/allergens', [AllergenController::class, 'store']);
 Route::post('/recipes', [RecipeController::class, 'store']);
+Route::post('/allergens/{id}/dishes', [AllergenController::class, 'attachDishes']);
 
 // DELETE
 Route::delete('/', [HomeController::class, 'destroy'])->name('destroy');
@@ -42,6 +43,6 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 Route::delete('/dishes/{categoryId}', [DishController::class, 'destroyByCategory']);
 Route::delete('/allergens/{id}', [AllergenController::class, 'destroy']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
-
+Route::delete('/allergens/{allergenId}/dishes/{dishId}', [AllergenController::class,'detachDish']);
 
 require __DIR__.'/auth.php';

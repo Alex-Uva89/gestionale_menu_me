@@ -62,6 +62,8 @@ function updateCurrentPageComponent(value) {
           />
           <component 
             v-else
+            :allergens="allergens"
+            :allergensDishes="allergensDishes"
             :is="currentPageComponent" 
             :selectedVenueName="selectedVenueName" 
             :selectedVenueColor="selectedVenueColor" 
@@ -74,14 +76,12 @@ function updateCurrentPageComponent(value) {
             :messages="messages"
             @dishAdded="componentKey += 1"
             :key="componentKey"
-            :allergens="allergens"
             :receips="receips"
             :updateIsShowStatus="updateIsShowStatus"
             @changePage="updateCurrentPageComponent"
             @changeHeader="updateSelectedValueButton"
             />     
         </div>
-
       </div>
       <div @click="toggleModalInstruction()" class="z-50 modal-instruction absolute w-screen h-screen top-0 right-0 bg-opacity-50 bg-black" :class="{ visible: openModalInstruction }">
         <div class="focus-modal cursor-pointer" :class="{ visible: openModalInstruction }">
@@ -177,6 +177,7 @@ export default {
     category_scante: Array,
     category_enoteca: Array,
     dish_enoteca_category: Array,
+    allergensDishes: Array,
     allergens: Array,
     receips: Array,
   },

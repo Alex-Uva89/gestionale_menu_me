@@ -9,6 +9,8 @@ const props = defineProps({
     selectedVenueColor: String,
     category_enoteca: Array,
     dish_enoteca_category: Array,
+    allergens: Array,
+    allergensDishes: Array,
 });
 
 
@@ -37,7 +39,6 @@ const props = defineProps({
         <div class="flex gap-2 items-center">
           <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
           <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
-          <!-- newCategoryDrink.name -->
         </div>
         
         <div class="flex gap-2 items-center">
@@ -63,8 +64,9 @@ const props = defineProps({
       :showAddDishesModal="showAddDishesModal"
       :componentKey="componentKey"
       @dishAdded="$emit('dishAdded')"
+      :allergens="allergens"
+      :allergensDishes="allergensDishes"
     />
-  
     <h2 class="text-2xl font-bold text-center uppercase m-5">beverage</h2>
     <CategoryDrink
       :category_enoteca="category_enoteca"
@@ -77,6 +79,8 @@ const props = defineProps({
       :showAddDishesModal="showAddDishesModal"
       :componentKey="componentKey"
       @dishAdded="$emit('dishAdded')"
+      :allergens="allergens"
+      :allergensDishes="allergensDishes"
     />
   </section>
 

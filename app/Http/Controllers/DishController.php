@@ -72,6 +72,9 @@ class DishController extends Controller
     //     return response()->json($dish);
     // }
 
-  
+    public function getAllergens(Dish $dish)
+    {
+        return response()->json($dish->allergens);
+    }
    
 }

@@ -49,6 +49,8 @@ class HomeController extends Controller
         $dish_enoteca_category = Dish::all()->where('venue_id', 3);
 
         $allergens = Allergen::all();
+
+        $allergensDishes = Allergen::with('dishes')->get();
         
         // smash data
          $data = [
@@ -64,7 +66,9 @@ class HomeController extends Controller
              'dish_scante_category' => $dish_scante_category,
              'dish_enoteca_category' => $dish_enoteca_category,
              'allergens' => $allergens,
+             'allergensDishes' => $allergensDishes,
          ];
+
 
         // return data
         return Inertia::render('Home', $data);

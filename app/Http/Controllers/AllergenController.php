@@ -94,4 +94,26 @@ class AllergenController extends Controller
 
             return response()->json(null, 204);
         }
+
+    public function attachDishes(Request $request, $id)
+        {
+            $allergen = Allergen::findOrFail($id);
+        
+            $request->validate([
+                'dish_id' => 'required|integer',
+            ]);
+        
+            $allergen->dishes()->syncWithoutDetaching([$request->dish_id]);
+        
+            return response()->json($allergen->dishes, 200);
+        }
+
+    public function detachDish($allergenId, $dishId)
+        {
+            $allergen = Allergen::findOrFail($allergenId);
+
+            $allergen->dishes()->detach($dishId);
+
+            return response()->json($allergen->dishes, 200);
+        }
 }
