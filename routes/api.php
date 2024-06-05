@@ -40,9 +40,10 @@ Route::post('/allergens/{id}/dishes', [AllergenController::class, 'attachDishes'
 Route::delete('/', [HomeController::class, 'destroy'])->name('destroy');
 Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
-Route::delete('/dishes/{categoryId}', [DishController::class, 'destroyByCategory']);
+Route::delete('/categories/{categoryId}/dishes', [DishController::class, 'destroyByCategory']);
 Route::delete('/allergens/{id}', [AllergenController::class, 'destroy']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 Route::delete('/allergens/{allergenId}/dishes/{dishId}', [AllergenController::class,'detachDish']);
+Route::delete('/dishes/{id}', [DishController::class, 'destroy']);
 
 require __DIR__.'/auth.php';

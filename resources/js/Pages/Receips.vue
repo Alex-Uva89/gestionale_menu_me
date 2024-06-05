@@ -13,8 +13,12 @@
     </nav>
 
     <section id="receips" class=" container-recipes flex flex-wrap m-4" :key="keyComponent">
-        <div v-for="recipe in receips" class="w-full md:w-1/2 lg:w-1/3 p-2">
-            <div class="bg-white rounded-lg shadow-lg p-4">
+        <div v-if="receips.length === 0" class="w-full  text-center border border-3 border-black rounded-3xl ">
+            <h2 class="p-3">
+                ⭐ Inizia <strong class="uppercase">aggiungendo</strong> una ricetta
+            </h2>
+        </div>
+        <div v-else v-for="recipe in receips" class="w-full md:w-1/2 lg:w-1/3 bg-white rounded-lg shadow-lg p-4">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center justify-center w-60 h-32 border rounded-2xl p-2">
                         <img class="object-cover h-full" src="/img/defaultDish.jpg" alt="immagine ricetta">
@@ -35,7 +39,6 @@
                     <h2 class="text-xl w-full font-semibold text-gray-800 first-letter:uppercase text-wrap truncate">{{ recipe.name }}</h2>
                     <p class="mt-2 w-full text-gray-600 container-process text-wrap text-ellipsis" maxlength="1500">{{ recipe.process }}</p>
                 </div>
-            </div>
         </div>
 
         
@@ -258,6 +261,8 @@ import ModalAction from '@/Components/ModalAction.vue';
                     .catch((error) => {
                         console.log(error);
                     });
+
+                    this.showModalAddRecipes = false;
             },
             deleteRecipe() {
                 axios.delete(`/api/recipes/${this.recipeId}`)
@@ -275,6 +280,8 @@ import ModalAction from '@/Components/ModalAction.vue';
                         console.log(error);
                     });
 
+                    this.showModalDeleteRecipes = false;
+
             },
             editRecipe() {
                 axios.put(`/api/recipes/${this.recipeId}`, this.form)
@@ -289,6 +296,8 @@ import ModalAction from '@/Components/ModalAction.vue';
                     .catch((error) => {
                         console.log(error);
                     });
+
+                    this.showModalEditRecipe = false;
             },
         },
         mounted() {

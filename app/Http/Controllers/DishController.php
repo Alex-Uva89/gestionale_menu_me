@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dish;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Log;
 
 class DishController extends Controller
 {
@@ -75,6 +75,20 @@ class DishController extends Controller
     public function getAllergens(Dish $dish)
     {
         return response()->json($dish->allergens);
+    }
+
+    public function destroy($id)
+    {
+        $dish = Dish::find($id);
+
+        if ($dish) {
+            $dish->delete();
+            return response()->json(['message' => 'dish deleted successfully']);
+        } else {
+            return response()->json(['message' => 'Dish not found'], 404);
+        }
+
+        return response()->json(['success' => 'avoja'], 200);
     }
    
 }

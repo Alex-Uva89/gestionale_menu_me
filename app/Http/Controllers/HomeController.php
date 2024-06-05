@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Venue;
 use App\Models\Dish;
 use App\Models\Allergen;
+use App\Models\Drink;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,7 @@ class HomeController extends Controller
         $categories = Category::all();
         $venues = Venue::all();
         $receips = Recipe::all();
+        $drinks = Drink::all();
         
 
         // specific record
@@ -38,16 +40,19 @@ class HomeController extends Controller
             $query->where('venue_id', $scante->id);
         })->get();
 
-    
-        $category_enoteca = Category::with('dishes')->whereHas('venues', function ($query) use ($enoteca) {
-            $query->where('venue_id', $enoteca->id);
-        })->get();
+        $category_enoteca = Category::with(['dishes', 'drinks'])
+            ->whereHas('venues', function ($query) use ($enoteca) {
+                $query->where('venue_id', $enoteca->id);
+            })
+            ->get();
 
 
         $dish_laCucina_category = Dish::all()->where('venue_id', 1);
         $dish_scante_category = Dish::all()->where('venue_id', 2);
         $dish_enoteca_category = Dish::all()->where('venue_id', 3);
 
+
+        dd($dish_enoteca_category);
         $allergens = Allergen::all();
 
         $allergensDishes = Allergen::with('dishes')->get();
@@ -57,6 +62,7 @@ class HomeController extends Controller
              'messages' => $messages,
              'categories' => $categories,
              'venues' => $venues,
+             'drinks' => $drinks,
              'laCucina' => $laCucina,
              'receips' => $receips,
              'category_laCucina' => $category_laCucina->toArray(),

@@ -25,6 +25,7 @@ export default {
 button.button-css{
   appearance: none;
   background-color: transparent;
+  border: 2px solid #74747438;
   border-radius: 15px;
   color: #3B3B3B;
   cursor: pointer;
@@ -36,6 +37,7 @@ button.button-css{
   width: fit-content;
   outline: none;
   padding: 0px 15px;
+  margin: 2px;
   text-align: center;
   text-decoration: none;
   transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);

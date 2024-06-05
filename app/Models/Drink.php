@@ -33,7 +33,7 @@ class Drink extends Model
         return $this->belongsToMany(Ingredient::class);
     }
 
-    public function pairing_dishes()
+    public function dishes()
     {
         return $this->belongsToMany(Dish::class);
     }

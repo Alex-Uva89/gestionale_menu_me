@@ -44,29 +44,30 @@ const props = defineProps({
                 <li v-for="dish in category.dishes" 
                 class="border-b-2 border-black p-2"
                 >
-                  <div class="container-dishes flex items-center">
+                  <div class="container-dishes">
                     <div class="flex items-center">
                       <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
                     </div>
                     <div class="flex flex-col name">
-                      <span>Nome piatto: </span><span>{{ dish.name }}</span>
+                      <span class="text-bold">Nome piatto: </span><span class="first-letter:uppercase">{{ dish.name }}</span>
                     </div>
                     <div class="flex flex-col price">
-                      <span>Prezzo: </span><span>{{ dish.price }} €</span>
+                      <span class="text-bold">Prezzo: </span><span>{{ dish.price }} €</span>
                     </div>
                     <div  class="flex flex-col description">
-                      <div>Descrizione: </div><div> {{ dish.description }}</div>
+                      <div class="text-bold">Consigli: </div><div> {{ dish.description }}</div>
                     </div>
                     <div class="flex flex-col gap-2 buttons">
                       <button class="border p-1">edit</button>
-                      <button class="border p-1">delete</button>
+                      <button @click="openModalDeleteDish(dish.id)" class="border p-1">delete</button>
                     </div>
                   </div>
                   <div class="flex items-center ps-6 py-3">
-                    Allergeni:
-                    <ul class="flex gap-2">
+                    Allergeni: 
+                    <ul class="flex gap-2" v-if="activeAllergens.length">
                       <li 
                         v-for="allergen in allergens" 
+                        v-show="allergen.is_active"
                         class="border border-black rounded-full p-2 ms-2 cursor-pointer hover:bg-gray-300"
                         @click="matchDish(dish.id, allergen.id)" 
                         :id="`${dish.id}-${allergen.id}`"
@@ -75,7 +76,11 @@ const props = defineProps({
                           {{ allergen.name }}
                         </button>
                       </li>    
-                  </ul>
+                    </ul>
+                    <div class="ps-2" v-else>
+                        Non sono presenti allergeni a database
+                    </div>
+                    
                   </div>
                 </li>
               </ul>
@@ -94,6 +99,7 @@ const props = defineProps({
      </div>
   </section>
 
+<!-- MODAL -->
 
   <section class="section-create-dishes" v-if="showAddDishesModal">
     <div class="modal-confirm">
@@ -108,9 +114,9 @@ const props = defineProps({
           :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome piatto'"
           >
           <!-- devo aggiungere anche descpription price, image -->
-          <label for="description">Descrizione</label>
+          <label for="description">Consigli</label>
           <textarea 
-          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'descrizione piatto'"
+          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'consigli piatto'"
           class="border-2 hover:border-black focus:border-black rounded"
           v-model="dish_enoteca_category.description"></textarea>
           <label for="price">Prezzo</label>
@@ -123,6 +129,10 @@ const props = defineProps({
           <label for="image">Immagine</label>
           <input type="file"
           v-on:change="onFileChange" ref="file" accept="image/*">
+          <label for="lang">Language</label>
+          <select name="pairings" id="lang">
+            <option value="javascript">JavaScript</option>
+          </select>
 
 
           <div class="flex gap-20 p-10">
@@ -131,33 +141,46 @@ const props = defineProps({
           </div>
         </div>
     </div>
-</section>
+  </section>
 
-<section class="section-delete" v-if="showDeleteModal">
-    <div class="modal-confirm">
-        <h2 class="h-20 font-bold text-2xl text-center">
-            Sei sicuro di voler eliminare questa categoria?
-            <p class="text-base">la cancellazione della categoria provvederà a cancellare TUTTI i piatti abbinati</p>
-        </h2>
-        <div class="flex w-100 justify-between p-5">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete()">Conferma</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
-        </div>
-    </div>
-</section>
+  <section class="section-delete" v-if="showDeleteModal">
+      <div class="modal-confirm">
+          <h2 class="h-20 font-bold text-2xl text-center">
+              Sei sicuro di voler eliminare questa categoria?
+              <p class="text-base">la cancellazione della categoria provvederà a cancellare TUTTI i piatti abbinati</p>
+          </h2>
+          <div class="flex w-100 justify-between p-5">
+              <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete()">Conferma</button>
+              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
+          </div>
+      </div>
+  </section>
 
-<section class="section-edit" v-if="showEditModal">
-    <div class="modal-confirm">
-        <h2 class="h-20 font-bold text-2xl text-center">
-            Modifica categoria
-        </h2>
-        <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
-        <div class="flex w-100 justify-between p-5">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(category_enoteca.name)">edit</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
-        </div>
+  <section class="section-edit" v-if="showEditModal">
+      <div class="modal-confirm">
+          <h2 class="h-20 font-bold text-2xl text-center">
+              Modifica categoria
+          </h2>
+          <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
+          <div class="flex w-100 justify-between p-5">
+              <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(category_enoteca.name)">edit</button>
+              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
+          </div>
+      </div>
+  </section>
+
+  <ModalAction :showModal="showModalDeleteDish" :selectedDish="selectedDish">
+    <h2 class="h-20 font-bold text-2xl text-center">
+      Sei sicuro di voler eliminare il piatto: 
+      {{ 
+        getDishName(dishIdToDelete)
+      }}?
+    </h2>
+    <div class="flex w-100 justify-between p-5">
+      <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish()">Conferma</button>
+      <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalDeleteDish = false">Annulla</button>
     </div>
-</section>
+  </ModalAction>
 
 </template>
 
@@ -165,11 +188,12 @@ const props = defineProps({
 <script>
 import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
-
+import ModalAction from '@/Components/ModalAction.vue';
 
 export default {
   components: {
     Switch_button,
+    ModalAction
   },
   name: 'Category',
   props: {
@@ -181,18 +205,20 @@ export default {
     is_drink: {
       type: Boolean,
       required: true
-    }
+    },
   },
   data() {
     return {
       componentKeyli: 0,
       showDeleteModal: false,
+      showModalDeleteDish: false,
       categoryToDelete: null,
       showEditModal: false,
       categoryToEdit: null,
       categoryNameToEdit: null,
       showAddDishesModal: false,
       dishToCreateId: null,
+      dishTodeleteId: null,
       localCategory_enoteca: this.category_enoteca,
       localDishEnotecaCategory: [],
       allergensDishes: this.allergensDishes,
@@ -205,7 +231,7 @@ export default {
             this.showDeleteModal = true;
         },
         confirmDelete() {
-            axios.delete(`/api/dishes/${this.categoryToDelete}`)
+          axios.delete(`/api/categories/${this.categoryToDelete}/dishes`)
                 .then(response => {
             
                 axios.delete(`/api/categories/${this.categoryToDelete}`)
@@ -292,6 +318,8 @@ export default {
             if (response.data && response.data.name && response.data.description && response.data.price && response.data.image) {
               let newDish = response.data;
               let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
+              console.log('CATEGORY');
+              console.log(category);
               if (category) {
                 category.dishes.push(newDish);
                 this.dishToCreateId = '';
@@ -336,18 +364,51 @@ export default {
             });
           }
         },
-        created() {
-            this.localDishEnotecaCategory = this.category_enoteca.map(category => {
-                let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
-                return {
-                    ...category,
-                    dishes: dishes
-                };
-            });
-
-            this.allergenDishes = this.allergensDishes;
+        openModalDeleteDish(dishId) {
+          this.dishIdToDelete = dishId;
+          this.showModalDeleteDish = !this.showModalDeleteDish;
         },
+        getDishName(dishId) {
+          for (let category of this.localDishEnotecaCategory) {
+            let foundDish = category.dishes.find(dish => dish.id === dishId);
+            if (foundDish) {
+              return foundDish.name;
+            }
+          }
+          return 'Non trovato';
+        },
+        confirmDeleteDish() {
+          axios.delete(`/api/dishes/${this.dishIdToDelete}`)
+          .then(() => {
+            for (let category of this.category_enoteca) {
+              let index = category.dishes.findIndex(dish => dish.id === this.dishIdToDelete);
+              if (index !== -1) {
+                category.dishes.splice(index, 1);
+              }
+            }
+            this.showModalDeleteDish = false;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        }
       },
+      created() {
+          this.localDishEnotecaCategory = this.category_enoteca.map(category => {
+              let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
+              return {
+                  ...category,
+                  dishes: dishes
+              };
+          });
+
+          this.allergenDishes = this.allergensDishes;
+      },
+      computed: {
+        activeAllergens() {
+          return this.allergens.filter(allergen => allergen.is_active);
+        }
+      }
 };
 </script>
 

@@ -17,19 +17,19 @@
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
             <div class="tab__content bg-white" >
                 <ul class="max-w-full" >
-                  <li v-for="dish in category.dishes"
+                  <li v-for="drink in category.drinks"
                   class="container-dishes flex items-center p-2 border-b-2 border-black" >
                         <div class="flex items-center">
-                          <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
+                          <img :src="drink.image = 'undefined' ? 'img/defaultDish.jpg' : drink.image" alt="dish image" class="w-44 h-44 object-cover p-2">
                         </div>
                         <div class="flex flex-col name">
-                          <span>Nome drink: </span><span>{{ dish.name }}</span>
+                          <span>Nome drink: </span><span>{{ drink.name }}</span>
                         </div>
                         <div class="flex flex-col price">
-                          <span>Prezzo: </span><span>{{ dish.price }} €</span>
+                          <span>Prezzo: </span><span>{{ drink.price }} €</span>
                         </div>
                         <div  class="flex flex-col description">
-                          <div>Descrizione: </div><div> {{ dish.description }}</div>
+                          <div>Consigli: </div><div> {{ drink.description }}</div>
                         </div>
                         <div class="flex flex-col gap-2 buttons">
                           <button class="border p-1">edit</button>
@@ -39,7 +39,7 @@
                 </ul>
            
 
-              <div type="button" @click="addDishes(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
+              <div type="button" @click="addDrink(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
                 <div class="font-bold text-lg">&#10133</div>
                 <span>Aggiungi bevanda</span>
               </div>
@@ -53,10 +53,10 @@
   </section>
 
 
-  <section class="section-create-dishes" v-if="showAddDishesModal">
+  <section class="section-create-drinks" v-if="showAddDrinksModal">
     <div class="modal-confirm">
         <h2 class="h-16 font-bold text-2xl text-center">
-            Aggiungi nuovo piatto
+            Aggiungi nuovo drink
         </h2>
         <div class="flex flex-col gap-4 flex-wrap">
           <label for="name">Nome drink</label>
@@ -66,9 +66,9 @@
           :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome drink'"
           >
           <!-- devo aggiungere anche descpription price, image -->
-          <label for="description">Descrizione</label>
+          <label for="description">Consigli</label>
           <textarea 
-          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'descrizione piatto'"
+          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'consigli drink'"
           class="border-2 hover:border-black focus:border-black rounded"
           v-model="dish_enoteca_category.description"></textarea>
           <label for="price">Prezzo</label>
