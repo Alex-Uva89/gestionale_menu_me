@@ -26,15 +26,14 @@
   }
 
 
-  .tab .container-dishes {
+  .tab .container-dishes, .tab .container-drinks{
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
-    gap: 1rem;
-    padding: 1rem;
+    grid-template-columns: .8fr 1fr .2fr;
+    align-items: center;
   }
 
-  .tab .container-dishes img {
-    width: 100%;
+  .tab .container-dishes img, .tab .container-drinks img{
+    width: 80%;
     height: auto;
     object-fit: cover;
   }
@@ -49,6 +48,9 @@
     border: 2px solid;
     border-radius: 0.5rem;
     overflow: hidden;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-top: none;
   }
   .tab__label,
   .tab__close {

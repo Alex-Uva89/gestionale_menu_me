@@ -30,69 +30,84 @@ const props = defineProps({
           <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
         </svg>
         <span class="leading-7">
-          aggiungi categoria
+          opzioni
         </span>
       </div>
       <div 
       class="items-center pt-3 gap-2 grid-cols-4"
       :class="isVisible? 'grid' : 'hidden' ">
-        <form class="grid grid-cols-4 col-span-2" @submit.prevent="createCategory(3)">
-          <div class="flex flex-col gap-2 col-span-3">
-            <label for="inputCategory">Aggiungi categoria food</label>
-            <input v-model="newCategory.name" type="text" placeholder="Nome categoria" id="inputCategory">
-          </div>
-          
-          <div class="flex flex-col gap-2 items-center col-span-1 justify-center">
-            <ButtonCss hoverColor="green" type="submit">Salva</ButtonCss>
-          </div>
-        </form>
         
-        <form class="grid grid-cols-4 col-span-2" @submit.prevent="createCategoryDrink(3)">
-          <div class="flex flex-col gap-2 col-span-3">
-            <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
-            <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
-          </div>
-          
-          <div class="flex flex-col gap-2 items-center col-span-1 justify-center">
-            <ButtonCss hoverColor="green" type="submit">Salva</ButtonCss>
-          </div>
-        </form>
+        
+        
       </div>
     </div>
     
   </section>
 
-  <section class="flex flex-col justify-between">
-    <h2 class="text-2xl font-bold text-center uppercase m-5">food</h2>
-    <Category
-      :category_enoteca="category_enoteca"
-      :selectedVenueColor="selectedVenueColor"
-      :deleteCategory="deleteCategory"
-      :editCategory="editCategory"
-      :updateIsShowStatus="updateIsShowStatus"
-      :dish_enoteca_category="dish_enoteca_category"
-      :addDishes="addDishes"
-      :showAddDishesModal="showAddDishesModal"
-      :componentKey="componentKey"
-      @dishAdded="$emit('dishAdded')"
-      :allergens="allergens"
-      :allergensDishes="allergensDishes"
-    />
-    <h2 class="text-2xl font-bold text-center uppercase m-5">beverage</h2>
-    <CategoryDrink
-      :category_enoteca="category_enoteca"
-      :selectedVenueColor="selectedVenueColor"
-      :deleteCategory="deleteCategory"
-      :editCategory="editCategory"
-      :updateIsShowStatus="updateIsShowStatus"
-      :drink_enoteca_category="drink_enoteca_category"
-      :addDishes="addDishes"
-      :showAddDishesModal="showAddDishesModal"
-      :componentKey="componentKey"
-      @dishAdded="$emit('dishAdded')"
-      :allergens="allergens"
-      :allergensDishes="allergensDishes"
-    />
+  <section class="flex justify-evenly">
+
+    <div class="container-food">
+      <form class="grid grid-cols-5" @submit.prevent="createCategory(3)">
+          <h2 class="text-2xl col-span-5 font-bold text-center uppercase">food</h2>
+          <div class="flex flex-col gap-2 col-span-4">
+            <label for="inputCategory">Aggiungi categoria food</label>
+            <input v-model="newCategory.name" type="text" placeholder="Nome categoria" id="inputCategory">
+          </div>
+          
+          <button type="submit" class=" self-end col-span-1 justify-self-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              </svg>
+          </button>
+      </form>
+      <Category
+        :category_enoteca="category_enoteca"
+        :selectedVenueColor="selectedVenueColor"
+        :deleteCategory="deleteCategory"
+        :editCategory="editCategory"
+        :updateIsShowStatus="updateIsShowStatus"
+        :dish_enoteca_category="dish_enoteca_category"
+        :addDishes="addDishes"
+        :showAddDishesModal="showAddDishesModal"
+        :componentKey="componentKey"
+        @dishAdded="$emit('dishAdded')"
+        :allergens="allergens"
+        :allergensDishes="allergensDishes"
+      />
+    </div>
+
+    <div class="container-beverage">
+      <form class="grid grid-cols-5" @submit.prevent="createCategoryDrink(3)">
+          <h2 class="text-2xl col-span-5 font-bold text-center uppercase">beverage</h2>
+          <div class="flex flex-col gap-2 col-span-4">
+            <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
+            <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
+          </div>
+          
+          <button type="submit" class=" self-end col-span-1 justify-self-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              </svg>
+          </button>
+      </form>
+      <CategoryDrink
+        :category_enoteca="category_enoteca"
+        :selectedVenueColor="selectedVenueColor"
+        :deleteCategory="deleteCategory"
+        :editCategory="editCategory"
+        :updateIsShowStatus="updateIsShowStatus"
+        :drink_enoteca_category="drink_enoteca_category"
+        :addDishes="addDishes"
+        :showAddDishesModal="showAddDishesModal"
+        :componentKey="componentKey"
+        @drinkAdded="$emit('drinkAdded')"
+        :allergens="allergens"
+        :allergensDishes="allergensDishes"
+      />
+    </div>
+
   </section>
 
 
@@ -204,7 +219,10 @@ export default {
             }
           } else {
             if(buttonCategory.innerText === '❌') {
-              buttonCategory.innerText = 'aggiungi categoria';
+              buttonCategory.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+          </svg> opzioni`;
               buttonCategory.style.borderBottom = 'none';
               buttonCategory.style.paddingBottom = '0';
             } else {
@@ -242,6 +260,19 @@ export default {
 section.accordion{
   width: 90%;
   margin: 10px auto;
+}
+
+.container-food, .container-beverage{
+  form{
+    width: calc(100% - 35px);
+    margin: 20px auto 0px;
+    border-bottom: none;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.060);
+  }
 }
 
 .section-delete, .section-edit, .section-create-dishes{

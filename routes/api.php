@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DishController;
+use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RecipeController;
 
@@ -32,9 +33,11 @@ Route::post('/', [HomeController::class, 'store'])->name('store');
 Route::post('/categories', [CategoryController::class, 'store']);
 Route::post('/categories/{id}/venues', [HomeController::class, 'attachVenues']);
 Route::post('/dishes/{id}', [DishController::class, 'store']);
+Route::post('/drinks', [DrinkController::class, 'store']);
 Route::post('/allergens', [AllergenController::class, 'store']);
 Route::post('/recipes', [RecipeController::class, 'store']);
 Route::post('/allergens/{id}/dishes', [AllergenController::class, 'attachDishes']);
+Route::post('/categories/{id}/drinks', [CategoryController::class, 'addDrink']);
 
 // DELETE
 Route::delete('/', [HomeController::class, 'destroy'])->name('destroy');

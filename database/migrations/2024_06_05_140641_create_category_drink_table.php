@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('category_drink', function (Blueprint $table) {
             $table->unsignedBigInteger('category_id');
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('drink_id')->references('id')->on('drinks')->onDelete('cascade');
 
-            $table->primary(['category_id', 'drink_id']);
+            $table->primary([ 'category_id','drink_id']);
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_drink');
+        Schema::dropIfExists('dish_drink');
     }
 };

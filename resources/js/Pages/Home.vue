@@ -3,15 +3,15 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import Sidebar from '@/Partials/Sidebar.vue';
 import Header from '@/Partials/Header.vue';
-import Inbox from '@/Pages/Inbox.vue';
-import LaCucina from '@/Pages/LaCucina.vue';
-import Scante from '@/Pages/Scante.vue';
-import Enoteca from '@/Pages/Enoteca.vue';
-import Preview from '@/Pages/Preview.vue';
-import Allergens from '@/Pages/Allergens.vue';
-import Dashboard from '@/Pages/Dashboard.vue';
-import Welcome from '@/Pages/Welcome.vue';
-import Receips from '@/Pages/Receips.vue';
+import Inbox from '@/PartialsHome/Inbox.vue';
+import LaCucina from '@/PartialsHome/Venues/LaCucina.vue';
+import Scante from '@/PartialsHome/Venues/Scante.vue';
+import Enoteca from '@/PartialsHome/Venues/Enoteca.vue';
+import Preview from '@/PartialsHome/Preview.vue';
+import Allergens from '@/PartialsHome/Allergens.vue';
+import Dashboard from '@/PartialsHome/Dashboard.vue';
+import Welcome from '@/PartialsHome/Welcome.vue';
+import Receips from '@/PartialsHome/Receips.vue';
 
 const selectedVenueName = ref('Benvenuto');
 const selectedVenueColor = ref('blue');
@@ -73,8 +73,10 @@ function updateCurrentPageComponent(value) {
             :category_enoteca="category_enoteca"
             :categories="categories" 
             :dish_enoteca_category="dish_enoteca_category"
+            :drink_enoteca_category="drink_enoteca_category"
             :messages="messages"
             @dishAdded="componentKey += 1"
+            @drinkAdded="componentKey += 1"
             :key="componentKey"
             :receips="receips"
             :updateIsShowStatus="updateIsShowStatus"

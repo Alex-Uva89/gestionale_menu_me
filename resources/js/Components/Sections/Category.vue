@@ -22,7 +22,7 @@ const props = defineProps({
      v-for="category in category_enoteca" 
      :key="category.id">
      <div 
-     class="tab border border-black category  bg-white" 
+     class="tab category  bg-white" 
      v-if="!category.is_drink">
       <div class="flex max-h-14 bg-white justify-evenly items-center gap-3 p-2">
           <button @click="deleteCategory(category.id)">❌</button>
@@ -40,13 +40,13 @@ const props = defineProps({
           <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
           <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
           <div class="tab__content bg-white" >
-              <ul class="max-w-full" >
+              <ul class="max-w-full">
                 <li v-for="dish in category.dishes" 
                 class="border-b-2 border-black p-2"
                 >
-                  <div class="container-dishes">
-                    <div class="flex items-center">
-                      <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="w-44 h-44 object-cover p-2">
+                  <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
+                    <div class="flex">
+                      <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-2">
                     </div>
                     <div class="flex flex-col name">
                       <span class="text-bold">Nome piatto: </span><span class="first-letter:uppercase">{{ dish.name }}</span>
@@ -54,33 +54,6 @@ const props = defineProps({
                     <div class="flex flex-col price">
                       <span class="text-bold">Prezzo: </span><span>{{ dish.price }} €</span>
                     </div>
-                    <div  class="flex flex-col description">
-                      <div class="text-bold">Consigli: </div><div> {{ dish.description }}</div>
-                    </div>
-                    <div class="flex flex-col gap-2 buttons">
-                      <button class="border p-1">edit</button>
-                      <button @click="openModalDeleteDish(dish.id)" class="border p-1">delete</button>
-                    </div>
-                  </div>
-                  <div class="flex items-center ps-6 py-3">
-                    Allergeni: 
-                    <ul class="flex gap-2" v-if="activeAllergens.length">
-                      <li 
-                        v-for="allergen in allergens" 
-                        v-show="allergen.is_active"
-                        class="border border-black rounded-full p-2 ms-2 cursor-pointer hover:bg-gray-300"
-                        @click="matchDish(dish.id, allergen.id)" 
-                        :id="`${dish.id}-${allergen.id}`"
-                        :class="{'bg-green-500': allergensDishes.some(allergenDish => allergenDish.id === allergen.id && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dish.id))}">
-                        <button>
-                          {{ allergen.name }}
-                        </button>
-                      </li>    
-                    </ul>
-                    <div class="ps-2" v-else>
-                        Non sono presenti allergeni a database
-                    </div>
-                    
                   </div>
                 </li>
               </ul>
@@ -99,7 +72,7 @@ const props = defineProps({
      </div>
   </section>
 
-<!-- MODAL -->
+<!-- MODALS -->
 
   <section class="section-create-dishes" v-if="showAddDishesModal">
     <div class="modal-confirm">
@@ -182,6 +155,17 @@ const props = defineProps({
     </div>
   </ModalAction>
 
+  <ModalAction :showModal="showModalDish">
+    <ShowDish 
+    :selectedDish="selectedDish" 
+    :allergens="allergens"
+    :allergensDishes="allergensDishes"
+    :category_enoteca="category_enoteca"
+    :dish_enoteca_category="dish_enoteca_category"
+    @showModalDish="showModalDish = false"
+    />
+  </ModalAction>
+
 </template>
 
 
@@ -189,11 +173,13 @@ const props = defineProps({
 import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
 import ModalAction from '@/Components/ModalAction.vue';
+import ShowDish from '@/Components/Sections/ShowEditDish.vue';
 
 export default {
   components: {
     Switch_button,
-    ModalAction
+    ModalAction,
+    ShowDish
   },
   name: 'Category',
   props: {
@@ -210,6 +196,7 @@ export default {
   data() {
     return {
       componentKeyli: 0,
+      showModalDish: false,
       showDeleteModal: false,
       showModalDeleteDish: false,
       categoryToDelete: null,
@@ -391,6 +378,10 @@ export default {
           .catch(error => {
             console.log(error);
           });
+        },
+        openShowDish(dishId) {
+          this.selectedDish = dishId;
+          this.showModalDish = !this.showModalDish;
         }
       },
       created() {
@@ -403,11 +394,6 @@ export default {
           });
 
           this.allergenDishes = this.allergensDishes;
-      },
-      computed: {
-        activeAllergens() {
-          return this.allergens.filter(allergen => allergen.is_active);
-        }
       }
 };
 </script>
@@ -442,5 +428,7 @@ export default {
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 }
+
+
 
 </style>

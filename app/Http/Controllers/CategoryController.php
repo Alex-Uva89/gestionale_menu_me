@@ -7,7 +7,7 @@ use App\Models\Category;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
- 
+use App\Models\Drink;
 
 
 class CategoryController extends Controller
@@ -70,7 +70,19 @@ class CategoryController extends Controller
                     }
                 }
 
-        
+                public function addDrink($id) {
+                    $category = Category::find($id);
+                    $drink_id = request('drink_id');
+                    $drink = Drink::find($drink_id);
+
+                    if ($category && $drink) {
+                        $category->drinks()->attach($drink);
+                        return response()->json(['message' => 'Drink added to category successfully'], 200);
+                    } else {
+                        return response()->json(['message' => 'Category or Drink not found'], 404);
+                    }
+                }
+
                 
             
 

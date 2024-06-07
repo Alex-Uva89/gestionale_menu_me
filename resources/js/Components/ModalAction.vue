@@ -1,7 +1,9 @@
 <template>
     <section class="modal-container" v-if="showModal">
         <div class="modal">
-            <slot></slot>
+            <div class="p-10">
+                <slot></slot>
+            </div>
         </div>
     </section>
 </template>
@@ -35,8 +37,9 @@ export default {
     width: 100%;
     height: 100%;
     .modal{
+        position: relative;
         background-color: white;
-        padding: 60px;
+        margin: 60px;
         border: 3px solid #868686;
         border-radius: 10px;
         box-shadow: 0 0 20px rgb(0, 0, 0), 0 0 40px rgb(255, 255, 255);

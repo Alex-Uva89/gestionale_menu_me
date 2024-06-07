@@ -18,7 +18,7 @@ class Category extends Model
 
     public function venues() 
     {
-        return $this->belongsToMany(Venue::class)->withPivot('category_id','venue_id');
+        return $this->belongsToMany(Venue::class);
     }
 
     public function dishes() 
@@ -28,6 +28,6 @@ class Category extends Model
 
     public function drinks() 
     {
-        return $this->belongsToMany(Drink::class)->withPivot('category_id','drink_id');
+        return $this->belongsToMany(Drink::class);
     }
 }

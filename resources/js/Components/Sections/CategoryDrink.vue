@@ -17,23 +17,17 @@
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
             <div class="tab__content bg-white" >
                 <ul class="max-w-full" >
-                  <li v-for="drink in category.drinks"
-                  class="container-dishes flex items-center p-2 border-b-2 border-black" >
-                        <div class="flex items-center">
-                          <img :src="drink.image = 'undefined' ? 'img/defaultDish.jpg' : drink.image" alt="dish image" class="w-44 h-44 object-cover p-2">
-                        </div>
-                        <div class="flex flex-col name">
-                          <span>Nome drink: </span><span>{{ drink.name }}</span>
-                        </div>
-                        <div class="flex flex-col price">
-                          <span>Prezzo: </span><span>{{ drink.price }} €</span>
-                        </div>
-                        <div  class="flex flex-col description">
-                          <div>Consigli: </div><div> {{ drink.description }}</div>
-                        </div>
-                        <div class="flex flex-col gap-2 buttons">
-                          <button class="border p-1">edit</button>
-                          <button class="border p-1">delete</button>
+                  <li v-for="drink in category.drinks">
+                        <div class="container-drinks px-3">
+                          <div class="flex">
+                            <img :src="drink.image = 'undefined' ? 'img/defaultDish.jpg' : drink.image" alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-2">
+                          </div>
+                          <div class="flex flex-col name">
+                            <span class="text-bold">Nome drink: </span><span class="first-letter:uppercase">{{ drink.name }}</span>
+                          </div>
+                          <div class="flex flex-col price">
+                            <span class="text-bold">Prezzo: </span><span>{{ drink.price }} €</span>
+                          </div>
                         </div>
                   </li>
                 </ul>
@@ -62,21 +56,20 @@
           <label for="name">Nome drink</label>
           <input type="text" 
           class="border-2 hover:border-black focus:border-black rounded" 
-          v-model="dish_enoteca_category.name" 
-          :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome drink'"
+          v-model="drink_enoteca_category.name" 
+          :placeholder="drink_enoteca_category.name ? drink_enoteca_category.name : 'nome drink'"
           >
-          <!-- devo aggiungere anche descpription price, image -->
           <label for="description">Consigli</label>
           <textarea 
-          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'consigli drink'"
+          :placeholder="drink_enoteca_category.description ? drink_enoteca_category.description : 'consigli drink'"
           class="border-2 hover:border-black focus:border-black rounded"
-          v-model="dish_enoteca_category.description"></textarea>
+          v-model="drink_enoteca_category.description"></textarea>
           <label for="price">Prezzo</label>
           <div>
             <input type="number" 
-            :placeholder="dish_enoteca_category.price ? dish_enoteca_category.price : 'prezzo del piatto'"
+            :placeholder="drink_enoteca_category.price ? drink_enoteca_category.price : 'prezzo del drink'"
             class="border-2 hover:border-black focus:border-black rounded"
-            v-model="dish_enoteca_category.price"><span> euro</span>
+            v-model="drink_enoteca_category.price"><span> euro</span>
           </div>
           <label for="image">Immagine</label>
           <input type="file"
@@ -84,7 +77,7 @@
 
 
           <div class="flex gap-20 p-10">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmAddDishes()">conferma</button>
+            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmAddDrinks()">conferma</button>
             <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showAddDishesModal = false">Annulla</button>
           </div>
         </div>
@@ -132,7 +125,7 @@ export default {
   props: {
     category_enoteca: Array,
     selectedVenueColor: String,
-    dish_enoteca_category: Array,
+    drink_enoteca_category: Array,
     is_drink: {
         type: Boolean,
         required: true
@@ -146,10 +139,10 @@ export default {
       showEditModal: false,
       categoryToEdit: null,
       categoryNameToEdit: null,
-      showAddDishesModal: false,
-      dishToCreateId: null,
+      showAddDrinksModal: false,
+      drinkToCreateId: null,
       localCategory_enoteca: this.category_enoteca,
-      localDishEnotecaCategory: [],
+      localDrinkEnotecaCategory: [],
     };
   },
   methods: {
@@ -221,38 +214,44 @@ export default {
           let reader = new FileReader();
           let vm = this;
           reader.onload = (e) => {
-            vm.dish_enoteca_category.image = e.target.result;
+            vm.drink_enoteca_category.image = e.target.result;
           };
           reader.readAsDataURL(file);
         },
-        addDishes(id) {
-          this.showAddDishesModal = true;
-          this.dishToCreateId = id;
+        addDrink(id) {
+          this.showAddDrinksModal = true;
+          this.drinkToCreateId = id;
         },
-        confirmAddDishes() {
+        confirmAddDrinks() {
           let formData = new FormData();
-          formData.append('name', this.dish_enoteca_category.name);
-          formData.append('description', this.dish_enoteca_category.description);
-          formData.append('price', this.dish_enoteca_category.price);
-          formData.append('image', this.dish_enoteca_category.image);
-          formData.append('category_id', this.dishToCreateId);
+          formData.append('name', this.drink_enoteca_category.name);
+          formData.append('description', this.drink_enoteca_category.description);
+          formData.append('price', this.drink_enoteca_category.price);
+          formData.append('image', this.drink_enoteca_category.image);
+          formData.append('category_id', this.drinkToCreateId);
           formData.append('venue_id', 3);
-
-          axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {
+        
+          axios.post(`/api/drinks`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then(response => {
             if (response.data && response.data.name && response.data.description && response.data.price && response.data.image) {
-              let newDish = response.data;
-              let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
-              if (category) {
-                category.dishes.push(newDish);
-                this.dishToCreateId = '';
-              }
-              this.$emit('dishAdded');
-              this.componentKeyli++;
+              let newDrink = response.data;
+              let category = this.category_enoteca.find(category => category.id === this.drinkToCreateId);
+              axios.post(`/api/categories/${this.drinkToCreateId}/drinks`, { drink_id: newDrink.id })
+              .then(response => {
+                this.$emit('drinkAdded');
+                this.componentKeyli++;
+                if (category) {
+                  category.drinks.push(newDrink);
+                  this.drinkToCreateId = '';
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
             } else {
               console.error("Server response does not contain expected data");
             }
@@ -260,7 +259,8 @@ export default {
           .catch(error => {
             console.log(error);
           });
-          this.showAddDishesModal = false;
+        
+          this.showAddDrinksModal = false;
         },
   },
   watch: {
@@ -268,6 +268,16 @@ export default {
       this.localCategory_enoteca = newVal;
     },
   },
+  created() {
+          this.localDrinkEnotecaCategory = this.category_enoteca.map(category => {
+              let drinks = this.drink_enoteca_category.filter(drink => drink.category_id === category.id);
+              return {
+                  ...category,
+                  drinks: drinks
+              };
+          });
+
+      },
 };
 </script>
 
@@ -283,7 +293,7 @@ export default {
   border-color: #a51a1a;
 }
 
-.section-delete, .section-edit, .section-create-dishes{
+.section-delete, .section-edit, .section-create-drinks{
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
