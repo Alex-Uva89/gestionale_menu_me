@@ -82,6 +82,7 @@ function updateCurrentPageComponent(value) {
             :updateIsShowStatus="updateIsShowStatus"
             @changePage="updateCurrentPageComponent"
             @changeHeader="updateSelectedValueButton"
+            :drinks="drinks"
             />     
         </div>
 
@@ -185,6 +186,7 @@ export default {
     allergensDishes: Array,
     allergens: Array,
     receips: Array,
+    drinks: Array,
   },
   data() {
     return {

@@ -48,5 +48,6 @@ Route::delete('/allergens/{id}', [AllergenController::class, 'destroy']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 Route::delete('/allergens/{allergenId}/dishes/{dishId}', [AllergenController::class,'detachDish']);
 Route::delete('/dishes/{id}', [DishController::class, 'destroy']);
+Route::delete('/drinks', [DrinkController::class, 'deleteByCategory']);
 
 require __DIR__.'/auth.php';

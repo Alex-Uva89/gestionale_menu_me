@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dish;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use App\Models\Drink;
 
 class DrinkController extends Controller
@@ -30,5 +31,11 @@ class DrinkController extends Controller
         $drink->save();
         
         return response()->json($drink, 201);
+    }
+
+    public function deleteByCategory(Request $request) {
+        $categoryId = $request->query('category_id');
+        Drink::where('category_id', $categoryId)->delete();
+        return response()->json(null, 204);
     }
 }

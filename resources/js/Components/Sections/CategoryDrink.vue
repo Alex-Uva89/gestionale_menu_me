@@ -37,7 +37,6 @@
                 <div class="font-bold text-lg">&#10133</div>
                 <span>Aggiungi bevanda</span>
               </div>
-
             </div>
         </div>
     </div>
@@ -123,6 +122,7 @@ export default {
   },
   name: 'CategoryDrink',
   props: {
+    drinks: Array,
     category_enoteca: Array,
     selectedVenueColor: String,
     drink_enoteca_category: Array,
@@ -151,7 +151,7 @@ export default {
             this.showDeleteModal = true;
         },
         confirmDelete() {
-            axios.delete(`/api/dishes/${this.categoryToDelete}`)
+            axios.delete(`/api/drinks?category_id=${this.categoryToDelete}`)
                 .then(response => {
                 console.log('Deleted corresponding dishes');
             
@@ -242,10 +242,10 @@ export default {
               let category = this.category_enoteca.find(category => category.id === this.drinkToCreateId);
               axios.post(`/api/categories/${this.drinkToCreateId}/drinks`, { drink_id: newDrink.id })
               .then(response => {
-                this.$emit('drinkAdded');
                 this.componentKeyli++;
                 if (category) {
                   category.drinks.push(newDrink);
+                  this.localDrinkEnotecaCategory.push(newDrink);
                   this.drinkToCreateId = '';
                 }
               })
@@ -267,6 +267,7 @@ export default {
     category_enoteca(newVal) {
       this.localCategory_enoteca = newVal;
     },
+
   },
   created() {
           this.localDrinkEnotecaCategory = this.category_enoteca.map(category => {
@@ -277,7 +278,7 @@ export default {
               };
           });
 
-      },
+  },
 };
 </script>
 

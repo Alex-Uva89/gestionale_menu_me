@@ -7,6 +7,7 @@ const props = defineProps({
     dish_enoteca_category: Array,
     allergens: Array,
     allergensDishes: Array,
+    drinks: Array,
 });
 
 
@@ -46,7 +47,7 @@ const props = defineProps({
                 >
                   <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-2">
+                      <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1">
                     </div>
                     <div class="flex flex-col name">
                       <span class="text-bold">Nome piatto: </span><span class="first-letter:uppercase">{{ dish.name }}</span>
@@ -68,56 +69,93 @@ const props = defineProps({
           </div>
       </div>
      </div>
-     
      </div>
   </section>
 
 <!-- MODALS -->
 
-  <section class="section-create-dishes" v-if="showAddDishesModal">
+  <ModalAction :showModal="showAddDishesModal" :key="keyComponent">
     <div class="modal-confirm">
         <h2 class="h-16 font-bold text-2xl text-center">
             Aggiungi nuovo piatto
         </h2>
-        <div class="flex flex-col gap-4 flex-wrap">
-          <label for="name">Nome piatto</label>
-          <input type="text" 
-          class="border-2 hover:border-black focus:border-black rounded" 
-          v-model="dish_enoteca_category.name" 
-          :placeholder="dish_enoteca_category.name ? dish_enoteca_category.name : 'nome piatto'"
-          >
-          <!-- devo aggiungere anche descpription price, image -->
-          <label for="description">Consigli</label>
-          <textarea 
-          :placeholder="dish_enoteca_category.description ? dish_enoteca_category.description : 'consigli piatto'"
-          class="border-2 hover:border-black focus:border-black rounded"
-          v-model="dish_enoteca_category.description"></textarea>
-          <label for="price">Prezzo</label>
-          <div>
-            <input type="number" 
-            :placeholder="dish_enoteca_category.price ? dish_enoteca_category.price : 'prezzo del piatto'"
-            class="border-2 hover:border-black focus:border-black rounded"
-            v-model="dish_enoteca_category.price"><span> euro</span>
+        <form  @submit.prevent="addDish">
+          <div class="grid-show-dish">
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          nome:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="dish_enoteca_category.name" :placeholder="dish_enoteca_category.name">
+                  </div>
+                  
+              </div>
+              <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
+                  <div class="flex flex-col justify-between items-start">
+                      <span class="font-black me-2 uppercase">
+                          immagine
+                      </span>
+                      <input type="file" @change="onFileChange" accept="image/*">
+                  </div>
+                  <img :src="imagePreview" class="h-image my-2 border border-3 border-black object-cover">
+              </div>            <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
+                  <span class="font-black me-2 uppercase">
+                      Allergeni: 
+                  </span>
+                  <ul class="flex gap-2">
+                    <li class="rounded-full cursor-pointer">
+                        <!-- <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-scale-down w-10 h-10 rounded-full border border-3 border-black"> -->
+                           <p class="p-2 rounded-full border border-3 border-black">allergene 1</p>
+                      </li>
+                      <li class="rounded-full cursor-pointer">
+                           <p class="p-2 rounded-full border border-3 border-black">allergene 1</p>
+                      </li>
+                      <li class="rounded-full cursor-pointer">
+                           <p class="p-2 rounded-full border border-3 border-black">allergene 1</p>
+                      </li>
+                  </ul>
+                  <!-- <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
+                              Non sono presenti allergeni attivi
+                  </div> -->
+  
+  
+              </div>
+              <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                  <div class="w-full flex justify-between items-center font-black uppercase">
+                      Consigli:
+                  </div>
+                  <input class="w-full h-16" type="text" v-model="dish_enoteca_category.description" :placeholder="dish_enoteca_category.description">
+              </div>
+              <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
+                  <div class="flex flex-col gap-2 w-full">
+                      <div class="font-black uppercase">
+                          prezzo:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="dish_enoteca_category.price" :placeholder="dish_enoteca_category.price">
+                  </div>
+              </div>
+              <SelectMultiple :options="drinks" @updateComponent="addDrink" defaultLabel="Il mio testo personalizzato" style="grid-area: abbinamenti;" />
+              {{ drinks }}
           </div>
-          <label for="image">Immagine</label>
-          <input type="file"
-          v-on:change="onFileChange" ref="file" accept="image/*">
-          <label for="lang">Language</label>
-          <select name="pairings" id="lang">
-            <option value="javascript">JavaScript</option>
-          </select>
-
-
-          <div class="flex gap-20 p-10">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmAddDishes()">conferma</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showAddDishesModal = false">Annulla</button>
+  
+          <div class="flex justify-evenly">
+                <ButtonCss hoverColor='#00FF00' type="submit">
+                  <p class="w-96">
+                    Aggiungi piatto
+                  </p>
+                </ButtonCss>
+                <ButtonCss hoverColor="#DC2626" @click="showAddDishesModal = false">
+                  <p class="w-96">
+                    Annulla
+                  </p>
+                </ButtonCss>
           </div>
-        </div>
+        </form>
     </div>
-  </section>
+  </ModalAction>
 
-  <section class="section-delete" v-if="showDeleteModal">
-      <div class="modal-confirm">
+  <ModalAction :showModal="showDeleteModal">
+      <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
               Sei sicuro di voler eliminare questa categoria?
               <p class="text-base">la cancellazione della categoria provvederà a cancellare TUTTI i piatti abbinati</p>
@@ -127,10 +165,10 @@ const props = defineProps({
               <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
           </div>
       </div>
-  </section>
+  </ModalAction>
 
-  <section class="section-edit" v-if="showEditModal">
-      <div class="modal-confirm">
+  <ModalAction :showModal="showEditModal">
+      <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
               Modifica categoria
           </h2>
@@ -140,19 +178,6 @@ const props = defineProps({
               <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
           </div>
       </div>
-  </section>
-
-  <ModalAction :showModal="showModalDeleteDish" :selectedDish="selectedDish">
-    <h2 class="h-20 font-bold text-2xl text-center">
-      Sei sicuro di voler eliminare il piatto: 
-      {{ 
-        getDishName(dishIdToDelete)
-      }}?
-    </h2>
-    <div class="flex w-100 justify-between p-5">
-      <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish()">Conferma</button>
-      <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalDeleteDish = false">Annulla</button>
-    </div>
   </ModalAction>
 
   <ModalAction :showModal="showModalDish">
@@ -163,6 +188,8 @@ const props = defineProps({
     :category_enoteca="category_enoteca"
     :dish_enoteca_category="dish_enoteca_category"
     @showModalDish="showModalDish = false"
+    @deleteDish="confirmDeleteDish"
+    @matchDish="matchDish"
     />
   </ModalAction>
 
@@ -174,12 +201,15 @@ import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
 import ModalAction from '@/Components/ModalAction.vue';
 import ShowDish from '@/Components/Sections/ShowEditDish.vue';
+import ButtonCss from '@/Components/ButtonCss.vue';
+import SelectMultiple from '@/Components/SelectMultiple.vue';
 
 export default {
   components: {
     Switch_button,
     ModalAction,
-    ShowDish
+    ShowDish,
+    ButtonCss
   },
   name: 'Category',
   props: {
@@ -187,6 +217,7 @@ export default {
     selectedVenueColor: String,
     dish_enoteca_category: Array,
     allergens: Array,
+    drinks: Array,
     allergensDishes: Array,
     is_drink: {
       type: Boolean,
@@ -210,6 +241,7 @@ export default {
       localDishEnotecaCategory: [],
       allergensDishes: this.allergensDishes,
       isMatch: false,
+      imagePreview: null,
     };
   },
   methods: {
@@ -270,16 +302,16 @@ export default {
             });
         },
         onFileChange(e) {
-        let files = e.target.files || e.dataTransfer.files;
-        if (!files.length)
-          return;
-        this.createImage(files[0]);
+          let files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+            return;
+          this.createImage(files[0]);
         },
         createImage(file) {
           let reader = new FileReader();
           let vm = this;
           reader.onload = (e) => {
-            vm.dish_enoteca_category.image = e.target.result;
+            vm.imagePreview = e.target.result;
           };
           reader.readAsDataURL(file);
         },
@@ -351,10 +383,6 @@ export default {
             });
           }
         },
-        openModalDeleteDish(dishId) {
-          this.dishIdToDelete = dishId;
-          this.showModalDeleteDish = !this.showModalDeleteDish;
-        },
         getDishName(dishId) {
           for (let category of this.localDishEnotecaCategory) {
             let foundDish = category.dishes.find(dish => dish.id === dishId);
@@ -364,16 +392,16 @@ export default {
           }
           return 'Non trovato';
         },
-        confirmDeleteDish() {
-          axios.delete(`/api/dishes/${this.dishIdToDelete}`)
+        confirmDeleteDish(dishIdToDelete) {
+          axios.delete(`/api/dishes/${dishIdToDelete}`)
           .then(() => {
             for (let category of this.category_enoteca) {
-              let index = category.dishes.findIndex(dish => dish.id === this.dishIdToDelete);
+              let index = category.dishes.findIndex(dish => dish.id === dishIdToDelete);
               if (index !== -1) {
                 category.dishes.splice(index, 1);
               }
             }
-            this.showModalDeleteDish = false;
+            this.showModalDish = false;
           })
           .catch(error => {
             console.log(error);
@@ -382,7 +410,12 @@ export default {
         openShowDish(dishId) {
           this.selectedDish = dishId;
           this.showModalDish = !this.showModalDish;
-        }
+        },
+        addDrink(newDrink) {
+          if(newDrink) {
+            keyComponent++;
+          }
+        },
       },
       created() {
           this.localDishEnotecaCategory = this.category_enoteca.map(category => {
@@ -410,25 +443,32 @@ export default {
   border-color: #a51a1a;
 }
 
-.section-delete, .section-edit, .section-create-dishes{
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    .modal-confirm{
-        background-color: white;
-        padding: 60px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    }
+.modal-confirm{
+    width: calc(100vw - 140px);
+    height: calc(100vh - 110px);
+    padding: 5px;
 }
 
+.grid-show-dish{
+    display: grid;
+    margin: 20px 0;
+    height: 62vh;
+    grid-template-areas: 
+        "nome nome immagine"
+        "prezzo prezzo immagine"
+        "abbinamenti abbinamenti immagine"
+        "allergeni allergeni immagine"
+        "consigli consigli consigli";
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 2fr 2fr;
+    gap: 10px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    .h-image{
+        width: 100%;
+        height: 80%;
+    }
+}
 
 
 </style>

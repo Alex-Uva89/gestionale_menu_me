@@ -1,125 +1,277 @@
 <template>
     <button class="absolute top-5 right-5" @click="showModalDish()">❌</button>
     <div class="container-dish-show">
-      <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
-        Scheda del piatto:
-        <span class="text-4xl uppercase text-red-500">
-          {{ selectedDish.name }}
-        </span> 
-      </h2>
-      <div class="h-10 flex justify-between items-center font-bold text-xl border border-3 border-t-0 border-black px-5">
-        ID Database: {{ selectedDish.id }}
-      </div>
-    <div class="grid-show-dish">
-        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
-            <div class="flex gap-2">
-                <div class="font-black uppercase">
-                    nome:
-                </div>
-                <span class="text-bold uppercase text-red-500">
-                    {{ selectedDish.name }}
-                </span>
-            </div>
-            <ButtonCss>
-                Modifica
-            </ButtonCss>
+        <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
+            Scheda del piatto:
+            <span class="text-4xl uppercase text-red-500">
+            {{ selectedDish.name }}
+            </span> 
+        </h2>
+        <div class="h-10 flex justify-between items-center font-bold text-xl border border-3 border-t-0 border-black px-5">
+            ID Database: {{ selectedDish.id }}
         </div>
-        <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
-            <div class="flex justify-between items-center">
+        <div class="grid-show-dish">
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        nome:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDish.name }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
+            </div>
+            <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
+                <div class="flex justify-between items-center">
+                    <span class="font-black me-2 uppercase">
+                        immagine
+                    </span>
+                    <ButtonCss>
+                            Modifica
+                    </ButtonCss>
+                </div>
+                <img :src="selectedDish.image? 'img/defaultDish.jpg' : '/storage/' + selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+            </div>
+            <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
-                    immagine
+                    Allergeni: 
                 </span>
-                <ButtonCss>
-                        Modifica
-                </ButtonCss>
-            </div>
-            <img :src="'/storage/' + selectedDish.image" :alt="selectedDish.name + ' image'" class="w-full h-full object-cover">
-        </div>
-        <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
-            <span class="font-black me-2 uppercase">
-                Allergeni: 
-            </span>
-            <ul class="flex gap-2" v-if="activeAllergens.length">
-                <li v-for="allergen in allergens" :key="allergen.id" class="rounded-full cursor-pointer">
-                    <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="w-10 h-10 rounded-full border border-3 border-black">
-                </li>
-            </ul>
-            <!-- <ul class="flex gap-2" v-if="activeAllergens.length">
-                      <li 
+                <ul class="flex gap-2" v-if="activeAllergens.length">
+                    <li 
                         v-for="allergen in allergens" 
-                        v-show="allergen.is_active"
-                        class="border border-black rounded-full flex justify-center items-center p-2 ms-2 cursor-pointer hover:bg-gray-300"
-                        @click="matchDish(dish.id, allergen.id)" 
-                        :id="`${dish.id}-${allergen.id}`"
-                        :class="{'bg-green': allergensDishes.some(allergenDish => allergenDish.id === allergen.id && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dish.id))}">
-                          <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-cover w-10 h10">
-                      </li>    
-            </ul> -->
-            <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
-                        Non sono presenti allergeni attivi
-            </div>
-
-
-        </div>
-        <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
-            <div class="w-full flex justify-between items-center font-black uppercase">
-                Consigli:
-                <ButtonCss>
-                    Modifica
-                </ButtonCss>
-            </div>
-            <span class="text-bold uppercase text-red-500">
-                {{ selectedDish.description }}
-            </span>
-        </div>
-        <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
-            <div class="flex gap-2">
-                <div class="font-black uppercase">
-                    prezzo:
+                        :key="allergen.id" 
+                        class="rounded-full cursor-pointer"
+                        :id="`${selectedDish.id}-${allergen.id}`"
+                        @click="matchDish(selectedDish.id, allergen.id)" 
+                    >
+                        <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
+                    </li>
+                </ul>
+                <!-- <ul class="flex gap-2" v-if="activeAllergens.length">
+                        <li 
+                            v-for="allergen in allergens" 
+                            v-show="allergen.is_active"
+                            class="border border-black rounded-full flex justify-center items-center p-2 ms-2 cursor-pointer hover:bg-gray-300"
+                            @click="matchDish(dish.id, allergen.id)" 
+                            :id="`${dish.id}-${allergen.id}`"
+                            :class="{'bg-green': allergensDishes.some(allergenDish => allergenDish.id === allergen.id && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dish.id))}">
+                            <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-cover w-10 h10">
+                        </li>    
+                </ul> -->
+                <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
+                            Non sono presenti allergeni attivi
                 </div>
-                <span class="text-bold uppercase text-red-500">
-                    {{ selectedDish.price }}
+
+
+            </div>
+            <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                <div class="w-full flex justify-between items-center font-black uppercase">
+                    Consigli:
+                    <ButtonCss @click="openInputDescription()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <span class="uppercase font-semibold text-red-500">
+                    {{ selectedDish.description }}
                 </span>
             </div>
-            <ButtonCss>
-                Modifica
-            </ButtonCss>
-        </div>
-        <div class="h-fit p-2 border-2 border-black" style="grid-area: abbinamenti;">
-            <div class="flex gap-2 justify-between items-center">
-                <div class="font-black uppercase">
-                    abbinamenti
+            <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        prezzo:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDish.Description }}
+                    </span>
                 </div>
-                <ButtonCss>
+                <ButtonCss @click="openInputPrice()">
                     Modifica
                 </ButtonCss>
             </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo eos aut, optio voluptatibus nesciunt reiciendis ex, voluptates commodi consequatur animi earum sequi, delectus aliquam ut fuga. Beatae corporis voluptatem magni. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam doloribus aut eveniet quis sunt, nihil libero cum placeat natus assumenda. Debitis exercitationem eos voluptas molestiae esse quasi ut quam ipsa? 1Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo eos aut, optio voluptatibus nesciunt reiciendis ex, voluptates commodi consequatur animi earum sequi, delectus aliquam ut fuga. Beatae corporis voluptatem magni. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam doloribus aut eveniet quis sunt, nihil libero cum placeat natus assumenda. Debitis exercitationem eos voluptas molestiae esse quasi ut quam ipsa? 1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo eos aut, optio voluptatibus nesciunt reiciendis ex, voluptates commodi consequatur animi earum sequi, delectus aliquam ut fuga. Beatae corporis voluptatem magni. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam doloribus aut eveniet quis sunt, nihil libero cum placeat natus assumenda. Debitis exercitationem eos voluptas molestiae esse quasi ut quam ipsa? 1</p>
+            <div class="h-fit p-2 border-2 border-black" style="grid-area: abbinamenti;">
+                <div class="flex gap-2 justify-between items-center">
+                    <div class="font-black uppercase">
+                        abbinamenti
+                    </div>
+                    <ButtonCss>
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <ul class="flex gap-2">
+                    <li class="px-4 py-1 border border-3 border-black rounded-full">Barolo</li>
+                    <li class="px-4 py-1 border border-3 border-black rounded-full">Vino a caso</li>
+                    <li class="px-4 py-1 border border-3 border-black rounded-full">Altro vino a caso</li>
+                </ul>
+            </div>
+        </div>
+        <div class="button_delete">
+            <div @click="openDeleteModalDish( selectedDish.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
+                Elimina piatto {{ selectedDish.name }}
+            </div>
         </div>
     </div>
-    </div>
+
+    <!-- MODALS -->
+     <div v-if="showModalDeleteDish" class="z-50">
+         <ModalAction :showModal="showModalDeleteDish" :selectedDish="selectedDish">
+             <h2 class="h-20 font-bold text-2xl text-center">
+             Sei sicuro di voler eliminare il piatto: 
+             {{ 
+                 selectedDish.name
+             }}?
+             </h2>
+             <div class="flex w-100 justify-between p-5">
+             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( selectedDish.id )">Conferma</button>
+             <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalDeleteDish = false">Annulla</button>
+             </div>
+         </ModalAction>
+     </div>
+
+     <div v-if="showModalEditName" class="z-50">
+         <ModalAction :showModal="showModalEditName" :selectedDish="selectedDish">
+                <h2 class="font-bold text-2xl text-center">
+                Modifica il nome del piatto: 
+                </h2>
+
+                <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                    nome attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDish.name }}
+                    </span>
+                </div>
+
+                <label for="name" class="font-bold text-xl">Nome:</label>
+                <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.name">
+
+
+                <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditName( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditName = false">Annulla</button>
+                </div>
+         </ModalAction>
+     </div>
+
+     <div v-if="showModalEditPrice" class="z-50">
+         <ModalAction :showModal="showModalEditPrice" :selectedDish="selectedDish">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il prezzo del piatto: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                    prezzo attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDish.price }} €
+                    </span>
+                </div>
+
+            <label for="name" class="font-bold text-xl">Nome:</label>
+            <input type="number" class="w-full border-1 border-black rounded" v-model="copySelectedDish.price">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPrice( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditPrice = false">Annulla</button>
+                </div>
+         </ModalAction>
+     </div>
+
+     <div v-if="showModalEditDescription" class="z-50">
+         <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica i consigli del piatto: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                    descrizione attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDish.description }}
+                    </span>
+                </div>
+
+            <label for="name" class="font-bold text-xl">Consiglio:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDescription( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditDescription = false">Annulla</button>
+                </div>
+         </ModalAction>
+     </div>
+
 </template>
 
 
 <script>
 import ButtonCss from '../ButtonCss.vue';
+import ModalAction from '../ModalAction.vue';
 
 
 export default {
     
     props: ['selectedDish', 'showModalDish', 'allergens'],
     components: {
-        ButtonCss
+        ButtonCss,
+        ModalAction
+    },
+    data() {
+        return {
+            showModalEditName: false,
+            showModalDeleteDish: false,
+            showModalEditPrice: false,
+            showModalEditDescription: false,
+            dishIdToDelete: null,
+            copySelectedDish: null
+        }
     },
     methods: {
         showModalDish(){
             this.$emit('showModalDish');
+        },
+        openDeleteModalDish(dishId){
+            this.dishIdToDelete = dishId;
+            this.showModalDeleteDish = true;
+        },
+        confirmDeleteDish(id){
+            this.$emit('deleteDish', id);
+            this.showModalDeleteDish = false;
+        },
+        matchDish(dishId, allergenId){
+            console.log('PREMUTO')
+            this.$emit('matchDish', dishId, allergenId);
+        },
+        openInputName(){
+            this.showModalEditName = true;
+        },
+        confirmEditName(dishNew){
+            this.selectedDish.name = dishNew.name
+            this.showModalEditName = false;
+        },
+        openInputPrice(){
+            this.showModalEditPrice = true;
+        },
+        confirmEditPrice(dishNew){
+            this.selectedDish.price = dishNew.price
+            this.showModalEditPrice = false;
+        },
+        openInputDescription(){
+            this.showModalEditDescription = true;
+        },
+        confirmEditDescription(dishNew){
+            this.selectedDish.description = dishNew.description
+            this.showModalEditDescription = false;
         }
     },
     computed: {
         activeAllergens() {
           return this.allergens.filter(allergen => allergen.is_active);
         }
+    },
+    mounted() {
+        this.copySelectedDish = Object.assign({}, this.selectedDish);
     }
 }
 
@@ -136,7 +288,7 @@ export default {
 .grid-show-dish{
     display: grid;
     margin: 20px 0;
-    height: 65vh;
+    height: 62vh;
     grid-template-areas: 
         "nome nome immagine"
         "prezzo prezzo immagine"
@@ -148,6 +300,17 @@ export default {
     gap: 10px;
     overflow-y: scroll;
     scrollbar-width: none;
+    .h-image{
+        min-width: 80%;
+        min-height: 80%;
+    }
+}
+
+.button-delete{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
 }
 
 </style>

@@ -13,6 +13,7 @@ const props = defineProps({
     drink_enoteca_category: Array,
     allergens: Array,
     allergensDishes: Array,
+    drinks: Array,
 });
 
 
@@ -74,6 +75,7 @@ const props = defineProps({
         @dishAdded="$emit('dishAdded')"
         :allergens="allergens"
         :allergensDishes="allergensDishes"
+        :drinks="drinks"
       />
     </div>
 
