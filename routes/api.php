@@ -32,12 +32,13 @@ Route::put('/recipes/{id}', [RecipeController::class, 'update']);
 Route::post('/', [HomeController::class, 'store'])->name('store');
 Route::post('/categories', [CategoryController::class, 'store']);
 Route::post('/categories/{id}/venues', [HomeController::class, 'attachVenues']);
+Route::post('/categories/{id}/dishes', [HomeController::class, 'store']);
+Route::post('/categories/{id}/drinks', [CategoryController::class, 'addDrink']);
 Route::post('/dishes/{id}', [DishController::class, 'store']);
 Route::post('/drinks', [DrinkController::class, 'store']);
 Route::post('/allergens', [AllergenController::class, 'store']);
-Route::post('/recipes', [RecipeController::class, 'store']);
 Route::post('/allergens/{id}/dishes', [AllergenController::class, 'attachDishes']);
-Route::post('/categories/{id}/drinks', [CategoryController::class, 'addDrink']);
+Route::post('/recipes', [RecipeController::class, 'store']);
 
 // DELETE
 Route::delete('/', [HomeController::class, 'destroy'])->name('destroy');

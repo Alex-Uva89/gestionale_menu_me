@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dish;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class DishController extends Controller
 {
@@ -15,9 +15,8 @@ class DishController extends Controller
         // specific record if exists
         $dish_laCucina_category = Dish::all()->where('category_id', 1)->firstOrFail();
         $dish_scante_category = Dish::all()->where('category_id', 2)->firstOrFail();
-        $dish_enoteca_category = Dish::all()->where('category_id', 3)->firstOrFail();
+        $dish_enoteca_category = Dish::with('allergens')->where('category_id', 3)->firstOrFail();
 
-        dd($dish_laCucina_category, $dish_scante_category, $dish_enoteca_category);
 
         $data = [
             'dish' => $dish,
@@ -30,7 +29,7 @@ class DishController extends Controller
     }
 
     //store
-    public function store()
+    public function store(Request $request)
 {
     $dish = new Dish();
     $dish->name = request('name');
@@ -39,9 +38,21 @@ class DishController extends Controller
     $dish->category_id = request('category_id');
     $dish->venue_id = request('venue_id');
 
-    if (request()->has('image')) {
-        $dish->image = request('image');
+    
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        if ($image->isValid()) {
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/storage');
+            $image->move($destinationPath, $imageName);
+            $dish->image = $imageName;
+        } else {
+            return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+        }
+    } else {
+        return response()->json(['error' => 'Nessun file fornito.'], 400);
     }
+
 
     $dish->save();
 

@@ -19,7 +19,7 @@ class AllergenController extends Controller
         {
             $allergens = Allergen::all();
 
-            dd($allergens);
+            // dd($allergens);
 
             return Inertia::render('Home', [
                 'allergens' => $allergens,

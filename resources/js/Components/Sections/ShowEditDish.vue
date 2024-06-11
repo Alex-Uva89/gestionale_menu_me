@@ -40,27 +40,18 @@
                     Allergeni: 
                 </span>
                 <ul class="flex gap-2" v-if="activeAllergens.length">
-                    <li 
-                        v-for="allergen in allergens" 
-                        :key="allergen.id" 
-                        class="rounded-full cursor-pointer"
-                        :id="`${selectedDish.id}-${allergen.id}`"
-                        @click="matchDish(selectedDish.id, allergen.id)" 
-                    >
-                        <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
-                    </li>
-                </ul>
-                <!-- <ul class="flex gap-2" v-if="activeAllergens.length">
+        
                         <li 
-                            v-for="allergen in allergens" 
-                            v-show="allergen.is_active"
-                            class="border border-black rounded-full flex justify-center items-center p-2 ms-2 cursor-pointer hover:bg-gray-300"
-                            @click="matchDish(dish.id, allergen.id)" 
-                            :id="`${dish.id}-${allergen.id}`"
-                            :class="{'bg-green': allergensDishes.some(allergenDish => allergenDish.id === allergen.id && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dish.id))}">
-                            <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-cover w-10 h10">
-                        </li>    
-                </ul> -->
+                            v-for="allergen in activeAllergens" 
+                            :key="allergen.id" 
+                            class="rounded-full cursor-pointer"
+                            :id="`${selectedDish.id}-${allergen.id}`"
+                            @click="matchDish(selectedDish.id, allergen.id)" 
+                            :class="{ 'bg-olive': isAllergenMatched(allergen.id) }"
+                        >
+                            <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
+                        </li>
+                </ul>
                 <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
                             Non sono presenti allergeni attivi
                 </div>
@@ -84,7 +75,7 @@
                         prezzo:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDish.Description }}
+                        {{ selectedDish.price }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputPrice()">
@@ -179,7 +170,7 @@
      </div>
 
      <div v-if="showModalEditDescription" class="z-50">
-         <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica i consigli del piatto: 
             </h2>
@@ -189,7 +180,7 @@
                     <span class="text-red-500 text-xl">
                         {{ selectedDish.description }}
                     </span>
-                </div>
+            </div>
 
             <label for="name" class="font-bold text-xl">Consiglio:</label>
             <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description">
@@ -198,8 +189,8 @@
             <div class="flex w-full justify-between py-5">
                     <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDescription( copySelectedDish )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditDescription = false">Annulla</button>
-                </div>
-         </ModalAction>
+            </div>
+        </ModalAction>
      </div>
 
 </template>
@@ -224,7 +215,8 @@ export default {
             showModalEditPrice: false,
             showModalEditDescription: false,
             dishIdToDelete: null,
-            copySelectedDish: null
+            copySelectedDish: null,
+            allergensDishes: [],
         }
     },
     methods: {
@@ -240,8 +232,16 @@ export default {
             this.showModalDeleteDish = false;
         },
         matchDish(dishId, allergenId){
-            console.log('PREMUTO')
+            const allergenSpecific = document.getElementById(`${dishId}-${allergenId}`)
             this.$emit('matchDish', dishId, allergenId);
+            allergenSpecific.classList.toggle('bg-olive')
+        },
+        isAllergenMatched(allergenId) {
+            const allergenDish = this.allergensDishes.find(allergenDish => allergenDish.id === allergenId);
+            if (!allergenDish) {
+                return false;
+            }
+            return allergenDish.dishes.some(dish => dish.pivot.dish_id === this.selectedDish.id);
         },
         openInputName(){
             this.showModalEditName = true;
@@ -278,6 +278,10 @@ export default {
 </script>
 
 <style scoped>
+
+.bg-olive{
+    background-color: #6b7238;
+}
 
 .container-dish-show{
     width: calc(100vw - 140px);

@@ -105,6 +105,7 @@ const props = defineProps({
         :showAddDishesModal="showAddDishesModal"
         :componentKey="componentKey"
         @drinkAdded="$emit('drinkAdded')"
+        @updateDrinks="addDrink"
         :allergens="allergens"
         :allergensDishes="allergensDishes"
       />
@@ -233,6 +234,9 @@ export default {
               buttonCategory.style.paddingBottom = '10px';
             }
           }
+        },
+        addDrink(newDrink) {
+          this.drinks.push(newDrink);
         },
     },
     watch: {

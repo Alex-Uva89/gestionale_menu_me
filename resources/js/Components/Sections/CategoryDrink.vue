@@ -245,7 +245,7 @@ export default {
                 this.componentKeyli++;
                 if (category) {
                   category.drinks.push(newDrink);
-                  this.localDrinkEnotecaCategory.push(newDrink);
+                  this.$emit('updateDrinks', newDrink);
                   this.drinkToCreateId = '';
                 }
               })

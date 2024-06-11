@@ -47,7 +47,7 @@ const props = defineProps({
                 >
                   <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="dish.image = 'undefined' ? 'img/defaultDish.jpg' : dish.image" alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1">
+                      <img :src="dish.image === undefined ? 'img/defaultDish.jpg' : '/storage/' + dish.image" alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1">                    
                     </div>
                     <div class="flex flex-col name">
                       <span class="text-bold">Nome piatto: </span><span class="first-letter:uppercase">{{ dish.name }}</span>
@@ -75,11 +75,14 @@ const props = defineProps({
 <!-- MODALS -->
 
   <ModalAction :showModal="showAddDishesModal" :key="keyComponent">
-    <div class="modal-confirm">
+    <div class="modal-confirm relative">
+        <ButtonCss hoverColor="#DC2626" @click="showAddDishesModal = false" style="position: absolute; right:-10px; top:-20px;">
+                  ❌
+        </ButtonCss>
         <h2 class="h-16 font-bold text-2xl text-center">
             Aggiungi nuovo piatto
         </h2>
-        <form  @submit.prevent="addDish">
+        <form  @submit.prevent="confirmAddDishes">
           <div class="grid-show-dish">
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                   <div class="w-full flex flex-col gap-2">
@@ -98,27 +101,25 @@ const props = defineProps({
                       <input type="file" @change="onFileChange" accept="image/*">
                   </div>
                   <img :src="imagePreview" class="h-image my-2 border border-3 border-black object-cover">
-              </div>            <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
+              </div>            
+              <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                   <span class="font-black me-2 uppercase">
                       Allergeni: 
                   </span>
                   <ul class="flex gap-2">
-                    <li class="rounded-full cursor-pointer">
-                        <!-- <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-scale-down w-10 h-10 rounded-full border border-3 border-black"> -->
-                           <p class="p-2 rounded-full border border-3 border-black">allergene 1</p>
-                      </li>
-                      <li class="rounded-full cursor-pointer">
-                           <p class="p-2 rounded-full border border-3 border-black">allergene 1</p>
-                      </li>
-                      <li class="rounded-full cursor-pointer">
-                           <p class="p-2 rounded-full border border-3 border-black">allergene 1</p>
+                      <template v-for="allergen in allergens">
+                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)">
+                          <img 
+                            :src="'/storage/' + allergen.icon" 
+                            :alt="allergen.name + ' icon'" 
+                            class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
+                        </li>
+                      </template>
+                      <li v-if="!allergens.some(allergen => allergen.is_active)" class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center">
+                        Non sono presenti allergeni attivi
                       </li>
                   </ul>
-                  <!-- <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
-                              Non sono presenti allergeni attivi
-                  </div> -->
-  
-  
+
               </div>
               <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
                   <div class="w-full flex justify-between items-center font-black uppercase">
@@ -131,22 +132,19 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           prezzo:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="dish_enoteca_category.price" :placeholder="dish_enoteca_category.price">
+                      <input class="w-full h-8" type="number" v-model="dish_enoteca_category.price" :placeholder="dish_enoteca_category.price">
                   </div>
               </div>
-              <SelectMultiple :options="drinks" @updateComponent="addDrink" defaultLabel="Il mio testo personalizzato" style="grid-area: abbinamenti;" />
-              {{ drinks }}
+              <div style="grid-area: abbinamenti">
+                <p>Aggiungi abbinamenti:</p>
+                <SelectMultiple :options="drinks" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+              </div>
           </div>
   
-          <div class="flex justify-evenly">
-                <ButtonCss hoverColor='#00FF00' type="submit">
-                  <p class="w-96">
+          <div class="flex w-full justify-center">
+                <ButtonCss v-bind:disabled="!isFormFilled" hoverColor='#00FF00' type="submit" style="width: 100%;">
+                  <p>
                     Aggiungi piatto
-                  </p>
-                </ButtonCss>
-                <ButtonCss hoverColor="#DC2626" @click="showAddDishesModal = false">
-                  <p class="w-96">
-                    Annulla
                   </p>
                 </ButtonCss>
           </div>
@@ -226,6 +224,8 @@ export default {
   },
   data() {
     return {
+      selectedAllergens: [],
+      file: null,
       componentKeyli: 0,
       showModalDish: false,
       showDeleteModal: false,
@@ -302,10 +302,11 @@ export default {
             });
         },
         onFileChange(e) {
-          let files = e.target.files || e.dataTransfer.files;
-          if (!files.length)
+          this.files = e.target.files || e.dataTransfer.files;
+          if (!this.files.length)
             return;
-          this.createImage(files[0]);
+          this.file = this.files[0]; // Aggiungi questa riga
+          this.createImage(this.files[0]);
         },
         createImage(file) {
           let reader = new FileReader();
@@ -314,6 +315,14 @@ export default {
             vm.imagePreview = e.target.result;
           };
           reader.readAsDataURL(file);
+        },
+        toggleAllergen(allergenId) {
+          const index = this.selectedAllergens.indexOf(allergenId);
+          if (index === -1) {
+            this.selectedAllergens.push(allergenId);
+          } else {
+            this.selectedAllergens.splice(index, 1);
+          }
         },
         addDishes(id) {
           this.showAddDishesModal = true;
@@ -324,44 +333,44 @@ export default {
           formData.append('name', this.dish_enoteca_category.name);
           formData.append('description', this.dish_enoteca_category.description);
           formData.append('price', this.dish_enoteca_category.price);
-          formData.append('image', this.dish_enoteca_category.image);
+          formData.append('image', this.file);
           formData.append('category_id', this.dishToCreateId);
-          formData.append('venue_id', 3);
-
+          formData.append('venue_id', 3); 
+        
           axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then(response => {
-            if (response.data && response.data.name && response.data.description && response.data.price && response.data.image) {
-              let newDish = response.data;
-              let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
-              console.log('CATEGORY');
-              console.log(category);
-              if (category) {
-                category.dishes.push(newDish);
-                this.dishToCreateId = '';
-              }
-              this.$emit('dishAdded');
-              this.componentKeyli++;
-            } else {
-              console.error("Server response does not contain expected data");
+            let data = response.data;
+            data = data.substring(data.indexOf('{'));
+            let newDish = JSON.parse(data);
+            let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
+
+            if (category) {
+              category.dishes.push(newDish);
+              this.dishToCreateId = '';
             }
-          })
+            this.$emit('dishAdded');
+            this.componentKeyli++;
+            this.showAddDishesModal = false;
+
+            this.selectedAllergens.forEach(allergenId => {
+                this.matchDish(newDish.id, allergenId);
+              });
+              this.selectedAllergens = [];
+            })
           .catch(error => {
             console.log(error);
           });
-          this.showAddDishesModal = false;
         },
         matchDish(dishId, allergenId) {
-          const allergenSpecific = document.getElementById(`${dishId}-${allergenId}`);
           const isMatched = this.allergensDishes.some(allergenDish => allergenDish.id === allergenId && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dishId));
         
           if (isMatched) {
             axios.delete(`/api/allergens/${allergenId}/dishes/${dishId}`)
             .then(() => {
-              allergenSpecific.classList.remove('bg-green-500');
               const index = this.allergensDishes.findIndex(allergenDish => allergenDish.id === allergenId);
               const dishIndex = this.allergensDishes[index].dishes.findIndex(dishAbb => dishAbb.pivot.dish_id === dishId);
               this.allergensDishes[index].dishes.splice(dishIndex, 1);
@@ -374,7 +383,7 @@ export default {
               dish_id: dishId
             })
             .then(() => {
-              allergenSpecific.classList.add('bg-green-500');
+              
               const index = this.allergensDishes.findIndex(allergenDish => allergenDish.id === allergenId);
               this.allergensDishes[index].dishes.push({pivot: {dish_id: dishId}});
             })
@@ -427,13 +436,18 @@ export default {
           });
 
           this.allergenDishes = this.allergensDishes;
+      },
+      computed: {
+        isFormFilled() {
+            return this.dish_enoteca_category.name && this.dish_enoteca_category.price && !this.imagePreview == [];
+        },
       }
 };
 </script>
 
 
 <style scoped>
-  .bg-olive {
+.bg-olive {
     background-color: #6b7238;
 }
 .bg-enoteca {
@@ -456,8 +470,8 @@ export default {
     grid-template-areas: 
         "nome nome immagine"
         "prezzo prezzo immagine"
-        "abbinamenti abbinamenti immagine"
         "allergeni allergeni immagine"
+        "abbinamenti abbinamenti immagine"
         "consigli consigli consigli";
     grid-template-columns: 2fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 2fr 2fr;

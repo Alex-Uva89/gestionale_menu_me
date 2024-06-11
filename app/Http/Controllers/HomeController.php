@@ -57,6 +57,8 @@ class HomeController extends Controller
         $allergens = Allergen::all();
 
         $allergensDishes = Allergen::with('dishes')->get();
+
+        // dd($allergensDishes);                          
         
         // smash data
          $data = [
