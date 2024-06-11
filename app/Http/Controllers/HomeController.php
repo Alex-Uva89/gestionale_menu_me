@@ -58,7 +58,9 @@ class HomeController extends Controller
 
         $allergensDishes = Allergen::with('dishes')->get();
 
-        // dd($allergensDishes);                          
+        $pairings_enoteca = Dish::with('drinks')->where('venue_id', 3)->get();
+
+        // dd($pairings_enoteca);                          
         
         // smash data
          $data = [
@@ -77,6 +79,7 @@ class HomeController extends Controller
              'drink_enoteca_category' => $drink_enoteca_category,
              'allergens' => $allergens,
              'allergensDishes' => $allergensDishes,
+             'pairingsEnoteca' => $pairings_enoteca
          ];
 
 

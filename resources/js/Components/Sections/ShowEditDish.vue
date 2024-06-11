@@ -33,7 +33,7 @@
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDish.image? 'img/defaultDish.jpg' : '/storage/' + selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="selectedDish.image? '/storage/' + selectedDish.image : 'img/defaultDish.jpg' " :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
@@ -66,7 +66,7 @@
                     </ButtonCss>
                 </div>
                 <span class="uppercase font-semibold text-red-500">
-                    {{ selectedDish.description }}
+                    {{ selectedDish.description === 'undefined' ? 'Non ci sono consigli in questo piatto al momento' : selectedDish.description }}
                 </span>
             </div>
             <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
@@ -92,15 +92,18 @@
                     </ButtonCss>
                 </div>
                 <ul class="flex gap-2">
-                    <li class="px-4 py-1 border border-3 border-black rounded-full">Barolo</li>
-                    <li class="px-4 py-1 border border-3 border-black rounded-full">Vino a caso</li>
-                    <li class="px-4 py-1 border border-3 border-black rounded-full">Altro vino a caso</li>
+    
+                    <template v-for="dish in pairings" :key="localComponentAllergen">
+                        <template v-for="drink in dish.drinks">
+                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                        </template>
+                    </template>
                 </ul>
             </div>
         </div>
         <div class="button_delete">
             <div @click="openDeleteModalDish( selectedDish.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
-                Elimina piatto {{ selectedDish.name }}
+                Elimina piatto: {{ selectedDish.name }}
             </div>
         </div>
     </div>
@@ -203,7 +206,7 @@ import ModalAction from '../ModalAction.vue';
 
 export default {
     
-    props: ['selectedDish', 'showModalDish', 'allergens'],
+    props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'componentAllergen'],
     components: {
         ButtonCss,
         ModalAction
@@ -216,7 +219,9 @@ export default {
             showModalEditDescription: false,
             dishIdToDelete: null,
             copySelectedDish: null,
-            allergensDishes: [],
+            arrayAllergens: this.allergensDishes,
+            pairings: this.pairingsEnoteca,
+            localComponentAllergen: this.componentAllergen
         }
     },
     methods: {
@@ -272,7 +277,12 @@ export default {
     },
     mounted() {
         this.copySelectedDish = Object.assign({}, this.selectedDish);
+    },
+    watch: {
+    componentAllergen(newVal) {
+      this.localComponentAllergen = newVal;
     }
+  }
 }
 
 </script>
@@ -305,8 +315,8 @@ export default {
     overflow-y: scroll;
     scrollbar-width: none;
     .h-image{
-        min-width: 80%;
-        min-height: 80%;
+        width: 100%;
+        height: 80%;
     }
 }
 

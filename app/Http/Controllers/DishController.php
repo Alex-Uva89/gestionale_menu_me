@@ -30,34 +30,32 @@ class DishController extends Controller
 
     //store
     public function store(Request $request)
-{
-    $dish = new Dish();
-    $dish->name = request('name');
-    $dish->description = request('description');
-    $dish->price = request('price');
-    $dish->category_id = request('category_id');
-    $dish->venue_id = request('venue_id');
-
+    {
+        $dish = new Dish();
+        $dish->name = request('name');
+        $dish->description = request('description');
+        $dish->price = request('price');
+        $dish->category_id = request('category_id');
+        $dish->venue_id = request('venue_id');
     
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        if ($image->isValid()) {
-            $imageName = time().'.'.$image->getClientOriginalExtension();
-            $destinationPath = public_path('/storage');
-            $image->move($destinationPath, $imageName);
-            $dish->image = $imageName;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            if ($image->isValid()) {
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $destinationPath = public_path('/storage');
+                $image->move($destinationPath, $imageName);
+                $dish->image = $imageName;
+            } else {
+                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+            }
         } else {
-            return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+            return response()->json(['error' => 'Nessun file fornito.'], 400);
         }
-    } else {
-        return response()->json(['error' => 'Nessun file fornito.'], 400);
+    
+        $dish->save();
+
+        return response()->json($dish, 201);
     }
-
-
-    $dish->save();
-
-    return response()->json($dish, 201);
-}
 
     public function destroyByCategory($categoryId)
     {
@@ -74,6 +72,17 @@ class DishController extends Controller
     public function getAllergens(Dish $dish)
     {
         return response()->json($dish->allergens);
+    }
+
+    
+
+    public function addDrinkMatch(Request $request, $id)
+    {
+        $dish = Dish::find($id);
+        $drinkId = $request->input('drink_id');
+        $dish->drinks()->attach($drinkId);
+    
+        return response()->json(['message' => 'Drink added successfully'], 200);
     }
 
     public function destroy($id)

@@ -10,11 +10,11 @@
                         <input class="js-filter-input" type="text" placeholder="Search">
                     </li>
                     <li v-for="(option, index) in options" :key="index" class="js-filterable" :data-filter-criteria="option.text">
-                        <label class="menu-item">
-                        <input class="checkbox js-option" type="checkbox" :value="option.value">
+                      <label class="menu-item">
+                        <input class="checkbox js-option" type="checkbox" :value="option" @change="$emit('updateComponent', option)">
                         <div class="choice-input"></div>
                         <span>{{ option.name }}</span>
-                        </label>
+                      </label>
                     </li>
                     </ul>
                 </div>

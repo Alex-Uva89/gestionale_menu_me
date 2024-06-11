@@ -2,6 +2,7 @@
 
 const props = defineProps({
     selectedVenueName: String,
+    pairingsEnoteca: Array,
     selectedVenueColor: String,
     category_enoteca: Array,
     dish_enoteca_category: Array,
@@ -112,6 +113,7 @@ const props = defineProps({
                           <img 
                             :src="'/storage/' + allergen.icon" 
                             :alt="allergen.name + ' icon'" 
+                            :id="allergen.id"
                             class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
                         </li>
                       </template>
@@ -152,6 +154,8 @@ const props = defineProps({
     </div>
   </ModalAction>
 
+  
+
   <ModalAction :showModal="showDeleteModal">
       <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
@@ -185,6 +189,8 @@ const props = defineProps({
     :allergensDishes="allergensDishes"
     :category_enoteca="category_enoteca"
     :dish_enoteca_category="dish_enoteca_category"
+    :pairingsEnoteca="pairingsEnoteca"
+    :componentAllergen="componentAllergen"
     @showModalDish="showModalDish = false"
     @deleteDish="confirmDeleteDish"
     @matchDish="matchDish"
@@ -221,10 +227,12 @@ export default {
       type: Boolean,
       required: true
     },
+    pairingsEnoteca: Array,
   },
   data() {
     return {
       selectedAllergens: [],
+      selectedDrinks: [],
       file: null,
       componentKeyli: 0,
       showModalDish: false,
@@ -242,6 +250,7 @@ export default {
       allergensDishes: this.allergensDishes,
       isMatch: false,
       imagePreview: null,
+      arrayPairings: this.pairingsEnoteca,
     };
   },
   methods: {
@@ -317,10 +326,13 @@ export default {
           reader.readAsDataURL(file);
         },
         toggleAllergen(allergenId) {
+          const specificAllergen = document.getElementById(allergenId);
           const index = this.selectedAllergens.indexOf(allergenId);
           if (index === -1) {
+            specificAllergen.classList.add('bg-olive');
             this.selectedAllergens.push(allergenId);
           } else {
+            specificAllergen.classList.remove('bg-olive');
             this.selectedAllergens.splice(index, 1);
           }
         },
@@ -347,7 +359,7 @@ export default {
             data = data.substring(data.indexOf('{'));
             let newDish = JSON.parse(data);
             let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
-
+        
             if (category) {
               category.dishes.push(newDish);
               this.dishToCreateId = '';
@@ -355,17 +367,28 @@ export default {
             this.$emit('dishAdded');
             this.componentKeyli++;
             this.showAddDishesModal = false;
-
+        
             this.selectedAllergens.forEach(allergenId => {
-                this.matchDish(newDish.id, allergenId);
-              });
-              this.selectedAllergens = [];
-            })
+              this.matchDish(newDish.id, allergenId.id);
+            });
+            this.selectedAllergens = [];
+        
+            
+            this.selectedDrinks.forEach(drinkId => {
+              
+              this.matchDrink(newDish.id, drinkId);
+            });
+            this.selectedDrinks = [];
+          })
+        
           .catch(error => {
             console.log(error);
           });
         },
         matchDish(dishId, allergenId) {
+
+          console.log('ALLERGEN ID')
+          console.log(allergenId)
           const isMatched = this.allergensDishes.some(allergenDish => allergenDish.id === allergenId && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dishId));
         
           if (isMatched) {
@@ -391,6 +414,17 @@ export default {
               console.log(error);
             });
           }
+        },
+        matchDrink(dishId, drinkId) {
+          
+          axios.post(`/api/dishes/${dishId}/drinks`, { drink_id: drinkId.id })
+            .then(response => {
+              console.log(response.data);
+              this.componentAllergen++;
+            })
+            .catch(error => {
+              console.log(error);
+            });
         },
         getDishName(dishId) {
           for (let category of this.localDishEnotecaCategory) {
@@ -422,10 +456,16 @@ export default {
         },
         addDrink(newDrink) {
           if(newDrink) {
-            keyComponent++;
+            let index = this.selectedDrinks.indexOf(newDrink);
+            if (index === -1) {
+              this.selectedDrinks.push(newDrink);
+            } else {
+              this.selectedDrinks.splice(index, 1);
+            }
           }
+
         },
-      },
+  },
       created() {
           this.localDishEnotecaCategory = this.category_enoteca.map(category => {
               let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);

@@ -17,6 +17,8 @@ return new class extends Migration
 
             $table->foreign('dish_id')->references('id')->on('dishes')->onDelete('cascade');
             $table->foreign('drink_id')->references('id')->on('drinks')->onDelete('cascade');
+
+            $table->primary(['dish_id', 'drink_id']);
         });
     }
 

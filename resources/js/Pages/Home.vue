@@ -56,10 +56,11 @@ function updateCurrentPageComponent(value) {
           <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
           
+
           <Welcome 
             v-if="currentPageComponent === ''"
             @open-modal-instruction="toggleModalInstruction"
-          />
+            />
           <component 
             v-else
             :allergens="allergens"
@@ -83,6 +84,7 @@ function updateCurrentPageComponent(value) {
             @changePage="updateCurrentPageComponent"
             @changeHeader="updateSelectedValueButton"
             :drinks="drinks"
+            :pairingsEnoteca="pairingsEnoteca"
             />     
         </div>
 
@@ -103,7 +105,6 @@ function updateCurrentPageComponent(value) {
         </div>
       </div>
 
-      
       
     </div>
 </template>
@@ -187,6 +188,7 @@ export default {
     allergens: Array,
     receips: Array,
     drinks: Array,
+    pairingsEnoteca: Array
   },
   data() {
     return {

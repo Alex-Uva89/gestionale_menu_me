@@ -14,6 +14,7 @@ const props = defineProps({
     allergens: Array,
     allergensDishes: Array,
     drinks: Array,
+    pairingsEnoteca: Array,
 });
 
 
@@ -76,6 +77,7 @@ const props = defineProps({
         :allergens="allergens"
         :allergensDishes="allergensDishes"
         :drinks="drinks"
+        :pairingsEnoteca="pairingsEnoteca"
       />
     </div>
 
