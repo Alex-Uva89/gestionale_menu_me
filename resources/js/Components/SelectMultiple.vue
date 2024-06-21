@@ -7,11 +7,11 @@
                     </label>
                     <ul class="menu js-select-options">
                     <li class="menu-item filter">
-                        <input class="js-filter-input" type="text" placeholder="Search">
+                      <input class="js-filter-input" type="text" v-model="search" placeholder="Search">
                     </li>
-                    <li v-for="(option, index) in options" :key="index" class="js-filterable" :data-filter-criteria="option.text">
+                    <li v-for="(option, index) in filteredOptions" :key="index" class="js-filterable" :data-filter-criteria="option.text">
                       <label class="menu-item">
-                        <input class="checkbox js-option" type="checkbox" :value="option" @change="$emit('updateComponent', option)">
+                        <input class="checkbox js-option" type="checkbox" :value="option" :checked="isSelected(option)" @change="handleOptionChange(option)">
                         <div class="choice-input"></div>
                         <span>{{ option.name }}</span>
                       </label>
@@ -31,7 +31,16 @@ export default {
         defaultLabel: {
         type: String,
         default: 'Select multiple'
-        }
+        },
+        selected: {
+            type: Array,
+            default: () => []
+        },
+    },
+    data: function () {
+        return {
+            search: '',
+        };
     },
     mounted() {
         this.setupMenu();
@@ -73,7 +82,27 @@ export default {
                 });
             });
         },
+        handleOptionChange(option) {
+          this.$emit('changeOption', option);
+          this.$emit('updateComponent', option);
+        },
+        isSelected(option) {
+          return this.selected.includes(option.id);
+        },
     },
+    computed: {
+      filteredOptions() {
+            if (!this.search) {
+                return this.options;
+            }
+
+            const searchLower = this.search.toLowerCase();
+
+            return this.options.filter(option =>
+                option.name.toLowerCase().includes(searchLower)
+            );
+      }
+    }
 };
 </script>
 

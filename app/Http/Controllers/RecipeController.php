@@ -31,12 +31,25 @@ class RecipeController extends Controller
         $recipe = Recipe::find($id);
         if ($recipe) {
             $request->validate([
-                'name' => 'required|string|max:255',
-                'process' => 'required|string|max:1500',
+                'name' => 'sometimes|string|max:255',
+                'process' => 'sometimes|string|max:1500',
+                'is_active' => 'sometimes|boolean',
+                'dish_id' => 'sometimes|nullable|exists:dishes,id',
             ]);
+    
+            if ($request->has('name')) {
+                $recipe->name = $request->name;
+            }
+            if ($request->has('process')) {
+                $recipe->process = $request->process;
+            }
+            if ($request->has('is_active')) {
+                $recipe->is_active = $request->is_active;
+            }
+            if ($request->has('dish_id')) {
+                $recipe->dish_id = $request->dish_id;
+            }
 
-            $recipe->name = $request->name;
-            $recipe->process = $request->process;
             $recipe->save();
             return response()->json($recipe, 200);
         }

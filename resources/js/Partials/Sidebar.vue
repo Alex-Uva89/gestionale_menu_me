@@ -124,6 +124,7 @@ a:hover {
 import { ref } from 'vue';
 
 export default {
+    emits: ['venueName', 'venueColor', 'valueButton'],
     methods: {
         toggleDropdown() {
             const dropdown = document.getElementById('dropdown-example');

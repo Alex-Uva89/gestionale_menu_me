@@ -15,48 +15,60 @@ const props = defineProps({
 </script>
 
 <template>
-    <section class="accordion overflow-x-hidden mx-4" >
+    <section class="overflow-x-hidden mx-4" :key="keyComponentCategory">
       <h2 class="p-3"  v-if="!category_enoteca.some(category => !category.is_drink)">
   ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria food
       </h2>
       
      <div 
-     v-for="category in category_enoteca" 
+     v-for="category in categoryEnoteca" 
+     class="last:mb-10 last:border-b-2  border-l-2 border-r-2  border-black"
      :key="category.id">
      <div 
      class="tab category  bg-white" 
      v-if="!category.is_drink">
-      <div class="flex max-h-14 bg-white justify-evenly items-center gap-3 p-2">
+      <div class="flex max-h-20 bg-white justify-evenly items-center gap-3 p-2">
           <button @click="deleteCategory(category.id)">❌</button>
           <button @click="editCategory(category.id)">Edit</button>
-          <Switch_button :value="category.is_active === 1" @switchChanged="value => updateIsShowStatus(category.id, value)" />
+          <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
       </div>
       <div
+      class="p-2"
       :class="{
         'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
         'bg-olive': selectedVenueColor === 'green',
         'bg-stone-500': selectedVenueColor === 'gray',
         'bg-enoteca': selectedVenueColor === 'red',
         'text-orange-500': selectedVenueColor === 'gray',
-      }" :key="componentKeyli" >
+      }" :key="componentKeyli">
           <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
-          <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
+          <label :for="'cb'+ category.id" class="tab__label uppercase text-white font-bold cursor-pointer">
+            <span class="rounded-2xl text-black w-12 h-8 bg-white p-1 flex justify-center items-center">{{ activeDishesCount[category.id] }} / {{ category.dishes ? category.dishes.length : 0 }}</span>            <span>
+              {{ category.name }}
+            </span>
+            <span class="tab__label__arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+              </svg>
+            </span>
+          </label>
           <div class="tab__content bg-white" >
               <ul class="max-w-full">
                 <li v-for="dish in category.dishes" 
-                class="border-b-2 border-black p-2"
-                >
+                class="border-b-2 border-black p-2">
+                <div class="w-full h-full" :class="dish.is_active ? 'opacity-100' : 'opacity-20'">
                   <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="dish.image === undefined ? 'img/defaultDish.jpg' : '/storage/' + dish.image" alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1">                    
+                      <img :src="dish.image == 'null' ? 'img/defaultDish.jpg' : '/storage/' + dish.image "  alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
                     </div>
                     <div class="flex flex-col name">
-                      <span class="text-bold">Nome piatto: </span><span class="first-letter:uppercase">{{ dish.name }}</span>
+                      <span class="first-letter:uppercase text-bold">{{ dish.name }}</span>
                     </div>
                     <div class="flex flex-col price">
-                      <span class="text-bold">Prezzo: </span><span>{{ dish.price }} €</span>
+                      <span class="text-bold">{{ dish.price }} €</span>
                     </div>
                   </div>
+                </div>
                 </li>
               </ul>
          
@@ -101,7 +113,7 @@ const props = defineProps({
                       </span>
                       <input type="file" @change="onFileChange" accept="image/*">
                   </div>
-                  <img :src="imagePreview" class="h-image my-2 border border-3 border-black object-cover">
+                  <img :src="imagePreview === null? defaultImgDish : imagePreview" class="h-image my-2 border border-3 border-black object-cover">
               </div>            
               <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                   <span class="font-black me-2 uppercase">
@@ -154,8 +166,6 @@ const props = defineProps({
     </div>
   </ModalAction>
 
-  
-
   <ModalAction :showModal="showDeleteModal">
       <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
@@ -176,7 +186,7 @@ const props = defineProps({
           </h2>
           <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
           <div class="flex w-100 justify-between p-5">
-              <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(category_enoteca.name)">edit</button>
+              <button  @click="console.log('Button clicked'); confirmEdit(category_enoteca.name)">edit</button>              
               <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
           </div>
       </div>
@@ -190,7 +200,8 @@ const props = defineProps({
     :category_enoteca="category_enoteca"
     :dish_enoteca_category="dish_enoteca_category"
     :pairingsEnoteca="pairingsEnoteca"
-    :componentAllergen="componentAllergen"
+    :pairings="pairings"
+    :drinks="drinks"
     @showModalDish="showModalDish = false"
     @deleteDish="confirmDeleteDish"
     @matchDish="matchDish"
@@ -207,6 +218,7 @@ import ModalAction from '@/Components/ModalAction.vue';
 import ShowDish from '@/Components/Sections/ShowEditDish.vue';
 import ButtonCss from '@/Components/ButtonCss.vue';
 import SelectMultiple from '@/Components/SelectMultiple.vue';
+import defaultImgDish from '../../../../public/img/defaultDish.jpg';
 
 export default {
   components: {
@@ -231,6 +243,9 @@ export default {
   },
   data() {
     return {
+      categoryEnoteca: this.category_enoteca,
+      keyComponentCategory: 0,
+      defaultImgDish,
       selectedAllergens: [],
       selectedDrinks: [],
       file: null,
@@ -251,6 +266,8 @@ export default {
       isMatch: false,
       imagePreview: null,
       arrayPairings: this.pairingsEnoteca,
+      pairings: [],
+      dishActive: [],
     };
   },
   methods: {
@@ -304,7 +321,12 @@ export default {
         updateIsShowStatus(categoryId, value) {
           axios.put(`/api/categories/${categoryId}`, { is_active: value })
           .then(response => {
-              this.category = response.data;
+              this.categoryEnoteca = this.categoryEnoteca.map(category => {
+                  if (category.id === categoryId) {
+                      category.is_active = value;
+                  }
+                  return category;
+              });
             })
           .catch(error => {
               console.log(error);
@@ -355,12 +377,21 @@ export default {
             }
           })
           .then(response => {
-            let data = response.data;
-            data = data.substring(data.indexOf('{'));
-            let newDish = JSON.parse(data);
+            let newDish;
+            if (typeof response.data === 'string') {
+                let data = response.data;
+                data = data.substring(data.indexOf('{'));
+                newDish = JSON.parse(data);
+            } else {
+                newDish = response.data;
+            }
             let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
-        
+            
+
             if (category) {
+              if (!category.dishes) {
+                category.dishes = [];
+              }
               category.dishes.push(newDish);
               this.dishToCreateId = '';
             }
@@ -369,7 +400,7 @@ export default {
             this.showAddDishesModal = false;
         
             this.selectedAllergens.forEach(allergenId => {
-              this.matchDish(newDish.id, allergenId.id);
+              this.matchDish(newDish.id, allergenId);
             });
             this.selectedAllergens = [];
         
@@ -379,16 +410,22 @@ export default {
               this.matchDrink(newDish.id, drinkId);
             });
             this.selectedDrinks = [];
+
+
+            this.dish_enoteca_category.name = '';
+            this.dish_enoteca_category.description = '';
+            this.dish_enoteca_category.price = null;
+            this.file = null;
+            this.imagePreview = null;
           })
         
           .catch(error => {
-            console.log(error);
+            console.log('ERRORE AHI AHI AHI: '+ error);
           });
+
         },
         matchDish(dishId, allergenId) {
 
-          console.log('ALLERGEN ID')
-          console.log(allergenId)
           const isMatched = this.allergensDishes.some(allergenDish => allergenDish.id === allergenId && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dishId));
         
           if (isMatched) {
@@ -419,8 +456,7 @@ export default {
           
           axios.post(`/api/dishes/${dishId}/drinks`, { drink_id: drinkId.id })
             .then(response => {
-              console.log(response.data);
-              this.componentAllergen++;
+              this.pairings.push(response.data);
             })
             .catch(error => {
               console.log(error);
@@ -479,9 +515,18 @@ export default {
       },
       computed: {
         isFormFilled() {
-            return this.dish_enoteca_category.name && this.dish_enoteca_category.price && !this.imagePreview == [];
+            return this.dish_enoteca_category.name && this.dish_enoteca_category.price;
         },
-      }
+
+        activeDishesCount() {
+          let activeDishesCount = {};
+          this.category_enoteca.forEach(category => {
+            let activeDishes = category.dishes ? category.dishes.filter(dish => dish.is_active) : [];
+            activeDishesCount[category.id] = activeDishes.length;
+          });
+          return activeDishesCount;
+        }
+      },
 };
 </script>
 

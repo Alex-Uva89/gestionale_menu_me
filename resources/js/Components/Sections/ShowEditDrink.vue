@@ -1,24 +1,25 @@
 <template>
-    <button class="absolute top-5 right-5" @click="showModalDish()">❌</button>
-    <div class="container-dish-show" :key="localComponentAllergen">
+    <button class="absolute top-5 right-5" @click="showModalDrink()">❌</button>
+    <div class="container-drink-show" :key="localComponentAllergen">
         <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
-            Scheda del piatto:
+            Scheda del drink:
             <span class="text-4xl uppercase text-red-500">
-                {{ selectedDish.name }}
+                {{ selectedDrink.name }}
             </span> 
-            <SwitchButton :value="selectedDish.is_active === 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
+            <SwitchButton :value="selectedDrink.is_active === 1 || selectedDrink.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDrink.id, value)"  />
         </h2>
         <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
-            <span class="font-bold text-xl">ID Database: {{ selectedDish.id }}</span>
+            <span class="font-bold text-xl">ID Database: {{ selectedDrink.id }}</span>
         </div>
-        <div class="grid-show-dish">
+        <div class="grid-show-drink">
+            {{ selectedDrink }}
             <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                 <div class="flex gap-2">
                     <div class="font-black uppercase">
                         nome:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDish.name }}
+                        {{ selectedDrink.name }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -34,7 +35,7 @@
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDish.image === 'null' ? 'img/defaultDish.jpg' : '/storage/' + selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="selectedDrink.image === 'null' ? 'img/defaultDish.jpg' : '/storage/' + selectedDrink.image" :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
@@ -46,8 +47,8 @@
                             v-for="allergen in activeAllergens" 
                             :key="allergen.id" 
                             class="rounded-full cursor-pointer"
-                            :id="`${selectedDish.id}-${allergen.id}`"
-                            @click="matchDish(selectedDish.id, allergen.id)" 
+                            :id="`${selectedDrink.id}-${allergen.id}`"
+                            @click="matchDish(selectedDrink.id, allergen.id)" 
                             :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }"
                         >
                             <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
@@ -67,7 +68,7 @@
                     </ButtonCss>
                 </div>
                 <span class="uppercase font-semibold text-red-500">
-                    {{ selectedDish.description === 'undefined' ? 'Non ci sono consigli in questo piatto al momento' : selectedDish.description }}
+                    {{ selectedDrink.description === 'undefined' ? 'Non ci sono consigli in questo drink al momento' : selectedDrink.description }}
                 </span>
             </div>
             <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
@@ -76,7 +77,7 @@
                         prezzo:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDish.price }}
+                        {{ selectedDrink.price }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputPrice()">
@@ -94,47 +95,47 @@
                 </div>
                 <ul class="flex gap-2">
     
-                    <template v-for="dish in pairings">
-                        <template v-for="drink in dish.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                    <template v-for="drink in pairings">
+                        <template v-for="drink in drink.drinks">
+                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="drink.id === selectedDrink.id" >{{ drink.name }}</li>
                         </template>
                     </template>
                 </ul>
             </div>
         </div>
         <div class="button_delete">
-            <div @click="openDeleteModalDish( selectedDish.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
-                Elimina piatto: {{ selectedDish.name }}
+            <div @click="openDeleteModalDish( selectedDrink.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
+                Elimina drink: {{ selectedDrink.name }}
             </div>
         </div>
     </div>
 
     <!-- MODALS -->
      <div v-if="showModalDeleteDish" class="z-50">
-         <ModalAction :showModal="showModalDeleteDish" :selectedDish="selectedDish">
+         <ModalAction :showModal="showModalDeleteDish" :selectedDrink="selectedDrink">
              <h2 class="h-20 font-bold text-2xl text-center">
-             Sei sicuro di voler eliminare il piatto: 
+             Sei sicuro di voler eliminare il drink: 
              {{ 
-                 selectedDish.name
+                 selectedDrink.name
              }}?
              </h2>
              <div class="flex w-100 justify-between p-5">
-             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( selectedDish.id )">Conferma</button>
+             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( selectedDrink.id )">Conferma</button>
              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalDeleteDish = false">Annulla</button>
              </div>
          </ModalAction>
      </div>
 
      <div v-if="showModalEditName" class="z-50">
-         <ModalAction :showModal="showModalEditName" :selectedDish="selectedDish">
+         <ModalAction :showModal="showModalEditName" :selectedDrink="selectedDrink">
                 <h2 class="font-bold text-2xl text-center">
-                Modifica il nome del piatto: 
+                Modifica il nome del drink: 
                 </h2>
 
                 <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     nome attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDish.name }}
+                        {{ selectedDrink.name }}
                     </span>
                 </div>
 
@@ -150,15 +151,15 @@
      </div>
 
      <div v-if="showModalEditPrice" class="z-50">
-         <ModalAction :showModal="showModalEditPrice" :selectedDish="selectedDish">
+         <ModalAction :showModal="showModalEditPrice" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica il prezzo del piatto: 
+                Modifica il prezzo del drink: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     prezzo attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDish.price }} €
+                        {{ selectedDrink.price }} €
                     </span>
                 </div>
 
@@ -174,15 +175,15 @@
      </div>
 
      <div v-if="showModalEditDescription" class="z-50">
-        <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica i consigli del piatto: 
+                Modifica i consigli del drink: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     descrizione attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDish.description }}
+                        {{ selectedDrink.description }}
                     </span>
             </div>
 
@@ -198,9 +199,9 @@
      </div>
 
      <div v-if="showModalEditImg" class="z-50">
-        <ModalAction :showModal="showModalEditImg" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditImg" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica l'immagine del piatto: 
+                Modifica l'immagine del drink: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
@@ -211,7 +212,7 @@
                     Anteprima Immagine:
                 </span>
                 <span class="container-edit-img">
-                        <img :src="imagePreview != null ? imagePreview : 'img/defaultDish.jpg'" :alt="selectedDish.name + ' image'" class="object-img my-2 border border-3 border-black object-cover">                    
+                        <img :src="imagePreview != null ? imagePreview : 'img/defaultDish.jpg'" :alt="selectedDrink.name + ' image'" class="object-img my-2 border border-3 border-black object-cover">                    
                     </span>
             </div>
 
@@ -226,9 +227,9 @@
      </div>
 
      <div v-if="showModalEditPairings" class="z-50">
-        <ModalAction :showModal="showModalEditPairings" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditPairings" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica Gli abbinamenti del piatto: 
+                Modifica Gli abbinamenti del drink: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
@@ -236,9 +237,9 @@
                     Abbinamenti attuali: 
                 </span>
                 <ul class="flex gap-2">
-                    <template v-for="dish in pairings">
-                        <template v-for="drink in dish.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                    <template v-for="drink in pairings">
+                        <template v-for="drink in drink.drinks">
+                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="drink.id === selectedDrink.id" >{{ drink.name }}</li>
                         </template>
                     </template>
                     
@@ -269,14 +270,14 @@ import SelectMultiple from '../SelectMultiple.vue';
 export default {
     
     name: 'ShowEditDish',
-    props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks'],
+    props: ['selectedDrink', 'showModalDrink', 'allergens','allergensDrinks', 'pairingsEnoteca', 'drinks'],
     components: {
         ButtonCss,
         ModalAction,
         SwitchButton,
         SelectMultiple
     },
-    emits: ['showModalDish', 'deleteDish', 'matchDish'],
+    emits: ['showModalDrink', 'deleteDish', 'matchDish'],
     data() {
         return {
             imagePreview: null,
@@ -288,15 +289,15 @@ export default {
             showModalEditPairings: false,
             dishIdToDelete: null,
             copySelectedDish: null,
-            arrayAllergens: this.allergensDishes,
+            arrayAllergens: this.allergensDrinks,
             pairings: [],
             localComponentAllergen: 0,
             selectedDishDrinks: []
         }
     },
     methods: {
-        showModalDish(){
-            this.$emit('showModalDish');
+        showModalDrink(){
+            this.$emit('showModalDrink');
         },
         openDeleteModalDish(dishId){
             this.dishIdToDelete = dishId;
@@ -310,20 +311,20 @@ export default {
             this.$emit('matchDish', dishId, allergenId);
         },
         isAllergenMatched(allergenId) {
-            const allergenDish = this.allergensDishes.find(allergenDish => allergenDish.id === allergenId);
-            if (!allergenDish) {
-                return false;
-                }
+            // const allergenDrink = this.allergensDrinks.find(allergenDrink => allergenDrink.id === allergenId);
+            // if (!allergenDrink) {
+            //     return false;
+            //     }
 
-            return allergenDish.dishes.some(dish => dish.pivot.dish_id === this.selectedDish.id);
+            // return allergenDrink.dishes.some(drink => drink.pivot.dish_id === this.selectedDrink.id);
         },
         openInputName(){
             this.showModalEditName = true;
         },
         confirmEditName(dishNew){
-            this.selectedDish.name = dishNew.name
+            this.selectedDrink.name = dishNew.name
 
-            axios.put(`/api/dishes/${this.selectedDish.id}`, {
+            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
                 name: dishNew.name
             })
 
@@ -336,9 +337,9 @@ export default {
             this.showModalEditPrice = true;
         },
         confirmEditPrice(dishNew){
-            this.selectedDish.price = dishNew.price
+            this.selectedDrink.price = dishNew.price
 
-            axios.put(`/api/dishes/${this.selectedDish.id}`, {
+            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
                 price: dishNew.price
             })
 
@@ -348,9 +349,9 @@ export default {
             this.showModalEditDescription = true;
         },
         confirmEditDescription(dishNew){
-            this.selectedDish.description = dishNew.description
+            this.selectedDrink.description = dishNew.description
 
-            axios.put(`/api/dishes/${this.selectedDish.id}`, {
+            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
                 description: dishNew.description
             })
 
@@ -372,7 +373,7 @@ export default {
 
             formData.append('_method', 'PUT');
 
-            axios.post(`/api/dishes/${this.selectedDish.id}`, formData, {
+            axios.post(`/api/dishes/${this.selectedDrink.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -382,7 +383,7 @@ export default {
                 data = data.substring(data.indexOf('{'));
                 newDish = JSON.parse(data);
 
-                this.selectedDish.image = newDish.image;
+                this.selectedDrink.image = newDish.image;
             })
             .catch(error => {
                 console.error(error);
@@ -412,7 +413,7 @@ export default {
         updateIsShowStatus(id, value) {
           axios.put(`/api/dishes/${id}`, { is_active: value })
           .then(response => {
-                this.selectedDish.is_active = response.data.is_active
+                this.selectedDrink.is_active = response.data.is_active
             })
           .catch(error => {
               console.log(error);
@@ -423,7 +424,7 @@ export default {
         },
         toggleDrink(drink) {
             this.pairings = this.pairings.map(pairing => {
-                if (pairing.id === this.selectedDish.id) {
+                if (pairing.id === this.selectedDrink.id) {
                     const drinkIndex = pairing.drinks.findIndex(d => d.id === drink.id);
                     if (drinkIndex !== -1) {
                         pairing.drinks.splice(drinkIndex, 1);
@@ -456,18 +457,18 @@ export default {
           return this.allergens.filter(allergen => allergen.is_active);
         },
         selectedDishDrinks() {
-            const dish = this.pairings.find(d => d.id === this.selectedDish.id);
-            if (!dish || !dish.drinks) {
+            const drink = this.pairings.find(d => d.id === this.selectedDrink.id);
+            if (!drink || !drink.drinks) {
                 return [];
             }
         
-            const drinkIds = dish.drinks.map(drink => drink.id);
+            const drinkIds = drink.drinks.map(drink => drink.id);
 
             return drinkIds;
         }
     },
     mounted() {
-        this.copySelectedDish = Object.assign({}, this.selectedDish);
+        this.copySelectedDish = Object.assign({}, this.selectedDrink);
         this.updatePairings(this.copySelectedDish.id);
     },
     watch: {
@@ -497,13 +498,13 @@ export default {
     background-color: #6b7238;
 }
 
-.container-dish-show{
+.container-drink-show{
     width: calc(100vw - 140px);
     height: calc(100vh - 110px);
     padding: 5px;
 }
 
-.grid-show-dish{
+.grid-show-drink{
     display: grid;
     margin: 20px 0;
     height: 62vh;

@@ -12,6 +12,7 @@ import Allergens from '@/PartialsHome/Allergens.vue';
 import Dashboard from '@/PartialsHome/Dashboard.vue';
 import Welcome from '@/PartialsHome/Welcome.vue';
 import Receips from '@/PartialsHome/Receips.vue';
+import { all } from 'axios';
 
 const selectedVenueName = ref('Benvenuto');
 const selectedVenueColor = ref('blue');
@@ -56,7 +57,6 @@ function updateCurrentPageComponent(value) {
           <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
           
-
           <Welcome 
             v-if="currentPageComponent === ''"
             @open-modal-instruction="toggleModalInstruction"
@@ -65,6 +65,7 @@ function updateCurrentPageComponent(value) {
             v-else
             :allergens="allergens"
             :allergensDishes="allergensDishes"
+            :allergensDrinks="allergensDrinks"
             :is="currentPageComponent" 
             :selectedVenueName="selectedVenueName" 
             :selectedVenueColor="selectedVenueColor" 
@@ -84,9 +85,11 @@ function updateCurrentPageComponent(value) {
             @changePage="updateCurrentPageComponent"
             @changeHeader="updateSelectedValueButton"
             :drinks="drinks"
+            :dishes="dishes"
             :pairingsEnoteca="pairingsEnoteca"
             />     
         </div>
+  
 
         
       </div>
@@ -185,10 +188,12 @@ export default {
     dish_enoteca_category: Array,
     drink_enoteca_category: Array,
     allergensDishes: Array,
+    allergensDrinks: Array,
     allergens: Array,
     receips: Array,
     drinks: Array,
-    pairingsEnoteca: Array
+    pairingsEnoteca: Array,
+    dishes: Array,
   },
   data() {
     return {

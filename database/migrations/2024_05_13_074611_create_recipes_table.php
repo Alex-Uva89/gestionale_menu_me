@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('process', 1500);
+            $table->foreignId('dish_id')->nullable()->constrained()->onDelete('cascade');
+
 
             $table->boolean('is_active')->default(false);
             $table->timestamps();

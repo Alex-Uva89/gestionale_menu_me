@@ -9,6 +9,7 @@ use App\Http\Controllers\DishController;
 use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\PairingsController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -16,8 +17,10 @@ Route::get('/user', function (Request $request) {
 
 // GET
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/dishes/{Id}/drinks', [PairingsController::class, 'index']);
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/dishes/{id}', [DishController::class, 'show']);
+Route::get('/dishes', [DishController::class, 'index']);
 Route::get('/allergens/{id}/dishes', [AllergenController::class, 'index']);
 Route::get('/dishes/{dish}/allergens', [DishController::class, 'getAllergens']);
 
@@ -27,6 +30,8 @@ Route::put('/messages/{id}', [MessageController::class, 'update']);
 Route::put('/categories/{id}', [CategoryController::class, 'update']);
 Route::put('/allergens/{id}', [AllergenController::class, 'update']);
 Route::put('/recipes/{id}', [RecipeController::class, 'update']);
+Route::put('/dishes/{id}', [DishController::class, 'update']);
+Route::put('/dishes/{id}/drinks', [DishController::class, 'updateDrinkMatch']);
 
 // POST
 Route::post('/', [HomeController::class, 'store'])->name('store');

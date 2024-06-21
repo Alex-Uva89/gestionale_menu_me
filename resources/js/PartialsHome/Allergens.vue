@@ -4,7 +4,6 @@
     
     <div :key="componenetAllergen">
         <h2 class="text-2xl title text-blue-600 font-bold">Aggiungi, Modifica o Elimina un Allergene</h2>
-
         <nav>
             <ul class="table-allergens flex pb-5">
                 <li @click="openModalAddAllergen()">

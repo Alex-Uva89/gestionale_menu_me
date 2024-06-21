@@ -62,16 +62,14 @@
     justify-content: space-between;
     padding: 1rem;
   }
-  .tab__label::after {
-    content: "\276F";
+  .tab__label__arrow {
     width: 1em;
     height: 1em;
     text-align: center;
-    transform: rotate(90deg);
     transition: all 0.35s;
 }
-.tab input:checked + .tab__label::after {
-  transform: rotate(270deg);
+.tab input:checked + .tab__label .tab__label__arrow {
+  transform: rotate(180deg);
 }
 .tab__content p {
   margin: 0;
@@ -89,15 +87,15 @@
 }
 
 /* Arrow animation */
-.tab input:not(:checked) + .tab__label:hover::after {
-  animation: bounce .5s infinite;
+.tab input:not(:checked) + .tab__label:hover .tab__label__arrow {
+  animation: bounce .8s infinite;
 }
 @keyframes bounce {
   25% {
-    transform: rotate(90deg) translate(.25rem);
+    transform: translateY(-.25rem);
   }
   75% {
-    transform: rotate(90deg) translate(-.25rem);
+    transform: translateY(.25rem);
   }
 }
 

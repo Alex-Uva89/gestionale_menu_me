@@ -1,36 +1,68 @@
+<script setup>
+
+const props = defineProps({
+    selectedVenueName: String,
+    pairingsEnoteca: Array,
+    selectedVenueColor: String,
+    category_enoteca: Array,
+    drink_enoteca_category: Array,
+    allergens: Array,
+    allergensDrinks: Array,
+    drinks: Array,
+});
+
+
+</script>
+
+
 <template>
-    <section class="accordion overflow-x-hidden mx-4" >
+    <section class="overflow-x-hidden mx-4" >
     <h2 class="p-3"  v-if="!category_enoteca.some(category => category.is_drink)">
   ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria beverage
     </h2>
+
      <div 
      v-for="category in category_enoteca" 
+     class="last:mb-10 last:border-b-2  border-l-2 border-r-2  border-black"
      :key="category.id">
-     <div v-if="category.is_drink" class="tab drink border border-black category  bg-white" >
+     <div v-if="category.is_drink" 
+     class="tab category  bg-white" >
         <div class="flex max-h-14 bg-white justify-evenly items-center gap-3 p-2">
             <button @click="deleteCategory(category.id)">❌</button>
             <button @click="editCategory(category.id)">Edit</button>
-            <Switch_button :value="category.is_active === 1" @switchChanged="value => updateIsShowStatus(category.id, value)" />
+            <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
         </div>
        <div class="bg-yellow-500" :key="componentKeyli" >
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
-            <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
-            <div class="tab__content bg-white" >
-                <ul class="max-w-full" >
-                  <li v-for="drink in category.drinks">
-                        <div class="container-drinks px-3">
-                          <div class="flex">
-                            <img :src="drink.image = 'undefined' ? 'img/defaultDish.jpg' : drink.image" alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-2">
-                          </div>
-                          <div class="flex flex-col name">
-                            <span class="text-bold">Nome drink: </span><span class="first-letter:uppercase">{{ drink.name }}</span>
-                          </div>
-                          <div class="flex flex-col price">
-                            <span class="text-bold">Prezzo: </span><span>{{ drink.price }} €</span>
-                          </div>
-                        </div>
-                  </li>
-                </ul>
+            <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">
+              <span class="rounded-2xl text-black w-12 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinkCount[category.id] }} / {{ category.drinks ? category.drinks.length : 0 }}</span>            <span>
+                {{ category.name }}
+              </span>
+              <span class="tab__label__arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                </svg>
+              </span>
+            </label>
+            <div class="tab__content bg-white">
+              <ul class="max-w-full">
+                <li v-for="drink in category.drinks" 
+                class="border-b-2 border-black p-2">
+                <div class="w-full h-full" :class="drink.is_active ? 'opacity-100' : 'opacity-20'">
+                  <div @click="openShowDrink(drink)" class="container-dishes px-3 cursor-pointer">
+                    <div class="flex">
+                      <img :src="drink.image == 'null' ? 'img/defaultDish.jpg' : '/storage/' + drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                    </div>
+                    <div class="flex flex-col name">
+                      <span class="first-letter:uppercase text-bold">{{ drink.name }}</span>
+                    </div>
+                    <div class="flex flex-col price">
+                      <span class="text-bold">{{ drink.price }} €</span>
+                    </div>
+                  </div>
+                </div>
+                </li>
+              </ul>
            
 
               <div type="button" @click="addDrink(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
@@ -46,68 +78,126 @@
   </section>
 
 
-  <section class="section-create-drinks" v-if="showAddDrinksModal">
-    <div class="modal-confirm">
+  <!-- <ModalAction :showModal="showAddDrinksModal" :key="keyComponent">
+    <div class="modal-confirm relative">
+        <ButtonCss hoverColor="#DC2626" @click="showAddDishesModal = false" style="position: absolute; right:-10px; top:-20px;">
+                  ❌
+        </ButtonCss>
         <h2 class="h-16 font-bold text-2xl text-center">
-            Aggiungi nuovo drink
+            Aggiungi nuovo piatto
         </h2>
-        <div class="flex flex-col gap-4 flex-wrap">
-          <label for="name">Nome drink</label>
-          <input type="text" 
-          class="border-2 hover:border-black focus:border-black rounded" 
-          v-model="drink_enoteca_category.name" 
-          :placeholder="drink_enoteca_category.name ? drink_enoteca_category.name : 'nome drink'"
-          >
-          <label for="description">Consigli</label>
-          <textarea 
-          :placeholder="drink_enoteca_category.description ? drink_enoteca_category.description : 'consigli drink'"
-          class="border-2 hover:border-black focus:border-black rounded"
-          v-model="drink_enoteca_category.description"></textarea>
-          <label for="price">Prezzo</label>
-          <div>
-            <input type="number" 
-            :placeholder="drink_enoteca_category.price ? drink_enoteca_category.price : 'prezzo del drink'"
-            class="border-2 hover:border-black focus:border-black rounded"
-            v-model="drink_enoteca_category.price"><span> euro</span>
+        <form  @submit.prevent="confirmAddDishes">
+          <div class="grid-show-dish">
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          nome:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.name" :placeholder="drink_enoteca_category.name">
+                  </div>
+                  
+              </div>
+              <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
+                  <div class="flex flex-col justify-between items-start">
+                      <span class="font-black me-2 uppercase">
+                          immagine
+                      </span>
+                      <input type="file" @change="onFileChange" accept="image/*">
+                  </div>
+                  <img :src="imagePreview === null? defaultImgDish : imagePreview" class="h-image my-2 border border-3 border-black object-cover">
+              </div>            
+              <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
+                  <span class="font-black me-2 uppercase">
+                      Allergeni: 
+                  </span>
+                  <ul class="flex gap-2">
+                      <template v-for="allergen in allergens">
+                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)">
+                          <img 
+                            :src="'/storage/' + allergen.icon" 
+                            :alt="allergen.name + ' icon'" 
+                            :id="allergen.id"
+                            class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
+                        </li>
+                      </template>
+                      <li v-if="!allergens.some(allergen => allergen.is_active)" class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center">
+                        Non sono presenti allergeni attivi
+                      </li>
+                  </ul>
+
+              </div>
+              <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                  <div class="w-full flex justify-between items-center font-black uppercase">
+                      Consigli:
+                  </div>
+                  <input class="w-full h-16" type="text" v-model="drink_enoteca_category.description" :placeholder="drink_enoteca_category.description">
+              </div>
+              <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
+                  <div class="flex flex-col gap-2 w-full">
+                      <div class="font-black uppercase">
+                          prezzo:
+                      </div>
+                      <input class="w-full h-8" type="number" v-model="drink_enoteca_category.price" :placeholder="drink_enoteca_category.price">
+                  </div>
+              </div>
+              <div style="grid-area: abbinamenti">
+                <p>Aggiungi abbinamenti:</p>
+                <SelectMultiple :options="drinks" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+              </div>
           </div>
-          <label for="image">Immagine</label>
-          <input type="file"
-          v-on:change="onFileChange" ref="file" accept="image/*">
-
-
-          <div class="flex gap-20 p-10">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmAddDrinks()">conferma</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showAddDishesModal = false">Annulla</button>
+  
+          <div class="flex w-full justify-center">
+                <ButtonCss v-bind:disabled="!isFormFilled" hoverColor='#00FF00' type="submit" style="width: 100%;">
+                  <p>
+                    Aggiungi piatto
+                  </p>
+                </ButtonCss>
           </div>
-        </div>
+        </form>
     </div>
-</section>
+  </ModalAction> -->
 
-<section class="section-delete" v-if="showDeleteModal">
-    <div class="modal-confirm">
-        <h2 class="h-20 font-bold text-2xl text-center">
-            Sei sicuro di voler eliminare questa categoria?
-            <p class="text-base">la cancellazione della categoria provvederà a cancellare TUTTI i piatti abbinati</p>
-        </h2>
-        <div class="flex w-100 justify-between p-5">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete()">Conferma</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
-        </div>
-    </div>
-</section>
+  <!-- <ModalAction :showModal="showDeleteModal">
+      <div class="modal">
+          <h2 class="h-20 font-bold text-2xl text-center">
+              Sei sicuro di voler eliminare questa categoria?
+              <p class="text-base">la cancellazione della categoria provvederà a cancellare TUTTI i piatti abbinati</p>
+          </h2>
+          <div class="flex w-100 justify-between p-5">
+              <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete()">Conferma</button>
+              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
+          </div>
+      </div>
+  </ModalAction> -->
 
-<section class="section-edit" v-if="showEditModal">
-    <div class="modal-confirm">
-        <h2 class="h-20 font-bold text-2xl text-center">
-            Modifica categoria
-        </h2>
-        <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
-        <div class="flex w-100 justify-between p-5">
-            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(category_enoteca.name)">edit</button>
-            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
-        </div>
-    </div>
-</section>
+  <!-- <ModalAction :showModal="showEditModal">
+      <div class="modal">
+          <h2 class="h-20 font-bold text-2xl text-center">
+              Modifica categoria
+          </h2>
+          <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
+          <div class="flex w-100 justify-between p-5">
+              <button  @click="console.log('Button clicked'); confirmEdit(category_enoteca.name)">edit</button>              
+              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
+          </div>
+      </div>
+  </ModalAction> -->
+
+  <ModalAction :showModal="showModalDrink">
+    <ShowDish 
+    :selectedDrink="selectedDrink" 
+    :allergens="allergens"
+    :allergensDrinks="allergensDrinks"
+    :category_enoteca="category_enoteca"
+    :drink_enoteca_category="drink_enoteca_category"
+    :pairingsEnoteca="pairingsEnoteca"
+    :pairings="pairings"
+    :drinks="drinks"
+    @showModalDrink="showModalDrink = false"
+    @deleteDish="confirmDeleteDish"
+    @matchDish="matchDish"
+    />
+  </ModalAction>
 
 </template>
 
@@ -115,14 +205,20 @@
 <script>
 import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
+import ModalAction from '@/Components/ModalAction.vue';
+import ShowDish from '@/Components/Sections/ShowEditDrink.vue';
 
 export default {
   components: {
     Switch_button,
+    ModalAction,
+    ShowDish
   },
   name: 'CategoryDrink',
   props: {
     drinks: Array,
+    allergens: Array,
+    allergensDrinks: Array,
     category_enoteca: Array,
     selectedVenueColor: String,
     drink_enoteca_category: Array,
@@ -138,11 +234,13 @@ export default {
       categoryToDelete: null,
       showEditModal: false,
       categoryToEdit: null,
+      showModalDrink: false,
       categoryNameToEdit: null,
       showAddDrinksModal: false,
       drinkToCreateId: null,
       localCategory_enoteca: this.category_enoteca,
       localDrinkEnotecaCategory: [],
+      allergensDrinks : this.allergensDrinks,
     };
   },
   methods: {
@@ -262,6 +360,10 @@ export default {
         
           this.showAddDrinksModal = false;
         },
+        openShowDrink(drink) {
+          this.selectedDrink = drink;
+          this.showModalDrink = !this.showModalDrink;
+        },
   },
   watch: {
     category_enoteca(newVal) {
@@ -279,6 +381,14 @@ export default {
           });
 
   },
+  computed: {
+    activeDrinkCount() {
+      return this.localDrinkEnotecaCategory.reduce((acc, category) => {
+        acc[category.id] = category.drinks.filter(drink => drink.is_active).length;
+        return acc;
+      }, {});
+    },
+  },
 };
 </script>
 
@@ -294,22 +404,24 @@ export default {
   border-color: #a51a1a;
 }
 
-.section-delete, .section-edit, .section-create-drinks{
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    .modal-confirm{
-        background-color: white;
-        padding: 60px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+.grid-show-dish{
+    display: grid;
+    margin: 20px 0;
+    height: 62vh;
+    grid-template-areas: 
+        "nome nome immagine"
+        "prezzo prezzo immagine"
+        "allergeni allergeni immagine"
+        "abbinamenti abbinamenti immagine"
+        "consigli consigli consigli";
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 2fr 2fr;
+    gap: 10px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    .h-image{
+        width: 100%;
+        height: 80%;
     }
 }
 

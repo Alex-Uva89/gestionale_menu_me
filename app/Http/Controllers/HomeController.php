@@ -23,6 +23,7 @@ class HomeController extends Controller
         $venues = Venue::all();
         $receips = Recipe::all();
         $drinks = Drink::all();
+        $dishes = Dish::all();
         
 
         // specific record
@@ -57,29 +58,32 @@ class HomeController extends Controller
         $allergens = Allergen::all();
 
         $allergensDishes = Allergen::with('dishes')->get();
+        $allergensDrinks = Allergen::with('drinks')->get();
 
-        $pairings_enoteca = Dish::with('drinks')->where('venue_id', 3)->get();
+      
 
-        // dd($pairings_enoteca);                          
+        $pairings_enoteca = Dish::with('drinks')->where('venue_id', 3)->get();                        
         
         // smash data
          $data = [
-             'messages' => $messages,
-             'categories' => $categories,
-             'venues' => $venues,
-             'drinks' => $drinks,
-             'laCucina' => $laCucina,
-             'receips' => $receips,
-             'category_laCucina' => $category_laCucina->toArray(),
-             'category_scante' => $category_scante->toArray(),
-             'category_enoteca' => $category_enoteca,
-             'dish_laCucina_category' => $dish_laCucina_category,
-             'dish_scante_category' => $dish_scante_category,
-             'dish_enoteca_category' => $dish_enoteca_category,
-             'drink_enoteca_category' => $drink_enoteca_category,
-             'allergens' => $allergens,
-             'allergensDishes' => $allergensDishes,
-             'pairingsEnoteca' => $pairings_enoteca
+                'messages' => $messages,
+                'categories' => $categories,
+                'venues' => $venues,
+                'drinks' => $drinks,
+                'dishes' => $dishes,
+                'laCucina' => $laCucina,
+                'receips' => $receips,
+                'category_laCucina' => $category_laCucina->toArray(),
+                'category_scante' => $category_scante->toArray(),
+                'category_enoteca' => $category_enoteca,
+                'dish_laCucina_category' => $dish_laCucina_category,
+                'dish_scante_category' => $dish_scante_category,
+                'dish_enoteca_category' => $dish_enoteca_category,
+                'drink_enoteca_category' => $drink_enoteca_category,
+                'allergens' => $allergens,
+                'allergensDishes' => $allergensDishes,
+                'allergensDrinks' => $allergensDrinks,
+                'pairingsEnoteca' => $pairings_enoteca
          ];
 
 
