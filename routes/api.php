@@ -40,6 +40,7 @@ Route::post('/categories/{id}/venues', [HomeController::class, 'attachVenues']);
 Route::post('/categories/{id}/dishes', [HomeController::class, 'store']);
 Route::post('/categories/{id}/drinks', [CategoryController::class, 'addDrink']);
 Route::post('/dishes/{id}', [DishController::class, 'store']);
+Route::post('/drinks/{id}', [DrinkController::class, 'store']);
 Route::post('/drinks', [DrinkController::class, 'store']);
 Route::post('/dishes/{id}/drinks', [DishController::class, 'addDrinkMatch']);
 Route::post('/allergens', [AllergenController::class, 'store']);
@@ -54,6 +55,7 @@ Route::delete('/categories/{categoryId}/dishes', [DishController::class, 'destro
 Route::delete('/allergens/{id}', [AllergenController::class, 'destroy']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 Route::delete('/allergens/{allergenId}/dishes/{dishId}', [AllergenController::class,'detachDish']);
+Route::delete('/allergens/{allergenId}/drinks/{drinkId}', [AllergenController::class,'detachDrink']);
 Route::delete('/dishes/{id}', [DishController::class, 'destroy']);
 Route::delete('/drinks', [DrinkController::class, 'deleteByCategory']);
 

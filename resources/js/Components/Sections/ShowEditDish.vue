@@ -47,7 +47,7 @@
                             :key="allergen.id" 
                             class="rounded-full cursor-pointer"
                             :id="`${selectedDish.id}-${allergen.id}`"
-                            @click="matchDish(selectedDish.id, allergen.id)" 
+                            @click="matchAllergens(selectedDish.id, allergen.id)" 
                             :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }"
                         >
                             <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
@@ -276,7 +276,7 @@ export default {
         SwitchButton,
         SelectMultiple
     },
-    emits: ['showModalDish', 'deleteDish', 'matchDish'],
+    emits: ['showModalDish', 'deleteDish', 'matchAllergens'],
     data() {
         return {
             imagePreview: null,
@@ -306,8 +306,8 @@ export default {
             this.$emit('deleteDish', id);
             this.showModalDeleteDish = false;
         },
-        matchDish(dishId, allergenId){
-            this.$emit('matchDish', dishId, allergenId);
+        matchAllergens(dishId, allergenId){
+            this.$emit('matchAllergens', dishId, allergenId);
         },
         isAllergenMatched(allergenId) {
             const allergenDish = this.allergensDishes.find(allergenDish => allergenDish.id === allergenId);

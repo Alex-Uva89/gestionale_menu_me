@@ -32,6 +32,7 @@ const props = defineProps({
           <button @click="editCategory(category.id)">Edit</button>
           <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
       </div>
+      
       <div
       class="p-2"
       :class="{
@@ -84,6 +85,8 @@ const props = defineProps({
      </div>
      </div>
   </section>
+
+  {{ newDrink }}
 
 <!-- MODALS -->
 
@@ -151,7 +154,7 @@ const props = defineProps({
               </div>
               <div style="grid-area: abbinamenti">
                 <p>Aggiungi abbinamenti:</p>
-                <SelectMultiple :options="drinks" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+                <SelectMultiple :options="drinks && newDrink" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
               </div>
           </div>
   
@@ -204,7 +207,7 @@ const props = defineProps({
     :drinks="drinks"
     @showModalDish="showModalDish = false"
     @deleteDish="confirmDeleteDish"
-    @matchDish="matchDish"
+    @matchAllergens="matchAllergens"
     />
   </ModalAction>
 
@@ -228,6 +231,7 @@ export default {
     ButtonCss
   },
   name: 'Category',
+  emits: ['update:category_enoteca'],
   props: {
     category_enoteca: Array,
     selectedVenueColor: String,
@@ -235,6 +239,7 @@ export default {
     allergens: Array,
     drinks: Array,
     allergensDishes: Array,
+    newDrink: Array,
     is_drink: {
       type: Boolean,
       required: true
@@ -243,6 +248,7 @@ export default {
   },
   data() {
     return {
+      newDrink: this.newDrink,
       categoryEnoteca: this.category_enoteca,
       keyComponentCategory: 0,
       defaultImgDish,
@@ -371,7 +377,7 @@ export default {
           formData.append('category_id', this.dishToCreateId);
           formData.append('venue_id', 3); 
         
-          axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {
+          axios.post(`/api/dishes/${this.dishToCreateId}`, formData, { 
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -400,7 +406,7 @@ export default {
             this.showAddDishesModal = false;
         
             this.selectedAllergens.forEach(allergenId => {
-              this.matchDish(newDish.id, allergenId);
+              this.matchAllergens(newDish.id, allergenId);
             });
             this.selectedAllergens = [];
         
@@ -424,7 +430,7 @@ export default {
           });
 
         },
-        matchDish(dishId, allergenId) {
+        matchAllergens(dishId, allergenId) {
 
           const isMatched = this.allergensDishes.some(allergenDish => allergenDish.id === allergenId && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dishId));
         

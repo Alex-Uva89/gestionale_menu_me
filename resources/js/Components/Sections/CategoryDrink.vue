@@ -32,10 +32,11 @@ const props = defineProps({
             <button @click="editCategory(category.id)">Edit</button>
             <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
         </div>
+        {{  allergensDrinks }}
        <div class="bg-yellow-500" :key="componentKeyli" >
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">
-              <span class="rounded-2xl text-black w-12 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinkCount[category.id] }} / {{ category.drinks ? category.drinks.length : 0 }}</span>            <span>
+              <span class="rounded-2xl text-black w-12 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinksCount[category.id] }} / {{ category.drinks ? category.drinks.length : 0 }}</span>            <span>
                 {{ category.name }}
               </span>
               <span class="tab__label__arrow">
@@ -49,9 +50,9 @@ const props = defineProps({
                 <li v-for="drink in category.drinks" 
                 class="border-b-2 border-black p-2">
                 <div class="w-full h-full" :class="drink.is_active ? 'opacity-100' : 'opacity-20'">
-                  <div @click="openShowDrink(drink)" class="container-dishes px-3 cursor-pointer">
+                  <div @click="openShowDrink(drink)" class="container-drinks px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="drink.image == 'null' ? 'img/defaultDish.jpg' : '/storage/' + drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                      <img :src="drink.image == 'null' || drink.image == 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
                     </div>
                     <div class="flex flex-col name">
                       <span class="first-letter:uppercase text-bold">{{ drink.name }}</span>
@@ -63,7 +64,8 @@ const props = defineProps({
                 </div>
                 </li>
               </ul>
-           
+
+              {{enoteca_category}}
 
               <div type="button" @click="addDrink(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
                 <div class="font-bold text-lg">&#10133</div>
@@ -78,15 +80,15 @@ const props = defineProps({
   </section>
 
 
-  <!-- <ModalAction :showModal="showAddDrinksModal" :key="keyComponent">
+  <ModalAction :showModal="showAddDrinksModal" :key="keyComponent">
     <div class="modal-confirm relative">
-        <ButtonCss hoverColor="#DC2626" @click="showAddDishesModal = false" style="position: absolute; right:-10px; top:-20px;">
+        <ButtonCss hoverColor="#DC2626" @click="showAddDrinksModal = false" style="position: absolute; right:-10px; top:-20px;">
                   ❌
         </ButtonCss>
         <h2 class="h-16 font-bold text-2xl text-center">
-            Aggiungi nuovo piatto
+            Aggiungi nuova bevanda
         </h2>
-        <form  @submit.prevent="confirmAddDishes">
+        <form  @submit.prevent="confirmAddDrinks">
           <div class="grid-show-dish">
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                   <div class="w-full flex flex-col gap-2">
@@ -130,7 +132,7 @@ const props = defineProps({
                   <div class="w-full flex justify-between items-center font-black uppercase">
                       Consigli:
                   </div>
-                  <input class="w-full h-16" type="text" v-model="drink_enoteca_category.description" :placeholder="drink_enoteca_category.description">
+                  <input class="w-full h-16" type="text" v-model="drink_enoteca_category.instruction" :placeholder="drink_enoteca_category.instruction">
               </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
                   <div class="flex flex-col gap-2 w-full">
@@ -149,15 +151,15 @@ const props = defineProps({
           <div class="flex w-full justify-center">
                 <ButtonCss v-bind:disabled="!isFormFilled" hoverColor='#00FF00' type="submit" style="width: 100%;">
                   <p>
-                    Aggiungi piatto
+                    Aggiungi bevanda
                   </p>
                 </ButtonCss>
           </div>
         </form>
     </div>
-  </ModalAction> -->
+  </ModalAction>
 
-  <!-- <ModalAction :showModal="showDeleteModal">
+  <ModalAction :showModal="showDeleteModal">
       <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
               Sei sicuro di voler eliminare questa categoria?
@@ -168,7 +170,7 @@ const props = defineProps({
               <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
           </div>
       </div>
-  </ModalAction> -->
+  </ModalAction>
 
   <!-- <ModalAction :showModal="showEditModal">
       <div class="modal">
@@ -207,12 +209,14 @@ import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
 import ModalAction from '@/Components/ModalAction.vue';
 import ShowDish from '@/Components/Sections/ShowEditDrink.vue';
+import ButtonCss from '../ButtonCss.vue';
 
 export default {
   components: {
     Switch_button,
     ModalAction,
-    ShowDish
+    ShowDish,
+    ButtonCss
   },
   name: 'CategoryDrink',
   props: {
@@ -229,6 +233,8 @@ export default {
   },
   data() {
     return {
+      file: null,
+      imagePreview: null,
       componentKeyli: 0,
       showDeleteModal: false,
       categoryToDelete: null,
@@ -241,6 +247,7 @@ export default {
       localCategory_enoteca: this.category_enoteca,
       localDrinkEnotecaCategory: [],
       allergensDrinks : this.allergensDrinks,
+      selectedAllergens: [],
     };
   },
   methods: {
@@ -251,7 +258,7 @@ export default {
         confirmDelete() {
             axios.delete(`/api/drinks?category_id=${this.categoryToDelete}`)
                 .then(response => {
-                console.log('Deleted corresponding dishes');
+                console.log('Deleted corresponding drinks');
             
                 axios.delete(`/api/categories/${this.categoryToDelete}`)
                 .then(response => {
@@ -316,6 +323,17 @@ export default {
           };
           reader.readAsDataURL(file);
         },
+        toggleAllergen(allergenId) {
+          const specificAllergen = document.getElementById(allergenId);
+          const index = this.selectedAllergens.indexOf(allergenId);
+          if (index === -1) {
+            specificAllergen.classList.add('bg-olive');
+            this.selectedAllergens.push(allergenId);
+          } else {
+            specificAllergen.classList.remove('bg-olive');
+            this.selectedAllergens.splice(index, 1);
+          }
+        },
         addDrink(id) {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
@@ -325,40 +343,90 @@ export default {
           formData.append('name', this.drink_enoteca_category.name);
           formData.append('description', this.drink_enoteca_category.description);
           formData.append('price', this.drink_enoteca_category.price);
-          formData.append('image', this.drink_enoteca_category.image);
+          formData.append('image', this.file);
           formData.append('category_id', this.drinkToCreateId);
-          formData.append('venue_id', 3);
+          formData.append('venue_id', 3); 
         
-          axios.post(`/api/drinks`, formData, {
+          axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then(response => {
-            if (response.data && response.data.name && response.data.description && response.data.price && response.data.image) {
-              let newDrink = response.data;
+            let newDrink;
+            if (typeof response.data === 'string') {
+                let data = response.data;
+                data = data.substring(data.indexOf('{'));
+                newDrink = JSON.parse(data);
+              } else {
+                newDrink = response.data;
+              }
               let category = this.category_enoteca.find(category => category.id === this.drinkToCreateId);
-              axios.post(`/api/categories/${this.drinkToCreateId}/drinks`, { drink_id: newDrink.id })
-              .then(response => {
-                this.componentKeyli++;
-                if (category) {
-                  category.drinks.push(newDrink);
-                  this.$emit('updateDrinks', newDrink);
-                  this.drinkToCreateId = '';
-                }
-              })
-              .catch(error => {
-                console.log(error);
-              });
-            } else {
-              console.error("Server response does not contain expected data");
+              
+              this.$emit('drinkAdded', newDrink);
+
+            if (category) {
+              if (!category.drinks) {
+                category.drinks = [];
+              }
+              category.drinks.push(newDrink);
+              this.drinkToCreateId = '';
             }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+            this.componentKeyli++;
+            this.showAddDrinksModal = false;
         
-          this.showAddDrinksModal = false;
+            this.selectedAllergens.forEach(allergenId => {
+              this.matchAllergens(newDrink.id, allergenId);
+            });
+            this.selectedAllergens = [];
+
+
+            this.drink_enoteca_category.name = '';
+            this.drink_enoteca_category.description = '';
+            this.drink_enoteca_category.price = null;
+            this.file = null;
+            this.imagePreview = null;
+          })
+        
+          .catch(error => {
+            console.log('ERRORE AHI AHI AHI: '+ error);
+          });
+
+        },
+        resetForm() {
+          this.drinkToCreateId = '';
+          this.drink_enoteca_category = { name: '', description: '', price: null, image: null };
+          this.selectedAllergens = [];
+          this.file = null;
+          this.imagePreview = null;
+        },
+        matchAllergens(drinkId, allergenId) {
+
+          const isMatched = this.allergensDrinks.some(allergenDrink => allergenDrink.id === allergenId && allergenDrink.drinks.some(drinkAbb => drinkAbb.pivot.dish_id === drinkId));
+
+          if (isMatched) {
+            axios.delete(`/api/allergens/${allergenId}/drinks/${drinkId}`)
+            .then(() => {
+              const index = this.allergensDrinks.findIndex(allergenDrink => allergenDrink.id === allergenId);
+              const drinkIndex = this.allergensDrinks[index].drinks.findIndex(drinkAbb => drinkAbb.pivot.dish_id === drinkId);
+              this.allergensDrinks[index].drinks.splice(drinkIndex, 1);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          } else {
+            axios.post(`/api/allergens/${allergenId}/drinks`, {
+              dish_id: drinkId
+            })
+            .then(() => {
+              
+              const index = this.allergensDrinks.findIndex(allergenDrink => allergenDrink.id === allergenId);
+              this.allergensDrinks[index].drinks.push({pivot: {dish_id: drinkId}});
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          }
         },
         openShowDrink(drink) {
           this.selectedDrink = drink;
@@ -380,14 +448,20 @@ export default {
               };
           });
 
+          this.allergenDrinks = this.allergensDrinks
   },
   computed: {
-    activeDrinkCount() {
-      return this.localDrinkEnotecaCategory.reduce((acc, category) => {
-        acc[category.id] = category.drinks.filter(drink => drink.is_active).length;
-        return acc;
-      }, {});
-    },
+    isFormFilled() {
+            return this.drink_enoteca_category.name && this.drink_enoteca_category.price;
+        },
+        activeDrinksCount() {
+          let activeDrinksCount = {};
+          this.category_enoteca.forEach(category => {
+            let activeDrinks = category.drinks ? category.drinks.filter(drink => drink.is_active) : [];
+            activeDrinksCount[category.id] = activeDrinks.length;
+          });
+          return activeDrinksCount;
+        }
   },
 };
 </script>

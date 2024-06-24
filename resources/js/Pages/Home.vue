@@ -56,7 +56,6 @@ function updateCurrentPageComponent(value) {
         <div class="main-app flex">
           <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
-          
           <Welcome 
             v-if="currentPageComponent === ''"
             @open-modal-instruction="toggleModalInstruction"

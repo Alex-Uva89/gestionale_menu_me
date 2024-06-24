@@ -16,17 +16,17 @@ const props = defineProps({
     allergensDrinks: Array,
     drinks: Array,
     pairingsEnoteca: Array,
+    newDrink: Object,
 });
-
 
 </script>
 
 <template>
-<div class="section_accordion relative h-full" >
-  <section class="sticky w-full top-0 z-10" >
-    
-    
-    <div class="bg-white p-2 border-2 border-black items-center">
+  <div class="section_accordion relative h-full" >
+    <section class="sticky w-full top-0 z-10" >
+      
+        TI PREGOOOOO
+    <!-- <div class="bg-white p-2 border-2 border-black items-center">
       <div class="first-letter:uppercase font-bold flex justify-center items-center gap-2 margin-negative cursor-pointer" @click="toggleVisibility()" id="button-category">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -39,12 +39,12 @@ const props = defineProps({
       <div 
       class="items-center pt-3 gap-2 grid-cols-4"
       :class="isVisible? 'grid' : 'hidden' ">
-        
-      </div>
+      
     </div>
-    
-  </section>
-
+  </div> -->
+  
+</section>
+ 
   <section class="flex justify-evenly">
     <div class="container-food">
       <form class="grid grid-cols-5" @submit.prevent="createCategory(3)">
@@ -75,20 +75,20 @@ const props = defineProps({
         :allergensDishes="allergensDishes"
         :drinks="drinks"
         :pairingsEnoteca="pairingsEnoteca"
-
+        :newDrink="newDrink"
       />
     </div>
-
-
-
+    
+    
+ 
     <div class="container-beverage">
       <form class="grid grid-cols-5" @submit.prevent="createCategoryDrink(3)">
-          <h2 class="text-2xl col-span-5 font-bold text-center uppercase">beverage</h2>
-          <div class="flex flex-col gap-2 col-span-4">
-            <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
-            <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
-          </div>
-          
+        <h2 class="text-2xl col-span-5 font-bold text-center uppercase">beverage</h2>
+        <div class="flex flex-col gap-2 col-span-4">
+          <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
+          <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
+        </div>
+        
           <button type="submit" class=" self-end col-span-1 justify-self-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -107,7 +107,7 @@ const props = defineProps({
         :addDishes="addDishes"
         :showAddDishesModal="showAddDishesModal"
         :componentKey="componentKey"
-        @drinkAdded="$emit('drinkAdded')"
+        @drinkAdded="handleDrinkAdded" 
         @updateDrinks="addDrink"
         :allergens="allergens"
       />
@@ -139,12 +139,13 @@ export default {
         ButtonCss,
     },
     props: {
-        category_enoteca: Array,
         dish_enoteca_category: Array,
+        allergensDrinks: Array,
     },
     data() {
       return {
         componentKey: 0,
+        newDrink : Object,
         newCategory: {
           name: '',
         },
@@ -158,6 +159,8 @@ export default {
         showAddDishesModal: false,
         dishToCreateId: null,
         isVisible: false,
+        allergensDrinks: this.allergensDrinks,
+        category_enoteca: this.category_enoteca
       }
     },
     methods: {
@@ -210,37 +213,42 @@ export default {
               console.log(error);
           });
         },
-        toggleVisibility() {
-          const buttonCategory = document.getElementById('button-category');
-          this.isVisible = !this.isVisible;
-          if(this.isVisible) {
-            if(buttonCategory.innerText === '❌') {
-              buttonCategory.innerText = 'aggiungi categoria';
-              buttonCategory.style.borderBottom = 'none';
-              buttonCategory.style.paddingBottom = '0';
-            } else {
-              buttonCategory.innerText = '❌';
-              buttonCategory.style.borderBottom = '3px solid black';
-              buttonCategory.style.paddingBottom = '10px';
-            }
-          } else {
-            if(buttonCategory.innerText === '❌') {
-              buttonCategory.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-          </svg> opzioni`;
-              buttonCategory.style.borderBottom = 'none';
-              buttonCategory.style.paddingBottom = '0';
-            } else {
-              buttonCategory.innerText = '❌';
-              buttonCategory.style.borderBottom = '3px solid black';
-              buttonCategory.style.paddingBottom = '10px';
-            }
-          }
-        },
+        // toggleVisibility() {
+        //   const buttonCategory = document.getElementById('button-category');
+        //   this.isVisible = !this.isVisible;
+        //   if(this.isVisible) {
+        //     if(buttonCategory.innerText === '❌') {
+        //       buttonCategory.innerText = 'aggiungi categoria';
+        //       buttonCategory.style.borderBottom = 'none';
+        //       buttonCategory.style.paddingBottom = '0';
+        //     } else {
+        //       buttonCategory.innerText = '❌';
+        //       buttonCategory.style.borderBottom = '3px solid black';
+        //       buttonCategory.style.paddingBottom = '10px';
+        //     }
+        //   } else {
+        //     if(buttonCategory.innerText === '❌') {
+        //       buttonCategory.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        //     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        //     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        //   </svg> opzioni`;
+        //       buttonCategory.style.borderBottom = 'none';
+        //       buttonCategory.style.paddingBottom = '0';
+        //     } else {
+        //       buttonCategory.innerText = '❌';
+        //       buttonCategory.style.borderBottom = '3px solid black';
+        //       buttonCategory.style.paddingBottom = '10px';
+        //     }
+        //   }
+        // },
         addDrink(newDrink) {
           this.drinks.push(newDrink);
         },
+        handleDrinkAdded(newDrink) {
+          console.log('NEW DRINK')
+          console.log(newDrink)
+          this.newDrink = newDrink;
+        }
     },
     watch: {
         category_enoteca(newVal) {

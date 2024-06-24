@@ -28,6 +28,6 @@ class Category extends Model
 
     public function drinks() 
     {
-        return $this->belongsToMany(Drink::class);
+        return $this->hasMany(Drink::class);
     }
 }

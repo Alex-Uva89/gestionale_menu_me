@@ -12,7 +12,7 @@
             <span class="font-bold text-xl">ID Database: {{ selectedDrink.id }}</span>
         </div>
         <div class="grid-show-drink">
-            {{ selectedDrink }}
+            
             <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                 <div class="flex gap-2">
                     <div class="font-black uppercase">
@@ -35,7 +35,7 @@
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDrink.image === 'null' ? 'img/defaultDish.jpg' : '/storage/' + selectedDrink.image" :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="selectedDrink.image === 'null' || selectedDrink.image === 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + selectedDrink.image" :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">

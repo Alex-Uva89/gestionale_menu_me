@@ -116,4 +116,13 @@ class AllergenController extends Controller
 
             return response()->json($allergen->dishes, 200);
         }
+
+        public function detachDrink($allergenId, $drinkId)
+        {
+            $allergen = Allergen::findOrFail($allergenId);
+
+            $allergen->drinks()->detach($drinkId);
+
+            return response()->json($allergen->drinks, 200);
+        }
 }
