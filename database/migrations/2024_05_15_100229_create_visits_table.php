@@ -11,11 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('drinks_wineries', function (Blueprint $table) {
+        Schema::create('visits', function (Blueprint $table) {
             $table->id();
+            $table->string('ip');
+            $table->string('country');
+            $table->string('city');
+            $table->string('region');
+            $table->string('timezone');
+            $table->string('isp');
+            $table->string('org');
+
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
-            $table->foreignId('drink_id')->constrained()->onDelete('cascade');
-            $table->foreignId('ingredient_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -24,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('drinks_wineries');
+        Schema::dropIfExists('visits');
     }
 };

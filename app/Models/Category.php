@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Local;
+use App\Models\Venue;
 use App\Models\Dish;
 use App\Models\Drink;
 
@@ -12,13 +12,13 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','venue_id','category_id','is_active','is_special'];
 
-    // relationships with locals
+    // relationships with venues
 
-    public function locals() 
+    public function venues() 
     {
-        return $this->belongsToMany(Local::class);
+        return $this->belongsToMany(Venue::class);
     }
 
     public function dishes() 

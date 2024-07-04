@@ -17,9 +17,9 @@ export default {
       :class="{
         'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
         'bg-olive': selectedVenueColor === 'green',
-        'bg-stone-500': selectedVenueColor === 'grey',
+        'bg-stone-500': selectedVenueColor === 'gray',
         'bg-enoteca': selectedVenueColor === 'red',
-        'text-orange-500': selectedVenueColor === 'grey',
+        'text-orange-500': selectedVenueColor === 'gray',
       }">
         <h1 v-if="selectedVenueName" class="ms-2">{{ selectedVenueName }}</h1>
         <h1 v-else class="ms-2">{{ selectedValueButton }}</h1>

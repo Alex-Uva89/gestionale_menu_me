@@ -1,0 +1,104 @@
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  /* Core styles/functionality */
+  .tab input {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+  }
+  .tab__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s;
+  }
+
+  .tab.drink .tab__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s;
+  }
+
+  .tab input:checked ~ .tab__content {
+    max-height: 2800px;
+  }
+
+
+  .tab .container-dishes, .tab .container-drinks{
+    display: grid;
+    grid-template-columns: .8fr 1fr .2fr;
+    align-items: center;
+  }
+
+  .tab .container-dishes img, .tab .container-drinks img{
+    width: 60%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .tab .buttons {
+    width: 100px;
+  }
+
+  /* Visual styles */
+  .accordion {
+    height: fit-content;
+    border: 2px solid;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-top: none;
+  }
+  .tab__label,
+  .tab__close {
+    display: flex;
+    color: white;
+    cursor: pointer;
+  }
+  .tab__label {
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  .tab__label__arrow {
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    transition: all 0.35s;
+}
+.tab input:checked + .tab__label .tab__label__arrow {
+  transform: rotate(180deg);
+}
+.tab__content p {
+  margin: 0;
+  padding: 1rem;
+}
+.tab__close {
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+.tab.category {
+  display:grid;
+  grid-template-columns: .7fr 4fr;
+}
+
+/* Arrow animation */
+.tab input:not(:checked) + .tab__label:hover .tab__label__arrow {
+  animation: bounce .8s infinite;
+}
+@keyframes bounce {
+  25% {
+    transform: translateY(-.25rem);
+  }
+  75% {
+    transform: translateY(.25rem);
+  }
+}
+
+.line {
+  border-bottom: 2px solid;
+}

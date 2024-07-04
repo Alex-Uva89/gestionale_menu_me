@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Local;
+use App\Models\Venue;
 use App\Models\Category;
-use App\Models\Filter;
 use App\Models\Allergen;
 use App\Models\Ingredient;
 use App\Models\Drink;
@@ -17,11 +16,11 @@ class Dish extends Model
     use HasFactory;
 
 
-    protected $fillable = ['name', 'image', 'price', 'description'];
+    protected $fillable = ['name','description','price','image','is_active','venue_id','category_id'];
 
-    public function locals()
+    public function venues()
     {
-        return $this->belongsTo(Local::class);
+        return $this->belongsTo(Venue::class);
     }
 
     public function categories()
@@ -39,7 +38,7 @@ class Dish extends Model
         return $this->belongsToMany(Ingredient::class);
     }
 
-    public function pairing_drinks()
+    public function drinks()
     {
         return $this->belongsToMany(Drink::class);
     }

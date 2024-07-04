@@ -14,9 +14,14 @@ return new class extends Migration
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image');
+            $table->string('image')->deafult('defaultDish.jpg');
             $table->integer('price');
             $table->text('description');
+            $table->boolean('is_active')->default(false);
+            $table->foreignId('category_id')->constrained();
+            $table->foreignId('venue_id')->constrained();
+
+
             
 
             $table->timestamps();

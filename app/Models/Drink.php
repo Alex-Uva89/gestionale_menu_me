@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Local;
+use App\Models\Venue;
 use App\Models\Category;
 use App\Models\Allergen;
 use App\Models\Ingredient;
@@ -18,9 +18,9 @@ class Drink extends Model
 
     protected $fillable = ['name', 'image','price', 'description', 'instructions', 'degrees','origin'];
 
-    public function local()
+    public function venues()
     {
-        return $this->belongsToMany(Local::class);
+        return $this->belongsToMany(Venue::class);
     }
 
     public function category()
@@ -33,7 +33,7 @@ class Drink extends Model
         return $this->belongsToMany(Ingredient::class);
     }
 
-    public function pairing_dishes()
+    public function dishes()
     {
         return $this->belongsToMany(Dish::class);
     }

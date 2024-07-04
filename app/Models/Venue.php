@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\Dish;
 use App\Models\Drink;
 
-class Local extends Model
+class Venue extends Model
 {
     use HasFactory;
 
@@ -38,7 +38,7 @@ class Local extends Model
 
     public function categories() 
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)->withPivot('category_id','venue_id');
     }
 
     public function dishes() 
