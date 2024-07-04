@@ -265,227 +265,227 @@ import SwitchButton from '../Switch_button.vue';
 import SelectMultiple from '../SelectMultiple.vue';
 
 
-export default {
-    
-    name: 'ShowEditDish',
-    props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks','newDrinko'],
-    components: {
-        ButtonCss,
-        ModalAction,
-        SwitchButton,
-        SelectMultiple
-    },
-    emits: ['showModalDish', 'deleteDish', 'matchAllergens'],
-    data() {
-        return {
-            imagePreview: null,
-            showModalEditName: false,
-            showModalDeleteDish: false,
-            showModalEditPrice: false,
-            showModalEditDescription: false,
-            showModalEditImg: false,
-            showModalEditPairings: false,
-            dishIdToDelete: null,
-            copySelectedDish: null,
-            arrayAllergens: this.allergensDishes,
-            pairings: [],
-            localComponentAllergen: 0,
-            selectedDishDrinks: [],
-            newPairings: null,
-        }
-    },
-    methods: {
-        showModalDish(){
-            this.$emit('showModalDish');
-        },
-        openDeleteModalDish(dishId){
-            this.dishIdToDelete = dishId;
-            this.showModalDeleteDish = true;
-        },
-        confirmDeleteDish(id){
-            this.$emit('deleteDish', id);
-            this.showModalDeleteDish = false;
-        },
-        matchAllergens(dishId, allergenId){
-            this.$emit('matchAllergens', dishId, allergenId);
-        },
-        isAllergenMatched(allergenId) {
-            const allergenDish = this.allergensDishes.find(allergenDish => allergenDish.id === allergenId);
-            if (!allergenDish) {
-                return false;
-                }
-
-            return allergenDish.dishes.some(dish => dish.pivot.dish_id === this.selectedDish.id);
-        },
-        openInputName(){
-            this.showModalEditName = true;
-        },
-        confirmEditName(dishNew){
-            this.selectedDish.name = dishNew.name
-
-            axios.put(`/api/dishes/${this.selectedDish.id}`, {
-                name: dishNew.name
-            })
-
-
-            this.showModalEditName = false;
-
-
-        },
-        openInputPrice(){
-            this.showModalEditPrice = true;
-        },
-        confirmEditPrice(dishNew){
-            this.selectedDish.price = dishNew.price
-
-            axios.put(`/api/dishes/${this.selectedDish.id}`, {
-                price: dishNew.price
-            })
-
-            this.showModalEditPrice = false;
-        },
-        openInputDescription(){
-            this.showModalEditDescription = true;
-        },
-        confirmEditDescription(dishNew){
-            this.selectedDish.description = dishNew.description
-
-            axios.put(`/api/dishes/${this.selectedDish.id}`, {
-                description: dishNew.description
-            })
-
-            this.showModalEditDescription = false;
-        },
-        openInputImg(){
-            this.showModalEditImg = true;
-        },
-        confirmEditImg(dishNew){
-            let newDish = null;
-            const formData = new FormData();
-            const fileInput = document.querySelector('#editImg');
-
-            console.log(fileInput.files[0])
-
-            if (fileInput.files[0]) {
-                formData.append('image', fileInput.files[0]);
-            }
-
-            formData.append('_method', 'PUT');
-
-            axios.post(`/api/dishes/${this.selectedDish.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(response => {
-                let data = response.data;
-                data = data.substring(data.indexOf('{'));
-                newDish = JSON.parse(data);
-
-                this.selectedDish.image = newDish.image;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-            this.showModalEditImg = false;
-        },
-        updatePairings(dishId) {
-            axios.get(`/api/dishes/${dishId}/drinks`)
-                .then(response => {
-                    this.pairings = response.data.pairingsEnoteca
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
-        previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.imagePreview = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        },
-        updateIsShowStatus(id, value) {
-          axios.put(`/api/dishes/${id}`, { is_active: value })
-          .then(response => {
-                this.selectedDish.is_active = response.data.is_active
-            })
-          .catch(error => {
-              console.log(error);
-            });
-        },
-        openEditPairings(){
-            this.showModalEditPairings = true;
-        },
-        toggleDrink(drink) {
-            this.pairings = this.pairings.map(pairing => {
-                if (pairing.id === this.selectedDish.id) {
-                    const drinkIndex = pairing.drinks.findIndex(d => d.id === drink.id);
-                    if (drinkIndex !== -1) {
-                        pairing.drinks.splice(drinkIndex, 1);
-                    } else {
-                        pairing.drinks.push(drink);
-                    }
-                }
-                return pairing;
-            });
-        },
-        confirmEditPairings(dishId){
-            const drinkIds = this.pairings
-                .filter(pairing => pairing.id === dishId.id)
-                .map(pairing => pairing.drinks.map(drink => drink.id))
-                .flat();
-
-            axios.put(`/api/dishes/${dishId.id}/drinks`, { drink_id: drinkIds })                
-                .then(response => {
-                    this.updatePairings(dishId.id);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-
-            this.showModalEditPairings = false;
-        },
-        updateDrinks(){
-            axios.get('/api/drinks')
-                .then(response => {
-                    this.newPairings = response.data
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        },
-    },
-    computed: {
-        activeAllergens() {
-          return this.allergens.filter(allergen => allergen.is_active);
-        },
-        selectedDishDrinks() {
-            const dish = this.pairings.find(d => d.id === this.selectedDish.id);
-            if (!dish || !dish.drinks) {
-                return [];
-            }
+    export default {
         
-            const drinkIds = dish.drinks.map(drink => drink.id);
-
-            return drinkIds;
-        }
-    },
-    mounted() {
-        this.copySelectedDish = Object.assign({}, this.selectedDish);
-        this.updatePairings(this.copySelectedDish.id);
-        this.updateDrinks();
-    },
-    watch: {
-        componentAllergen(newVal) {
-            this.localComponentAllergen = newVal;
+        name: 'ShowEditDish',
+        props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks','newDrinko'],
+        components: {
+            ButtonCss,
+            ModalAction,
+            SwitchButton,
+            SelectMultiple
         },
+        emits: ['showModalDish', 'deleteDish', 'matchAllergens'],
+        data() {
+            return {
+                imagePreview: null,
+                showModalEditName: false,
+                showModalDeleteDish: false,
+                showModalEditPrice: false,
+                showModalEditDescription: false,
+                showModalEditImg: false,
+                showModalEditPairings: false,
+                dishIdToDelete: null,
+                copySelectedDish: null,
+                arrayAllergens: this.allergensDishes,
+                pairings: [],
+                localComponentAllergen: 0,
+                selectedDishDrinks: [],
+                newPairings: null,
+            }
+        },
+        methods: {
+            showModalDish(){
+                this.$emit('showModalDish');
+            },
+            openDeleteModalDish(dishId){
+                this.dishIdToDelete = dishId;
+                this.showModalDeleteDish = true;
+            },
+            confirmDeleteDish(id){
+                this.$emit('deleteDish', id);
+                this.showModalDeleteDish = false;
+            },
+            matchAllergens(dishId, allergenId){
+                this.$emit('matchAllergens', dishId, allergenId);
+            },
+            isAllergenMatched(allergenId) {
+                const allergenDish = this.allergensDishes.find(allergenDish => allergenDish.id === allergenId);
+                if (!allergenDish) {
+                    return false;
+                    }
+
+                return allergenDish.dishes.some(dish => dish.pivot.dish_id === this.selectedDish.id);
+            },
+            openInputName(){
+                this.showModalEditName = true;
+            },
+            confirmEditName(dishNew){
+                this.selectedDish.name = dishNew.name
+
+                axios.put(`/api/dishes/${this.selectedDish.id}`, {
+                    name: dishNew.name
+                })
+
+
+                this.showModalEditName = false;
+
+
+            },
+            openInputPrice(){
+                this.showModalEditPrice = true;
+            },
+            confirmEditPrice(dishNew){
+                this.selectedDish.price = dishNew.price
+
+                axios.put(`/api/dishes/${this.selectedDish.id}`, {
+                    price: dishNew.price
+                })
+
+                this.showModalEditPrice = false;
+            },
+            openInputDescription(){
+                this.showModalEditDescription = true;
+            },
+            confirmEditDescription(dishNew){
+                this.selectedDish.description = dishNew.description
+
+                axios.put(`/api/dishes/${this.selectedDish.id}`, {
+                    description: dishNew.description
+                })
+
+                this.showModalEditDescription = false;
+            },
+            openInputImg(){
+                this.showModalEditImg = true;
+            },
+            confirmEditImg(dishNew){
+                let newDish = null;
+                const formData = new FormData();
+                const fileInput = document.querySelector('#editImg');
+
+                console.log(fileInput.files[0])
+
+                if (fileInput.files[0]) {
+                    formData.append('image', fileInput.files[0]);
+                }
+
+                formData.append('_method', 'PUT');
+
+                axios.post(`/api/dishes/${this.selectedDish.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    let data = response.data;
+                    data = data.substring(data.indexOf('{'));
+                    newDish = JSON.parse(data);
+
+                    this.selectedDish.image = newDish.image;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+                this.showModalEditImg = false;
+            },
+            updatePairings(dishId) {
+                axios.get(`/api/dishes/${dishId}/drinks`)
+                    .then(response => {
+                        this.pairings = response.data.pairingsEnoteca
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            },
+            previewImage(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.imagePreview = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            },
+            updateIsShowStatus(id, value) {
+            axios.put(`/api/dishes/${id}`, { is_active: value })
+            .then(response => {
+                    this.selectedDish.is_active = response.data.is_active
+                })
+            .catch(error => {
+                console.log(error);
+                });
+            },
+            openEditPairings(){
+                this.showModalEditPairings = true;
+            },
+            toggleDrink(drink) {
+                this.pairings = this.pairings.map(pairing => {
+                    if (pairing.id === this.selectedDish.id) {
+                        const drinkIndex = pairing.drinks.findIndex(d => d.id === drink.id);
+                        if (drinkIndex !== -1) {
+                            pairing.drinks.splice(drinkIndex, 1);
+                        } else {
+                            pairing.drinks.push(drink);
+                        }
+                    }
+                    return pairing;
+                });
+            },
+            confirmEditPairings(dishId){
+                const drinkIds = this.pairings
+                    .filter(pairing => pairing.id === dishId.id)
+                    .map(pairing => pairing.drinks.map(drink => drink.id))
+                    .flat();
+
+                axios.put(`/api/dishes/${dishId.id}/drinks`, { drink_id: drinkIds })                
+                    .then(response => {
+                        this.updatePairings(dishId.id);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+
+                this.showModalEditPairings = false;
+            },
+            updateDrinks(){
+                axios.get('/api/drinks')
+                    .then(response => {
+                        this.newPairings = response.data
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            },
+        },
+        computed: {
+            activeAllergens() {
+            return this.allergens.filter(allergen => allergen.is_active);
+            },
+            selectedDishDrinks() {
+                const dish = this.pairings.find(d => d.id === this.selectedDish.id);
+                if (!dish || !dish.drinks) {
+                    return [];
+                }
+            
+                const drinkIds = dish.drinks.map(drink => drink.id);
+
+                return drinkIds;
+            }
+        },
+        mounted() {
+            this.copySelectedDish = Object.assign({}, this.selectedDish);
+            this.updatePairings(this.copySelectedDish.id);
+            this.updateDrinks();
+        },
+        watch: {
+            componentAllergen(newVal) {
+                this.localComponentAllergen = newVal;
+            },
+        }
     }
-}
     
 
 </script>

@@ -56,29 +56,27 @@ const props = defineProps({
           </label>
           <div class="tab__content bg-white" >
               <ul class="max-w-full">
-                <li v-for="dish in category.dishes" 
-                class="border-b-2 border-black p-2">
-                <div class="w-full h-full" :class="dish.is_active ? 'opacity-100' : 'opacity-20'">
-                  <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
-                    <div class="flex">
-                      <img :src="dish.image == 'null' ? 'img/defaultDish.jpg' : '/storage/' + dish.image "  alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
-                    </div>
-                    <div class="flex flex-col name">
-                      <span class="first-letter:uppercase text-bold">{{ dish.name }}</span>
-                    </div>
-                    <div class="flex flex-col price">
-                      <span class="text-bold">{{ dish.price }} €</span>
+                <li v-for="dish in category.dishes" :key="dish.id" class="border-b-2 border-black p-2">
+                  <div class="w-full h-full" :class="dish.is_active ? 'opacity-100' : 'opacity-20'">
+                    <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
+                      <div class="flex">
+                        <img :src="dish.image == 'null' ? 'img/defaultDish.jpg' : '/storage/' + dish.image "  alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                      </div>
+                      <div class="flex flex-col name">
+                        <span class="first-letter:uppercase text-bold">{{ dish.name }}</span>
+                      </div>
+                      <div class="flex flex-col price">
+                        <span class="text-bold">{{ dish.price }} €</span>
+                      </div>
                     </div>
                   </div>
-                </div>
                 </li>
               </ul>
          
  
             <div type="button" @click="addDishes(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
-              <div class="font-bold text-lg">&#10133</div>
+              <div class="font-bold text-lg">&#10133;</div>
               <span>Aggiungi piatto</span>
-              
             </div>
  
           </div>
@@ -123,7 +121,7 @@ const props = defineProps({
                   </span>
                   <ul class="flex gap-2">
                       <template v-for="allergen in allergens">
-                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)">
+                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
                             :src="'/storage/' + allergen.icon" 
                             :alt="allergen.name + ' icon'" 
@@ -576,11 +574,11 @@ export default {
     gap: 10px;
     overflow-y: scroll;
     scrollbar-width: none;
-    .h-image{
-        width: 100%;
-        height: 80%;
-    }
-}
+  }
+  .h-image{
+      width: 100%;
+      height: 80%;
+  }
 
 
 </style>
