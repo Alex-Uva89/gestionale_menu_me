@@ -1,5 +1,3 @@
-
-
 <template>
     
     <div :key="componenetAllergen">
@@ -191,7 +189,6 @@
         </svg>
     </div>
  
-
 </template>
 
 <script>

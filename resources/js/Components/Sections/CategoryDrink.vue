@@ -67,7 +67,7 @@ const props = defineProps({
 
               
               <div type="button" @click="addDrink(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
-                <div class="font-bold text-lg">&#10133</div>
+                <div class="font-bold text-lg">&#10133;</div>
                 <span>Aggiungi bevanda</span>
               </div>
             </div>
@@ -112,7 +112,7 @@ const props = defineProps({
                   </span>
                   <ul class="flex gap-2">
                       <template v-for="allergen in allergens">
-                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)">
+                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
                             :src="'/storage/' + allergen.icon" 
                             :alt="allergen.name + ' icon'" 
@@ -564,10 +564,10 @@ export default {
     gap: 10px;
     overflow-y: scroll;
     scrollbar-width: none;
-    .h-image{
-        width: 100%;
-        height: 80%;
-    }
-}
-
+  }
+  .h-image{
+      width: 100%;
+      height: 80%;
+  }
+  
 </style>

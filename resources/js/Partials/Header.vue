@@ -25,7 +25,7 @@ export default {
         <h1 v-else class="ms-2">{{ selectedValueButton }}</h1>
       </div>
     </header>
-  </template>
+</template>
 
 
 
