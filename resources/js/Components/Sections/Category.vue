@@ -9,6 +9,7 @@ const props = defineProps({
     allergens: Array,
     allergensDishes: Array,
     drinks: Array,
+    newDrink: Array,
 });
 
 
@@ -44,7 +45,7 @@ const props = defineProps({
       }" :key="componentKeyli">
           <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
           <label :for="'cb'+ category.id" class="tab__label uppercase text-white font-bold cursor-pointer">
-            <span class="rounded-2xl text-black w-12 h-8 bg-white p-1 flex justify-center items-center">{{ activeDishesCount[category.id] }} / {{ category.dishes ? category.dishes.length : 0 }}</span>            <span>
+            <span class="rounded-2xl text-black w-20 h-8 bg-white p-1 flex justify-center items-center">{{ activeDishesCount[category.id] }} / {{ category.dishes ? category.dishes.length : 0 }}</span>            <span>
               {{ category.name }}
             </span>
             <span class="tab__label__arrow">
@@ -85,8 +86,6 @@ const props = defineProps({
      </div>
      </div>
   </section>
-
-  {{ newDrink }}
 
 <!-- MODALS -->
 
@@ -154,7 +153,7 @@ const props = defineProps({
               </div>
               <div style="grid-area: abbinamenti">
                 <p>Aggiungi abbinamenti:</p>
-                <SelectMultiple :options="drinks && newDrink" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+                <SelectMultiple :options="drinks && newDrinkPairings" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
               </div>
           </div>
   
@@ -194,7 +193,7 @@ const props = defineProps({
           </div>
       </div>
   </ModalAction>
-
+  
   <ModalAction :showModal="showModalDish">
     <ShowDish 
     :selectedDish="selectedDish" 
@@ -205,6 +204,7 @@ const props = defineProps({
     :pairingsEnoteca="pairingsEnoteca"
     :pairings="pairings"
     :drinks="drinks"
+    :newDrinko="newDrinko"
     @showModalDish="showModalDish = false"
     @deleteDish="confirmDeleteDish"
     @matchAllergens="matchAllergens"
@@ -220,7 +220,6 @@ import Switch_button from '@/Components/Switch_button.vue';
 import ModalAction from '@/Components/ModalAction.vue';
 import ShowDish from '@/Components/Sections/ShowEditDish.vue';
 import ButtonCss from '@/Components/ButtonCss.vue';
-import SelectMultiple from '@/Components/SelectMultiple.vue';
 import defaultImgDish from '../../../../public/img/defaultDish.jpg';
 
 export default {
@@ -239,7 +238,6 @@ export default {
     allergens: Array,
     drinks: Array,
     allergensDishes: Array,
-    newDrink: Array,
     is_drink: {
       type: Boolean,
       required: true
@@ -248,7 +246,6 @@ export default {
   },
   data() {
     return {
-      newDrink: this.newDrink,
       categoryEnoteca: this.category_enoteca,
       keyComponentCategory: 0,
       defaultImgDish,
@@ -274,9 +271,11 @@ export default {
       arrayPairings: this.pairingsEnoteca,
       pairings: [],
       dishActive: [],
+      newDrinko: this.newDrink,
     };
   },
   methods: {
+
         deleteCategory(id) {
             this.categoryToDelete = id;
             this.showDeleteModal = true;
@@ -342,7 +341,7 @@ export default {
           this.files = e.target.files || e.dataTransfer.files;
           if (!this.files.length)
             return;
-          this.file = this.files[0]; // Aggiungi questa riga
+          this.file = this.files[0];
           this.createImage(this.files[0]);
         },
         createImage(file) {
@@ -508,7 +507,7 @@ export default {
 
         },
   },
-      created() {
+  created() {
           this.localDishEnotecaCategory = this.category_enoteca.map(category => {
               let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
               return {
@@ -518,8 +517,8 @@ export default {
           });
 
           this.allergenDishes = this.allergensDishes;
-      },
-      computed: {
+  },
+  computed: {
         isFormFilled() {
             return this.dish_enoteca_category.name && this.dish_enoteca_category.price;
         },
@@ -532,7 +531,15 @@ export default {
           });
           return activeDishesCount;
         }
-      },
+  },
+  mounted() {
+    console.log(this.newDrink)
+  },
+  watch: {
+    newDrink(newVal) {
+      this.newDrinko = newVal // Dovrebbe loggare ogni volta che newDrink cambia
+    }
+  },
 };
 </script>
 

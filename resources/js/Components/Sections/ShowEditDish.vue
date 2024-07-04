@@ -5,7 +5,7 @@
             Scheda del piatto:
             <span class="text-4xl uppercase text-red-500">
                 {{ selectedDish.name }}
-            </span> 
+            </span>  
             <SwitchButton :value="selectedDish.is_active === 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
         </h2>
         <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
@@ -93,10 +93,9 @@
                     </ButtonCss>
                 </div>
                 <ul class="flex gap-2">
-    
                     <template v-for="dish in pairings">
                         <template v-for="drink in dish.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id && (drink.is_active === true || drink.is_active === 1)" >{{ drink.name }}</li>
                         </template>
                     </template>
                 </ul>
@@ -225,28 +224,28 @@
         </ModalAction>
      </div>
 
-     <div v-if="showModalEditPairings" class="z-50">
+     <div v-if="showModalEditPairings" class="z-50 container-editing-parings">
         <ModalAction :showModal="showModalEditPairings" :selectedDish="selectedDish">
-            <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica Gli abbinamenti del piatto: 
-            </h2>
+                <h2 class="font-bold text-2xl text-center pb-6">
+                    Modifica Gli abbinamenti del piatto: 
+                </h2>
 
-            <div class="text-xl pb-4 first-letter:uppercase mb-8">
-                <span>
-                    Abbinamenti attuali: 
-                </span>
-                <ul class="flex gap-2">
-                    <template v-for="dish in pairings">
-                        <template v-for="drink in dish.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                    <span>
+                        Abbinamenti attuali: 
+                    </span>
+                    <ul class="flex gap-2">
+                        <template v-for="dish in pairings">
+                            <template v-for="drink in dish.drinks">
+                                <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                            </template>
                         </template>
-                    </template>
-                    
-                </ul>
-            </div>
+                        
+                    </ul>
+                </div>
 
-            <label for="name" class="font-bold text-xl">Abbinamenti:</label>
-            <SelectMultiple ref="selectMultiple" :options="drinks" :selected="selectedDishDrinks" @updateComponent="toggleDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+                <label for="name" class="font-bold text-xl">Abbinamenti:</label>
+                <SelectMultiple ref="selectMultiple" :options="newPairings" :selected="selectedDishDrinks" @updateComponent="toggleDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
             <div class="flex w-full justify-between py-5">
                     <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPairings( copySelectedDish )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditPairings = false">Annulla</button>
@@ -269,7 +268,7 @@ import SelectMultiple from '../SelectMultiple.vue';
 export default {
     
     name: 'ShowEditDish',
-    props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks'],
+    props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks','newDrinko'],
     components: {
         ButtonCss,
         ModalAction,
@@ -291,7 +290,8 @@ export default {
             arrayAllergens: this.allergensDishes,
             pairings: [],
             localComponentAllergen: 0,
-            selectedDishDrinks: []
+            selectedDishDrinks: [],
+            newPairings: null,
         }
     },
     methods: {
@@ -449,7 +449,16 @@ export default {
                 });
 
             this.showModalEditPairings = false;
-        }
+        },
+        updateDrinks(){
+            axios.get('/api/drinks')
+                .then(response => {
+                    this.newPairings = response.data
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
     },
     computed: {
         activeAllergens() {
@@ -469,17 +478,24 @@ export default {
     mounted() {
         this.copySelectedDish = Object.assign({}, this.selectedDish);
         this.updatePairings(this.copySelectedDish.id);
+        this.updateDrinks();
     },
     watch: {
         componentAllergen(newVal) {
             this.localComponentAllergen = newVal;
         },
-    },
+    }
 }
+    
 
 </script>
 
 <style scoped>
+
+.container-editing-parings{
+    max-height: 100%;
+    overflow-y: scroll;
+}
 
 .container-edit-img{
     width: 400px;

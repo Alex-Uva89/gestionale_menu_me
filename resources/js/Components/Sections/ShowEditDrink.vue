@@ -41,6 +41,7 @@
                 <span class="font-black me-2 uppercase">
                     Allergeni: 
                 </span>
+                
                 <ul class="flex gap-2" v-if="activeAllergens.length">
         
                         <li 
@@ -84,24 +85,84 @@
                     Modifica
                 </ButtonCss>
             </div>
-            <div class="h-fit p-2 border-2 border-black" style="grid-area: abbinamenti;">
-                <div class="flex gap-2 justify-between items-center">
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: gradi;">
+                <div class="flex gap-2">
                     <div class="font-black uppercase">
-                        abbinamenti
+                        gradi:
                     </div>
-                    <ButtonCss @click="openEditPairings()">
-                        Modifica
-                    </ButtonCss>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.degrees }}
+                    </span>
                 </div>
-                <ul class="flex gap-2">
-    
-                    <template v-for="drink in pairings">
-                        <template v-for="drink in drink.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="drink.id === selectedDrink.id" >{{ drink.name }}</li>
-                        </template>
-                    </template>
-                </ul>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
             </div>
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        colore:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.color }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
+            </div>
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produzione;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        metodo di produzione:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.production_method }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
+            </div>
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: sapore;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        sapore:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.flavour }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
+            </div>
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        ingredienti:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.description }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
+            </div>   
+            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        origine:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.origin }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputName()">
+                    Modifica
+                </ButtonCss>
+            </div>  
         </div>
         <div class="button_delete">
             <div @click="openDeleteModalDish( selectedDrink.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
@@ -311,12 +372,13 @@ export default {
             this.$emit('matchDish', dishId, allergenId);
         },
         isAllergenMatched(allergenId) {
-            // const allergenDrink = this.allergensDrinks.find(allergenDrink => allergenDrink.id === allergenId);
-            // if (!allergenDrink) {
-            //     return false;
-            //     }
+            const allergenDrink = this.allergensDrinks.find(allergenDrink => allergenDrink.id === allergenId)
+            
+            if (!allergenDrink) {
+                return false;
+                }
 
-            // return allergenDrink.dishes.some(drink => drink.pivot.dish_id === this.selectedDrink.id);
+            return allergenDrink.drinks.some(drink => drink.pivot.drink_id === this.selectedDrink.id);
         },
         openInputName(){
             this.showModalEditName = true;
@@ -360,8 +422,8 @@ export default {
         openInputImg(){
             this.showModalEditImg = true;
         },
-        confirmEditImg(dishNew){
-            let newDish = null;
+        confirmEditImg(drinkNew){
+            let newDrink = null;
             const formData = new FormData();
             const fileInput = document.querySelector('#editImg');
 
@@ -373,7 +435,7 @@ export default {
 
             formData.append('_method', 'PUT');
 
-            axios.post(`/api/dishes/${this.selectedDrink.id}`, formData, {
+            axios.post(`/api/drinks/${this.selectedDrink.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -381,9 +443,9 @@ export default {
             .then(response => {
                 let data = response.data;
                 data = data.substring(data.indexOf('{'));
-                newDish = JSON.parse(data);
+                newDrink = JSON.parse(data);
 
-                this.selectedDrink.image = newDish.image;
+                this.selectedDrink.image = newDrink.image;
             })
             .catch(error => {
                 console.error(error);
@@ -411,7 +473,7 @@ export default {
             }
         },
         updateIsShowStatus(id, value) {
-          axios.put(`/api/dishes/${id}`, { is_active: value })
+          axios.put(`/api/drinks/${id}`, { is_active: value })
           .then(response => {
                 this.selectedDrink.is_active = response.data.is_active
             })
@@ -509,12 +571,14 @@ export default {
     margin: 20px 0;
     height: 62vh;
     grid-template-areas: 
-        "nome nome immagine"
-        "prezzo prezzo immagine"
-        "allergeni allergeni immagine"
-        "consigli consigli immagine"
-        "abbinamenti abbinamenti abbinamenti";
-    grid-template-columns: 2fr 1fr 1fr;
+        "nome nome immagine immagine"
+        "prezzo prezzo immagine immagine"
+        "allergeni allergeni immagine immagine"
+        "consigli consigli immagine immagine"
+        "ingredienti ingredienti colore colore"
+        "gradi gradi origine origine"
+        "produzione produzione sapore sapore";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 2fr 2fr;
     gap: 10px;
     overflow-y: scroll;

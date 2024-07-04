@@ -23,6 +23,7 @@ Route::get('/dishes/{id}', [DishController::class, 'show']);
 Route::get('/dishes', [DishController::class, 'index']);
 Route::get('/allergens/{id}/dishes', [AllergenController::class, 'index']);
 Route::get('/dishes/{dish}/allergens', [DishController::class, 'getAllergens']);
+Route::get('/drinks', [DrinkController::class, 'getDrinks']);
 
 // PUT
 Route::put('/', [HomeController::class, 'update'])->name('update');
@@ -32,6 +33,7 @@ Route::put('/allergens/{id}', [AllergenController::class, 'update']);
 Route::put('/recipes/{id}', [RecipeController::class, 'update']);
 Route::put('/dishes/{id}', [DishController::class, 'update']);
 Route::put('/dishes/{id}/drinks', [DishController::class, 'updateDrinkMatch']);
+Route::put('/drinks/{id}', [DrinkController::class, 'update']);
 
 // POST
 Route::post('/', [HomeController::class, 'store'])->name('store');
@@ -45,6 +47,7 @@ Route::post('/drinks', [DrinkController::class, 'store']);
 Route::post('/dishes/{id}/drinks', [DishController::class, 'addDrinkMatch']);
 Route::post('/allergens', [AllergenController::class, 'store']);
 Route::post('/allergens/{id}/dishes', [AllergenController::class, 'attachDishes']);
+Route::post('/allergens/{id}/drinks', [AllergenController::class, 'attachDrinks']);
 Route::post('/recipes', [RecipeController::class, 'store']);
 
 // DELETE

@@ -32,11 +32,10 @@ const props = defineProps({
             <button @click="editCategory(category.id)">Edit</button>
             <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
         </div>
-        {{  allergensDrinks }}
        <div class="bg-yellow-500" :key="componentKeyli" >
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">
-              <span class="rounded-2xl text-black w-12 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinksCount[category.id] }} / {{ category.drinks ? category.drinks.length : 0 }}</span>            <span>
+              <span class="rounded-2xl text-black w-20 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinksCount[category.id] }} / {{ category.drinks ? category.drinks.length : 0 }}</span>            <span>
                 {{ category.name }}
               </span>
               <span class="tab__label__arrow">
@@ -48,7 +47,8 @@ const props = defineProps({
             <div class="tab__content bg-white">
               <ul class="max-w-full">
                 <li v-for="drink in category.drinks" 
-                class="border-b-2 border-black p-2">
+                    :key="drink.id"
+                    class="border-b-2 border-black p-2">
                 <div class="w-full h-full" :class="drink.is_active ? 'opacity-100' : 'opacity-20'">
                   <div @click="openShowDrink(drink)" class="container-drinks px-3 cursor-pointer">
                     <div class="flex">
@@ -65,17 +65,15 @@ const props = defineProps({
                 </li>
               </ul>
 
-              {{enoteca_category}}
-
+              
               <div type="button" @click="addDrink(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
                 <div class="font-bold text-lg">&#10133</div>
                 <span>Aggiungi bevanda</span>
               </div>
             </div>
+          </div>
         </div>
-    </div>
      </div>
-   
   
   </section>
 
@@ -89,7 +87,7 @@ const props = defineProps({
             Aggiungi nuova bevanda
         </h2>
         <form  @submit.prevent="confirmAddDrinks">
-          <div class="grid-show-dish">
+          <div class="grid-show-drink">
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                   <div class="w-full flex flex-col gap-2">
                       <div class="font-black uppercase">
@@ -106,7 +104,7 @@ const props = defineProps({
                       </span>
                       <input type="file" @change="onFileChange" accept="image/*">
                   </div>
-                  <img :src="imagePreview === null? defaultImgDish : imagePreview" class="h-image my-2 border border-3 border-black object-cover">
+                  <img :src="imagePreview == null? defaultImgDish : imagePreview" class="h-image my-2 border border-3 border-black object-cover">
               </div>            
               <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                   <span class="font-black me-2 uppercase">
@@ -134,6 +132,23 @@ const props = defineProps({
                   </div>
                   <input class="w-full h-16" type="text" v-model="drink_enoteca_category.instruction" :placeholder="drink_enoteca_category.instruction">
               </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          ingredienti:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.description" :placeholder="drink_enoteca_category.description">
+                  </div>
+                  
+              </div>
+              <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: gradi;">
+                  <div class="flex flex-col gap-2 w-full">
+                      <div class="font-black uppercase">
+                          gradi:
+                      </div>
+                      <input class="w-full h-8" type="number" v-model="drink_enoteca_category.degrees" :placeholder="drink_enoteca_category.degrees">
+                  </div>
+              </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
                   <div class="flex flex-col gap-2 w-full">
                       <div class="font-black uppercase">
@@ -142,9 +157,46 @@ const props = defineProps({
                       <input class="w-full h-8" type="number" v-model="drink_enoteca_category.price" :placeholder="drink_enoteca_category.price">
                   </div>
               </div>
-              <div style="grid-area: abbinamenti">
-                <p>Aggiungi abbinamenti:</p>
-                <SelectMultiple :options="drinks" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          origine:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.origin" :placeholder="drink_enoteca_category.origin">
+                  </div>
+                  
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          colore:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.color" :placeholder="drink_enoteca_category.color">
+                  </div>
+                  
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produzione;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          metodo di produzione:
+                      </div>
+                      <select class="w-full h-8" v-model="drink_enoteca_category.production_method" placeholder="Scegli un metodo">
+                          <option value="distillazione">Distillazione</option>
+                          <option value="aFreddo">A freddo</option>
+                          <option value="infusione">Infusione</option>
+                          <option value="macerazione">Macerazione</option>
+                          <option value="percolazione">Percolazione</option>
+                      </select>
+                  </div>
+                  
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: sapore;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          sapore:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.flavour" :placeholder="drink_enoteca_category.flavour">
+                  </div>
               </div>
           </div>
   
@@ -210,6 +262,7 @@ import Switch_button from '@/Components/Switch_button.vue';
 import ModalAction from '@/Components/ModalAction.vue';
 import ShowDish from '@/Components/Sections/ShowEditDrink.vue';
 import ButtonCss from '../ButtonCss.vue';
+import defaultImgDish from '../../../../public/img/defaultDish.jpg';
 
 export default {
   components: {
@@ -233,6 +286,7 @@ export default {
   },
   data() {
     return {
+      defaultImgDish,
       file: null,
       imagePreview: null,
       componentKeyli: 0,
@@ -310,16 +364,17 @@ export default {
             });
         },
         onFileChange(e) {
-        let files = e.target.files || e.dataTransfer.files;
-        if (!files.length)
-          return;
-        this.createImage(files[0]);
+          this.files = e.target.files || e.dataTransfer.files;
+          if (!this.files.length)
+            return;
+          this.file = this.files[0];
+          this.createImage(this.files[0]);
         },
         createImage(file) {
           let reader = new FileReader();
           let vm = this;
           reader.onload = (e) => {
-            vm.drink_enoteca_category.image = e.target.result;
+            vm.imagePreview = e.target.result;
           };
           reader.readAsDataURL(file);
         },
@@ -339,11 +394,18 @@ export default {
           this.drinkToCreateId = id;
         },
         confirmAddDrinks() {
+
           let formData = new FormData();
           formData.append('name', this.drink_enoteca_category.name);
           formData.append('description', this.drink_enoteca_category.description);
           formData.append('price', this.drink_enoteca_category.price);
           formData.append('image', this.file);
+          formData.append('instruction', this.drink_enoteca_category.instruction);
+          formData.append('degrees', this.drink_enoteca_category.degrees);
+          formData.append('origin', this.drink_enoteca_category.origin);
+          formData.append('color', this.drink_enoteca_category.color);
+          formData.append('production_method', this.drink_enoteca_category.production_method);
+          formData.append('flavour', this.drink_enoteca_category.flavour);
           formData.append('category_id', this.drinkToCreateId);
           formData.append('venue_id', 3); 
         
@@ -356,6 +418,7 @@ export default {
             let newDrink;
             if (typeof response.data === 'string') {
                 let data = response.data;
+                console.log('DAI CAVALLOOOOOO')
                 data = data.substring(data.indexOf('{'));
                 newDrink = JSON.parse(data);
               } else {
@@ -380,12 +443,13 @@ export default {
             });
             this.selectedAllergens = [];
 
-
             this.drink_enoteca_category.name = '';
             this.drink_enoteca_category.description = '';
             this.drink_enoteca_category.price = null;
             this.file = null;
             this.imagePreview = null;
+            this.drink_enoteca_category.production_method = null;
+            newDrink = '';
           })
         
           .catch(error => {
@@ -402,13 +466,13 @@ export default {
         },
         matchAllergens(drinkId, allergenId) {
 
-          const isMatched = this.allergensDrinks.some(allergenDrink => allergenDrink.id === allergenId && allergenDrink.drinks.some(drinkAbb => drinkAbb.pivot.dish_id === drinkId));
+          const isMatched = this.allergensDrinks.some(allergenDrink => allergenDrink.id === allergenId && allergenDrink.drinks.some(drinkAbb => drinkAbb.pivot.drink_id === drinkId));
 
           if (isMatched) {
             axios.delete(`/api/allergens/${allergenId}/drinks/${drinkId}`)
             .then(() => {
               const index = this.allergensDrinks.findIndex(allergenDrink => allergenDrink.id === allergenId);
-              const drinkIndex = this.allergensDrinks[index].drinks.findIndex(drinkAbb => drinkAbb.pivot.dish_id === drinkId);
+              const drinkIndex = this.allergensDrinks[index].drinks.findIndex(drinkAbb => drinkAbb.pivot.drink_id === drinkId);
               this.allergensDrinks[index].drinks.splice(drinkIndex, 1);
             })
             .catch(error => {
@@ -416,12 +480,12 @@ export default {
             });
           } else {
             axios.post(`/api/allergens/${allergenId}/drinks`, {
-              dish_id: drinkId
+              drink_id: drinkId
             })
             .then(() => {
               
               const index = this.allergensDrinks.findIndex(allergenDrink => allergenDrink.id === allergenId);
-              this.allergensDrinks[index].drinks.push({pivot: {dish_id: drinkId}});
+              this.allergensDrinks[index].drinks.push({pivot: {drink_id: drinkId}});
             })
             .catch(error => {
               console.log(error);
@@ -478,17 +542,24 @@ export default {
   border-color: #a51a1a;
 }
 
-.grid-show-dish{
+.modal-confirm{
+  width: 80vw;
+}
+
+.grid-show-drink{
     display: grid;
     margin: 20px 0;
     height: 62vh;
     grid-template-areas: 
-        "nome nome immagine"
-        "prezzo prezzo immagine"
-        "allergeni allergeni immagine"
-        "abbinamenti abbinamenti immagine"
-        "consigli consigli consigli";
-    grid-template-columns: 2fr 1fr 1fr;
+        "nome nome immagine immagine"
+        "prezzo prezzo immagine immagine"
+        "allergeni allergeni immagine immagine"
+        "abbinamenti abbinamenti immagine immagine"
+        "consigli consigli immagine immagine"
+        "gradi gradi origine origine"
+        "colore colore produzione produzione"
+        "sapore sapore ingredienti ingredienti";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 2fr 2fr;
     gap: 10px;
     overflow-y: scroll;

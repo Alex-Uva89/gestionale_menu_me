@@ -189,9 +189,13 @@ export default {
 }
 .menu {
   width: 100%;
+  max-height: 200px;
   border-width: 0 1px 1px;
   border-style: solid;
   border-color: #333;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #00f #fff;
 }
 .menu-item {
   width: 100%;

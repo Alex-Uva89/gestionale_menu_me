@@ -13,6 +13,7 @@ const props = defineProps({
     drink_enoteca_category: Array,
     allergens: Array,
     allergensDishes: Array,
+    allergensDrinks: Array,
     drinks: Array,
     pairingsEnoteca: Array,
 });
@@ -25,7 +26,7 @@ const props = defineProps({
 
   <section class="sticky w-full top-0 z-10" >
     
-    <div class="bg-white p-2 border-2 border-black items-center">
+    <!-- <div class="bg-white p-2 border-2 border-black items-center">
       <div class="first-letter:uppercase font-bold flex justify-center items-center gap-2 margin-negative cursor-pointer" @click="toggleVisibility()" id="button-category">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
           <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -42,7 +43,7 @@ const props = defineProps({
         
         
       </div>
-    </div>
+    </div> -->
     
   </section>
 
@@ -78,6 +79,7 @@ const props = defineProps({
         :allergensDishes="allergensDishes"
         :drinks="drinks"
         :pairingsEnoteca="pairingsEnoteca"
+        :newDrink="newDrink"
       />
     </div>
 
@@ -106,10 +108,10 @@ const props = defineProps({
         :addDishes="addDishes"
         :showAddDishesModal="showAddDishesModal"
         :componentKey="componentKey"
-        @drinkAdded="$emit('drinkAdded')"
+        @drinkAdded="handleNewDrink"
         @updateDrinks="addDrink"
         :allergens="allergens"
-        :allergensDishes="allergensDishes"
+        :allergensDrinks="allergensDrinks"
       />
     </div>
 
@@ -132,6 +134,7 @@ import axios from 'axios';
 
 
 export default {
+    emits: ['dishAdded', 'drinkAdded'],
     components: {
         Modal,
         Category,
@@ -158,9 +161,14 @@ export default {
         showAddDishesModal: false,
         dishToCreateId: null,
         isVisible: false,
+        newDrink: null
       }
     },
     methods: {
+        handleNewDrink(drinkEmit){
+          this.newDrink = drinkEmit;
+          return this.newDrink
+        },
         createCategory(venue_ids) {
           const venue_id = [venue_ids];
           const newCategory = { name: this.newCategory.name, is_drink: false};
@@ -209,34 +217,34 @@ export default {
               console.log(error);
           });
         },
-        toggleVisibility() {
-          const buttonCategory = document.getElementById('button-category');
-          this.isVisible = !this.isVisible;
-          if(this.isVisible) {
-            if(buttonCategory.innerText === '❌') {
-              buttonCategory.innerText = 'aggiungi categoria';
-              buttonCategory.style.borderBottom = 'none';
-              buttonCategory.style.paddingBottom = '0';
-            } else {
-              buttonCategory.innerText = '❌';
-              buttonCategory.style.borderBottom = '3px solid black';
-              buttonCategory.style.paddingBottom = '10px';
-            }
-          } else {
-            if(buttonCategory.innerText === '❌') {
-              buttonCategory.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-          </svg> opzioni`;
-              buttonCategory.style.borderBottom = 'none';
-              buttonCategory.style.paddingBottom = '0';
-            } else {
-              buttonCategory.innerText = '❌';
-              buttonCategory.style.borderBottom = '3px solid black';
-              buttonCategory.style.paddingBottom = '10px';
-            }
-          }
-        },
+        // toggleVisibility() {
+        //   const buttonCategory = document.getElementById('button-category');
+        //   this.isVisible = !this.isVisible;
+        //   if(this.isVisible) {
+        //     if(buttonCategory.innerText === '❌') {
+        //       buttonCategory.innerText = 'aggiungi categoria';
+        //       buttonCategory.style.borderBottom = 'none';
+        //       buttonCategory.style.paddingBottom = '0';
+        //     } else {
+        //       buttonCategory.innerText = '❌';
+        //       buttonCategory.style.borderBottom = '3px solid black';
+        //       buttonCategory.style.paddingBottom = '10px';
+        //     }
+        //   } else {
+        //     if(buttonCategory.innerText === '❌') {
+        //       buttonCategory.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        //     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        //     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        //   </svg> opzioni`;
+        //       buttonCategory.style.borderBottom = 'none';
+        //       buttonCategory.style.paddingBottom = '0';
+        //     } else {
+        //       buttonCategory.innerText = '❌';
+        //       buttonCategory.style.borderBottom = '3px solid black';
+        //       buttonCategory.style.paddingBottom = '10px';
+        //     }
+        //   }
+        // },
         addDrink(newDrink) {
           this.drinks.push(newDrink);
         },

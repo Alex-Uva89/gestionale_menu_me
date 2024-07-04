@@ -108,6 +108,7 @@ class AllergenController extends Controller
             return response()->json($allergen->dishes, 200);
         }
 
+
     public function detachDish($allergenId, $dishId)
         {
             $allergen = Allergen::findOrFail($allergenId);
@@ -115,6 +116,19 @@ class AllergenController extends Controller
             $allergen->dishes()->detach($dishId);
 
             return response()->json($allergen->dishes, 200);
+        }
+
+        public function attachDrinks(Request $request, $id)
+        {
+            $allergen = Allergen::findOrFail($id);
+        
+            $request->validate([
+                'drink_id' => 'required|integer',
+            ]);
+        
+            $allergen->drinks()->syncWithoutDetaching([$request->drink_id]);
+        
+            return response()->json($allergen->drinks, 200);
         }
 
         public function detachDrink($allergenId, $drinkId)
