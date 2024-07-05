@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
 
 export default defineConfig({
     plugins: [
@@ -13,11 +14,18 @@ export default defineConfig({
                 transformAssetUrls: {
                     base: null,
                     includeAbsolute: false,
-                    refresh: true,
                 },
             },
         }),
     ],
+    build: {
+        outDir: 'public/build',
+        rollupOptions: {
+            input: {
+                main: resolve(__dirname, 'resources/js/app.js'),
+            },
+        },
+    },
     server: {
         https: true,
     }
