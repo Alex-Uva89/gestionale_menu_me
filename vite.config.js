@@ -21,13 +21,13 @@ export default defineConfig({
     server: {
         https: true,
     },
-    // build: {
-    //     rollupOptions: {
-    //         output: {
-    //             entryFileNames: 'build/assets/[name]-[hash].js',
-    //             chunkFileNames: 'build/assets/[name]-[hash].js',
-    //             assetFileNames: 'build/assets/[name]-[hash][extname]',
-    //         },
-    //     },
-    // },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
+        sourcemap: true,
+        assetsDir: 'assets',
+    },
 });
