@@ -24,10 +24,11 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                manualChunks: undefined,
+                assetFileNames: 'build/assets/[name]-[hash][extname]',
+                chunkFileNames: 'build/assets/[name]-[hash].js',
+                entryFileNames: 'build/assets/[name]-[hash].js',
             },
         },
         sourcemap: true,
-        assetsDir: 'assets',
     },
 });
