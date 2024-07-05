@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "postinstall": "npm run prod",
+        "postinstall": "npm install && npm run prod",
         "prod": "vite build"
     },
     "devDependencies": {
@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
-        "@popperjs/core": "^2.11.8"
+        "@popperjs/core": "^2.11.8",
+        "ziggy": "^2.4.0"
     }
 }
