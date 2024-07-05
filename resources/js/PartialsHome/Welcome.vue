@@ -6,7 +6,7 @@
             <h2 class="text-center text-4xl uppercase">Benvenuto nel gestionale di mamma elvira</h2>
             <p @click="openModalInstruction" class="cursor-pointer text-center text-3xl leading-7 text-blue-700 uppercase">
                 <!-- svg freccia sinistra -->
-                <svg class="w-6 h-6 inline-block font-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-6 h-6 inline-block font-black" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 Seleziona una delle voci del menù a sinistra per iniziare
