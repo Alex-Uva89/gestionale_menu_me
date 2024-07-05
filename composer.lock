@@ -178,12 +178,12 @@
                 {
                     "name": "Dragonfly Development Inc.",
                     "email": "info@dflydev.com",
-                    "homepage": "http://dflydev.com"
+                    "homepage": "https://dflydev.com"
                 },
                 {
                     "name": "Beau Simensen",
                     "email": "beau@dflydev.com",
-                    "homepage": "http://beausimensen.com"
+                    "homepage": "https://beausimensen.com"
                 },
                 {
                     "name": "Carlos Frutos",
@@ -522,7 +522,7 @@
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "symfony/http-foundation": "^4.4|^5.4|^6|^7"
+                "symfony/https-foundation": "^4.4|^5.4|^6|^7"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.4",
@@ -640,7 +640,7 @@
             "time": "2023-11-12T22:16:48+00:00"
         },
         {
-            "name": "guzzlehttp/guzzle",
+            "name": "guzzlehttps/guzzle",
             "version": "7.8.1",
             "source": {
                 "type": "git",
@@ -655,20 +655,20 @@
             },
             "require": {
                 "ext-json": "*",
-                "guzzlehttp/promises": "^1.5.3 || ^2.0.1",
-                "guzzlehttp/psr7": "^1.9.1 || ^2.5.1",
+                "guzzlehttps/promises": "^1.5.3 || ^2.0.1",
+                "guzzlehttps/psr7": "^1.9.1 || ^2.5.1",
                 "php": "^7.2.5 || ^8.0",
-                "psr/http-client": "^1.0",
+                "psr/https-client": "^1.0",
                 "symfony/deprecation-contracts": "^2.2 || ^3.0"
             },
             "provide": {
-                "psr/http-client-implementation": "1.0"
+                "psr/https-client-implementation": "1.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
                 "ext-curl": "*",
-                "php-http/client-integration-tests": "dev-master#2c025848417c1135031fdf9c728ee53d0a7ceaee as 3.0.999",
-                "php-http/message-factory": "^1.1",
+                "php-https/client-integration-tests": "dev-master#2c025848417c1135031fdf9c728ee53d0a7ceaee as 3.0.999",
+                "php-https/message-factory": "^1.1",
                 "phpunit/phpunit": "^8.5.36 || ^9.6.15",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
             },
@@ -738,8 +738,8 @@
                 "client",
                 "curl",
                 "framework",
-                "http",
-                "http client",
+                "https",
+                "https client",
                 "psr-18",
                 "psr-7",
                 "rest",
@@ -759,14 +759,14 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/guzzle",
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttps/guzzle",
                     "type": "tidelift"
                 }
             ],
             "time": "2023-12-03T20:35:24+00:00"
         },
         {
-            "name": "guzzlehttp/promises",
+            "name": "guzzlehttps/promises",
             "version": "2.0.2",
             "source": {
                 "type": "git",
@@ -842,14 +842,14 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/promises",
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttps/promises",
                     "type": "tidelift"
                 }
             ],
             "time": "2023-12-03T20:19:20+00:00"
         },
         {
-            "name": "guzzlehttp/psr7",
+            "name": "guzzlehttps/psr7",
             "version": "2.6.2",
             "source": {
                 "type": "git",
@@ -864,21 +864,21 @@
             },
             "require": {
                 "php": "^7.2.5 || ^8.0",
-                "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.1 || ^2.0",
+                "psr/https-factory": "^1.0",
+                "psr/https-message": "^1.1 || ^2.0",
                 "ralouphie/getallheaders": "^3.0"
             },
             "provide": {
-                "psr/http-factory-implementation": "1.0",
-                "psr/http-message-implementation": "1.0"
+                "psr/https-factory-implementation": "1.0",
+                "psr/https-message-implementation": "1.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
-                "http-interop/http-factory-tests": "^0.9",
+                "https-interop/https-factory-tests": "^0.9",
                 "phpunit/phpunit": "^8.5.36 || ^9.6.15"
             },
             "suggest": {
-                "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
+                "laminas/laminas-httpshandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
@@ -935,7 +935,7 @@
             ],
             "description": "PSR-7 message implementation that also provides common utility methods",
             "keywords": [
-                "http",
+                "https",
                 "message",
                 "psr-7",
                 "request",
@@ -958,14 +958,14 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/psr7",
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttps/psr7",
                     "type": "tidelift"
                 }
             ],
             "time": "2023-12-03T20:05:35+00:00"
         },
         {
-            "name": "guzzlehttp/uri-template",
+            "name": "guzzlehttps/uri-template",
             "version": "v1.0.3",
             "source": {
                 "type": "git",
@@ -1027,7 +1027,7 @@
             ],
             "description": "A polyfill class for uri_template of PHP",
             "keywords": [
-                "guzzlehttp",
+                "guzzlehttps",
                 "uri-template"
             ],
             "support": {
@@ -1044,7 +1044,7 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/uri-template",
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttps/uri-template",
                     "type": "tidelift"
                 }
             ],
@@ -1154,8 +1154,8 @@
                 "ext-session": "*",
                 "ext-tokenizer": "*",
                 "fruitcake/php-cors": "^1.3",
-                "guzzlehttp/guzzle": "^7.8",
-                "guzzlehttp/uri-template": "^1.0",
+                "guzzlehttps/guzzle": "^7.8",
+                "guzzlehttps/uri-template": "^1.0",
                 "laravel/prompts": "^0.1.18",
                 "laravel/serializable-closure": "^1.3",
                 "league/commonmark": "^2.2.1",
@@ -1171,8 +1171,8 @@
                 "symfony/console": "^7.0",
                 "symfony/error-handler": "^7.0",
                 "symfony/finder": "^7.0",
-                "symfony/http-foundation": "^7.0",
-                "symfony/http-kernel": "^7.0",
+                "symfony/https-foundation": "^7.0",
+                "symfony/https-kernel": "^7.0",
                 "symfony/mailer": "^7.0",
                 "symfony/mime": "^7.0",
                 "symfony/polyfill-php83": "^1.28",
@@ -1209,7 +1209,7 @@
                 "illuminate/events": "self.version",
                 "illuminate/filesystem": "self.version",
                 "illuminate/hashing": "self.version",
-                "illuminate/http": "self.version",
+                "illuminate/https": "self.version",
                 "illuminate/log": "self.version",
                 "illuminate/macroable": "self.version",
                 "illuminate/mail": "self.version",
@@ -1247,8 +1247,8 @@
                 "predis/predis": "^2.0.2",
                 "resend/resend-php": "^0.10.0",
                 "symfony/cache": "^7.0",
-                "symfony/http-client": "^7.0",
-                "symfony/psr-http-message-bridge": "^7.0"
+                "symfony/https-client": "^7.0",
+                "symfony/psr-https-message-bridge": "^7.0"
             },
             "suggest": {
                 "ably/ably-php": "Required to use the Ably broadcast driver (^1.0).",
@@ -1276,15 +1276,15 @@
                 "pda/pheanstalk": "Required to use the beanstalk queue driver (^5.0).",
                 "phpunit/phpunit": "Required to use assertions and run tests (^10.5|^11.0).",
                 "predis/predis": "Required to use the predis connector (^2.0.2).",
-                "psr/http-message": "Required to allow Storage::put to accept a StreamInterface (^1.0).",
+                "psr/https-message": "Required to allow Storage::put to accept a StreamInterface (^1.0).",
                 "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^6.0|^7.0).",
                 "resend/resend-php": "Required to enable support for the Resend mail transport (^0.10.0).",
                 "symfony/cache": "Required to PSR-6 cache bridge (^7.0).",
                 "symfony/filesystem": "Required to enable support for relative symbolic links (^7.0).",
-                "symfony/http-client": "Required to enable support for the Symfony API mail transports (^7.0).",
+                "symfony/https-client": "Required to enable support for the Symfony API mail transports (^7.0).",
                 "symfony/mailgun-mailer": "Required to enable support for the Mailgun mail transport (^7.0).",
                 "symfony/postmark-mailer": "Required to enable support for the Postmark mail transport (^7.0).",
-                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^7.0)."
+                "symfony/psr-https-message-bridge": "Required to use PSR-7 bridging features (^7.0)."
             },
             "type": "library",
             "extra": {
@@ -1790,10 +1790,10 @@
                 "async-aws/core": "<1.19.0",
                 "async-aws/s3": "<1.14.0",
                 "aws/aws-sdk-php": "3.209.31 || 3.210.0",
-                "guzzlehttp/guzzle": "<7.0",
-                "guzzlehttp/ringphp": "<1.1.1",
+                "guzzlehttps/guzzle": "<7.0",
+                "guzzlehttps/ringphp": "<1.1.1",
                 "phpseclib/phpseclib": "3.0.15",
-                "symfony/http-client": "<5.2"
+                "symfony/https-client": "<5.2"
             },
             "require-dev": {
                 "async-aws/s3": "^1.5 || ^2.0",
@@ -1806,7 +1806,7 @@
                 "ext-zip": "*",
                 "friendsofphp/php-cs-fixer": "^3.5",
                 "google/cloud-storage": "^1.23",
-                "guzzlehttp/psr7": "^2.6",
+                "guzzlehttps/psr7": "^2.6",
                 "microsoft/azure-storage-blob": "^1.1",
                 "mongodb/mongodb": "^1.2",
                 "phpseclib/phpseclib": "^3.0.36",
@@ -1982,8 +1982,8 @@
                 "elasticsearch/elasticsearch": "^7 || ^8",
                 "ext-json": "*",
                 "graylog2/gelf-php": "^1.4.2 || ^2.0",
-                "guzzlehttp/guzzle": "^7.4.5",
-                "guzzlehttp/psr7": "^2.2",
+                "guzzlehttps/guzzle": "^7.4.5",
+                "guzzlehttps/psr7": "^2.2",
                 "mongodb/mongodb": "^1.8",
                 "php-amqplib/php-amqplib": "~2.4 || ^3",
                 "phpstan/phpstan": "^1.9",
@@ -2667,7 +2667,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Standard interfaces for event handling.",
@@ -2683,22 +2683,22 @@
             "time": "2019-01-08T18:20:26+00:00"
         },
         {
-            "name": "psr/http-client",
+            "name": "psr/https-client",
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/http-client.git",
+                "url": "https://github.com/php-fig/https-client.git",
                 "reference": "bb5906edc1c324c9a05aa0873d40117941e5fa90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/bb5906edc1c324c9a05aa0873d40117941e5fa90",
+                "url": "https://api.github.com/repos/php-fig/https-client/zipball/bb5906edc1c324c9a05aa0873d40117941e5fa90",
                 "reference": "bb5906edc1c324c9a05aa0873d40117941e5fa90",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0 || ^8.0",
-                "psr/http-message": "^1.0 || ^2.0"
+                "psr/https-message": "^1.0 || ^2.0"
             },
             "type": "library",
             "extra": {
@@ -2722,35 +2722,35 @@
                 }
             ],
             "description": "Common interface for HTTP clients",
-            "homepage": "https://github.com/php-fig/http-client",
+            "homepage": "https://github.com/php-fig/https-client",
             "keywords": [
-                "http",
-                "http-client",
+                "https",
+                "https-client",
                 "psr",
                 "psr-18"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-client"
+                "source": "https://github.com/php-fig/https-client"
             },
             "time": "2023-09-23T14:17:50+00:00"
         },
         {
-            "name": "psr/http-factory",
+            "name": "psr/https-factory",
             "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/http-factory.git",
+                "url": "https://github.com/php-fig/https-factory.git",
                 "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
+                "url": "https://api.github.com/repos/php-fig/https-factory/zipball/2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
                 "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1",
-                "psr/http-message": "^1.0 || ^2.0"
+                "psr/https-message": "^1.0 || ^2.0"
             },
             "type": "library",
             "extra": {
@@ -2776,7 +2776,7 @@
             "description": "PSR-17: Common interfaces for PSR-7 HTTP message factories",
             "keywords": [
                 "factory",
-                "http",
+                "https",
                 "message",
                 "psr",
                 "psr-17",
@@ -2785,21 +2785,21 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-factory"
+                "source": "https://github.com/php-fig/https-factory"
             },
             "time": "2024-04-15T12:06:14+00:00"
         },
         {
-            "name": "psr/http-message",
+            "name": "psr/https-message",
             "version": "2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/http-message.git",
+                "url": "https://github.com/php-fig/https-message.git",
                 "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "url": "https://api.github.com/repos/php-fig/https-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
                 "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
                 "shasum": ""
             },
@@ -2828,17 +2828,17 @@
                 }
             ],
             "description": "Common interface for HTTP messages",
-            "homepage": "https://github.com/php-fig/http-message",
+            "homepage": "https://github.com/php-fig/https-message",
             "keywords": [
-                "http",
-                "http-message",
+                "https",
+                "https-message",
                 "psr",
                 "psr-7",
                 "request",
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/2.0"
+                "source": "https://github.com/php-fig/https-message/tree/2.0"
             },
             "time": "2023-04-04T09:54:51+00:00"
         },
@@ -3005,11 +3005,11 @@
                 {
                     "name": "Justin Hileman",
                     "email": "justin@justinhileman.info",
-                    "homepage": "http://justinhileman.com"
+                    "homepage": "https://justinhileman.com"
                 }
             ],
             "description": "An interactive shell for modern PHP.",
-            "homepage": "http://psysh.org",
+            "homepage": "https://psysh.org",
             "keywords": [
                 "REPL",
                 "console",
@@ -3356,8 +3356,8 @@
                 "symfony/config": "^6.4|^7.0",
                 "symfony/dependency-injection": "^6.4|^7.0",
                 "symfony/event-dispatcher": "^6.4|^7.0",
-                "symfony/http-foundation": "^6.4|^7.0",
-                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/https-foundation": "^6.4|^7.0",
+                "symfony/https-kernel": "^6.4|^7.0",
                 "symfony/lock": "^6.4|^7.0",
                 "symfony/messenger": "^6.4|^7.0",
                 "symfony/process": "^6.4|^7.0",
@@ -3567,11 +3567,11 @@
             },
             "conflict": {
                 "symfony/deprecation-contracts": "<2.5",
-                "symfony/http-kernel": "<6.4"
+                "symfony/https-kernel": "<6.4"
             },
             "require-dev": {
                 "symfony/deprecation-contracts": "^2.5|^3",
-                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/https-kernel": "^6.4|^7.0",
                 "symfony/serializer": "^6.4|^7.0"
             },
             "bin": [
@@ -3653,7 +3653,7 @@
                 "symfony/dependency-injection": "^6.4|^7.0",
                 "symfony/error-handler": "^6.4|^7.0",
                 "symfony/expression-language": "^6.4|^7.0",
-                "symfony/http-foundation": "^6.4|^7.0",
+                "symfony/https-foundation": "^6.4|^7.0",
                 "symfony/service-contracts": "^2.5|^3",
                 "symfony/stopwatch": "^6.4|^7.0"
             },
@@ -3842,16 +3842,16 @@
             "time": "2024-05-31T14:57:53+00:00"
         },
         {
-            "name": "symfony/http-foundation",
+            "name": "symfony/https-foundation",
             "version": "v7.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/http-foundation.git",
+                "url": "https://github.com/symfony/https-foundation.git",
                 "reference": "74d171d5b6a1d9e4bfee09a41937c17a7536acfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/74d171d5b6a1d9e4bfee09a41937c17a7536acfa",
+                "url": "https://api.github.com/repos/symfony/https-foundation/zipball/74d171d5b6a1d9e4bfee09a41937c17a7536acfa",
                 "reference": "74d171d5b6a1d9e4bfee09a41937c17a7536acfa",
                 "shasum": ""
             },
@@ -3870,7 +3870,7 @@
                 "symfony/cache": "^6.4|^7.0",
                 "symfony/dependency-injection": "^6.4|^7.0",
                 "symfony/expression-language": "^6.4|^7.0",
-                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/https-kernel": "^6.4|^7.0",
                 "symfony/mime": "^6.4|^7.0",
                 "symfony/rate-limiter": "^6.4|^7.0"
             },
@@ -3900,7 +3900,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v7.1.1"
+                "source": "https://github.com/symfony/https-foundation/tree/v7.1.1"
             },
             "funding": [
                 {
@@ -3919,16 +3919,16 @@
             "time": "2024-05-31T14:57:53+00:00"
         },
         {
-            "name": "symfony/http-kernel",
+            "name": "symfony/https-kernel",
             "version": "v7.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/http-kernel.git",
+                "url": "https://github.com/symfony/https-kernel.git",
                 "reference": "fa8d1c75b5f33b1302afccf81811f93976c6e26f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/fa8d1c75b5f33b1302afccf81811f93976c6e26f",
+                "url": "https://api.github.com/repos/symfony/https-kernel/zipball/fa8d1c75b5f33b1302afccf81811f93976c6e26f",
                 "reference": "fa8d1c75b5f33b1302afccf81811f93976c6e26f",
                 "shasum": ""
             },
@@ -3938,7 +3938,7 @@
                 "symfony/deprecation-contracts": "^2.5|^3",
                 "symfony/error-handler": "^6.4|^7.0",
                 "symfony/event-dispatcher": "^6.4|^7.0",
-                "symfony/http-foundation": "^6.4|^7.0",
+                "symfony/https-foundation": "^6.4|^7.0",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "conflict": {
@@ -3949,8 +3949,8 @@
                 "symfony/dependency-injection": "<6.4",
                 "symfony/doctrine-bridge": "<6.4",
                 "symfony/form": "<6.4",
-                "symfony/http-client": "<6.4",
-                "symfony/http-client-contracts": "<2.5",
+                "symfony/https-client": "<6.4",
+                "symfony/https-client-contracts": "<2.5",
                 "symfony/mailer": "<6.4",
                 "symfony/messenger": "<6.4",
                 "symfony/translation": "<6.4",
@@ -3974,7 +3974,7 @@
                 "symfony/dom-crawler": "^6.4|^7.0",
                 "symfony/expression-language": "^6.4|^7.0",
                 "symfony/finder": "^6.4|^7.0",
-                "symfony/http-client-contracts": "^2.5|^3",
+                "symfony/https-client-contracts": "^2.5|^3",
                 "symfony/process": "^6.4|^7.0",
                 "symfony/property-access": "^7.1",
                 "symfony/routing": "^6.4|^7.0",
@@ -4014,7 +4014,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-kernel/tree/v7.1.1"
+                "source": "https://github.com/symfony/https-kernel/tree/v7.1.1"
             },
             "funding": [
                 {
@@ -4056,15 +4056,15 @@
                 "symfony/service-contracts": "^2.5|^3"
             },
             "conflict": {
-                "symfony/http-client-contracts": "<2.5",
-                "symfony/http-kernel": "<6.4",
+                "symfony/https-client-contracts": "<2.5",
+                "symfony/https-kernel": "<6.4",
                 "symfony/messenger": "<6.4",
                 "symfony/mime": "<6.4",
                 "symfony/twig-bridge": "<6.4"
             },
             "require-dev": {
                 "symfony/console": "^6.4|^7.0",
-                "symfony/http-client": "^6.4|^7.0",
+                "symfony/https-client": "^6.4|^7.0",
                 "symfony/messenger": "^6.4|^7.0",
                 "symfony/twig-bridge": "^6.4|^7.0"
             },
@@ -4995,7 +4995,7 @@
                 "symfony/config": "^6.4|^7.0",
                 "symfony/dependency-injection": "^6.4|^7.0",
                 "symfony/expression-language": "^6.4|^7.0",
-                "symfony/http-foundation": "^6.4|^7.0",
+                "symfony/https-foundation": "^6.4|^7.0",
                 "symfony/yaml": "^6.4|^7.0"
             },
             "type": "library",
@@ -5158,7 +5158,7 @@
             "require-dev": {
                 "symfony/emoji": "^7.1",
                 "symfony/error-handler": "^6.4|^7.0",
-                "symfony/http-client": "^6.4|^7.0",
+                "symfony/https-client": "^6.4|^7.0",
                 "symfony/intl": "^6.4|^7.0",
                 "symfony/translation-contracts": "^2.5|^3.0",
                 "symfony/var-exporter": "^6.4|^7.0"
@@ -5241,8 +5241,8 @@
                 "symfony/config": "<6.4",
                 "symfony/console": "<6.4",
                 "symfony/dependency-injection": "<6.4",
-                "symfony/http-client-contracts": "<2.5",
-                "symfony/http-kernel": "<6.4",
+                "symfony/https-client-contracts": "<2.5",
+                "symfony/https-kernel": "<6.4",
                 "symfony/service-contracts": "<2.5",
                 "symfony/twig-bundle": "<6.4",
                 "symfony/yaml": "<6.4"
@@ -5257,8 +5257,8 @@
                 "symfony/console": "^6.4|^7.0",
                 "symfony/dependency-injection": "^6.4|^7.0",
                 "symfony/finder": "^6.4|^7.0",
-                "symfony/http-client-contracts": "^2.5|^3.0",
-                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/https-client-contracts": "^2.5|^3.0",
+                "symfony/https-kernel": "^6.4|^7.0",
                 "symfony/intl": "^6.4|^7.0",
                 "symfony/polyfill-intl-icu": "^1.21",
                 "symfony/routing": "^6.4|^7.0",
@@ -5488,7 +5488,7 @@
             "require-dev": {
                 "ext-iconv": "*",
                 "symfony/console": "^6.4|^7.0",
-                "symfony/http-kernel": "^6.4|^7.0",
+                "symfony/https-kernel": "^6.4|^7.0",
                 "symfony/process": "^6.4|^7.0",
                 "symfony/uid": "^6.4|^7.0",
                 "twig/twig": "^3.0.4"
@@ -5789,7 +5789,7 @@
             "authors": [
                 {
                     "name": "Lars Moelleken",
-                    "homepage": "http://www.moelleken.org/"
+                    "homepage": "https://www.moelleken.org/"
                 }
             ],
             "description": "Portable ASCII library - performance optimized (ascii) string functions for php.",
@@ -8120,7 +8120,7 @@
                 "illuminate/pipeline": "^8.0|^9.0|^10.0|^11.0",
                 "php": "^8.0",
                 "spatie/backtrace": "^1.6.1",
-                "symfony/http-foundation": "^5.2|^6.0|^7.0",
+                "symfony/https-foundation": "^5.2|^6.0|^7.0",
                 "symfony/mime": "^5.2|^6.0|^7.0",
                 "symfony/process": "^5.2|^6.0|^7.0",
                 "symfony/var-dumper": "^5.2|^6.0|^7.0"
