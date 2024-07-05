@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "postinstall": "npm install && composer install && npm run prod",
+        "postinstall": "composer install && npm run prod",
         "prod": "vite build"
     },
     "dependencies": {
