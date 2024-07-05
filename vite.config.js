@@ -24,13 +24,13 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                assetFileNames: 'assets/[name]-[hash][extname]',
-                chunkFileNames: 'assets/[name]-[hash].js',
-                entryFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/assets/[name]-[hash][extname]',
+                chunkFileNames: 'chuck/assets/[name]-[hash].js',
+                entryFileNames: 'entry/assets/[name]-[hash].js',
             },
         },
         sourcemap: true,
-        assetsDir: 'public/build/assets',
+        assetsDir: 'assets',
         outDir: 'public/build',
     },
 });
