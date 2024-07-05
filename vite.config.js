@@ -30,7 +30,7 @@ export default defineConfig({
             },
         },
         sourcemap: true,
-        assetsDir: 'assets',
+        assetsDir: 'public/build/assets',
         outDir: 'public/build',
     },
 });
