@@ -2,10 +2,9 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "vercel-build": "sh ./install-composer.sh && composer install && npm install && npm run prod",
         "dev": "vite",
         "build": "vite build",
-        "postinstall": "composer install && npm run prod",
-        "prod": "vite build"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
