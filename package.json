@@ -23,9 +23,5 @@
         "@inertiajs/inertia": "^0.11.1",
         "@popperjs/core": "^2.11.8",
         "ziggy": "^2.4.0"
-    },
-    "engines": {
-        "node": "18.20.2",
-        "npm": "10.5.0"
     }
 }
