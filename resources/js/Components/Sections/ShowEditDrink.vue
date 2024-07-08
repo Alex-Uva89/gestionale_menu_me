@@ -69,7 +69,7 @@
                     </ButtonCss>
                 </div>
                 <span class="uppercase font-semibold text-red-500">
-                    {{ selectedDrink.description === 'undefined' ? 'Non ci sono consigli in questo drink al momento' : selectedDrink.description }}
+                    {{ selectedDrink.instructions === 'undefined' ? 'Non ci sono consigli in questo drink al momento' : selectedDrink.instructions }}
                 </span>
             </div>
             <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
