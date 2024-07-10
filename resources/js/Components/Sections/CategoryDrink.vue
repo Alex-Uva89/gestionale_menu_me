@@ -4,8 +4,8 @@ const props = defineProps({
     selectedVenueName: String,
     pairingsEnoteca: Array,
     selectedVenueColor: String,
-    category_enoteca: Array,
-    drink_enoteca_category: Array,
+    category_venues: Array,
+    drink_category: Array,
     allergens: Array,
     allergensDrinks: Array,
     drinks: Array,
@@ -16,13 +16,13 @@ const props = defineProps({
 
 
 <template>
-    <section class="overflow-x-hidden mx-4" >
-    <h2 class="p-3"  v-if="!category_enoteca.some(category => category.is_drink)">
+    <section class="overflow-x-hidden" >
+    <h2 class="p-3"  v-if="!category_venues.some(category => category.is_drink)">
   ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria beverage
     </h2>
 
      <div 
-     v-for="category in category_enoteca" 
+     v-for="category in category_venues" 
      class="last:mb-10 last:border-b-2  border-l-2 border-r-2  border-black"
      :key="category.id">
      <div v-if="category.is_drink" 
@@ -31,7 +31,8 @@ const props = defineProps({
             <button @click="deleteCategory(category.id)">❌</button>
             <button @click="editCategory(category.id)">Edit</button>
             <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
-        </div>
+          </div>
+          
        <div class="bg-yellow-500" :key="componentKeyli" >
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">
@@ -52,7 +53,7 @@ const props = defineProps({
                 <div class="w-full h-full" :class="drink.is_active ? 'opacity-100' : 'opacity-20'">
                   <div @click="openShowDrink(drink)" class="container-drinks px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="drink.image == 'null' || drink.image == 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                      <img :src="drink.image == 'null' || drink.image === '' || drink.image === 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
                     </div>
                     <div class="flex flex-col name">
                       <span class="first-letter:uppercase text-bold">{{ drink.name }}</span>
@@ -93,7 +94,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           nome:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.name" :placeholder="drink_enoteca_category.name">
+                      <input class="w-full h-8" type="text" v-model="drink_category.name" :placeholder="drink_category.name">
                   </div>
                   
               </div>
@@ -130,14 +131,14 @@ const props = defineProps({
                   <div class="w-full flex justify-between items-center font-black uppercase">
                       Consigli:
                   </div>
-                  <input class="w-full h-16" type="text" v-model="drink_enoteca_category.instruction" :placeholder="drink_enoteca_category.instruction">
+                  <input class="w-full h-16" type="text" v-model="drink_category.instruction" :placeholder="drink_category.instruction">
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
                   <div class="w-full flex flex-col gap-2">
                       <div class="font-black uppercase">
                           ingredienti:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.description" :placeholder="drink_enoteca_category.description">
+                      <input class="w-full h-8" type="text" v-model="drink_category.description" :placeholder="drink_category.description">
                   </div>
                   
               </div>
@@ -146,7 +147,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           gradi:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="drink_enoteca_category.degrees" :placeholder="drink_enoteca_category.degrees">
+                      <input class="w-full h-8" type="number" v-model="drink_category.degrees" :placeholder="drink_category.degrees">
                   </div>
               </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
@@ -154,7 +155,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           prezzo:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="drink_enoteca_category.price" :placeholder="drink_enoteca_category.price">
+                      <input class="w-full h-8" type="number" v-model="drink_category.price" :placeholder="drink_category.price">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
@@ -162,7 +163,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           origine:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.origin" :placeholder="drink_enoteca_category.origin">
+                      <input class="w-full h-8" type="text" v-model="drink_category.origin" :placeholder="drink_category.origin">
                   </div>
                   
               </div>
@@ -171,7 +172,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           colore:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.color" :placeholder="drink_enoteca_category.color">
+                      <input class="w-full h-8" type="text" v-model="drink_category.color" :placeholder="drink_category.color">
                   </div>
                   
               </div>
@@ -180,7 +181,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           metodo di produzione:
                       </div>
-                      <select class="w-full h-8" v-model="drink_enoteca_category.production_method" placeholder="Scegli un metodo">
+                      <select class="w-full h-8" v-model="drink_category.production_method" placeholder="Scegli un metodo">
                           <option value="distillazione">Distillazione</option>
                           <option value="aFreddo">A freddo</option>
                           <option value="infusione">Infusione</option>
@@ -195,7 +196,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           sapore:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_enoteca_category.flavour" :placeholder="drink_enoteca_category.flavour">
+                      <input class="w-full h-8" type="text" v-model="drink_category.flavour" :placeholder="drink_category.flavour">
                   </div>
               </div>
           </div>
@@ -229,9 +230,9 @@ const props = defineProps({
           <h2 class="h-20 font-bold text-2xl text-center">
               Modifica categoria
           </h2>
-          <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
+          <input type="text" v-model="category_venues.name" :placeholder="category_venues.name">
           <div class="flex w-100 justify-between p-5">
-              <button  @click="console.log('Button clicked'); confirmEdit(category_enoteca.name)">edit</button>              
+              <button  @click="console.log('Button clicked'); confirmEdit(category_venues.name)">edit</button>              
               <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
           </div>
       </div>
@@ -242,8 +243,8 @@ const props = defineProps({
     :selectedDrink="selectedDrink" 
     :allergens="allergens"
     :allergensDrinks="allergensDrinks"
-    :category_enoteca="category_enoteca"
-    :drink_enoteca_category="drink_enoteca_category"
+    :category_venues="category_venues"
+    :drink_category="drink_category"
     :pairingsEnoteca="pairingsEnoteca"
     :pairings="pairings"
     :drinks="drinks"
@@ -276,9 +277,9 @@ export default {
     drinks: Array,
     allergens: Array,
     allergensDrinks: Array,
-    category_enoteca: Array,
+    category_venues: Array,
     selectedVenueColor: String,
-    drink_enoteca_category: Array,
+    drink_category: Array,
     is_drink: {
         type: Boolean,
         required: true
@@ -298,7 +299,7 @@ export default {
       categoryNameToEdit: null,
       showAddDrinksModal: false,
       drinkToCreateId: null,
-      localCategory_enoteca: this.category_enoteca,
+      localcategory_venues: this.category_venues,
       localDrinkEnotecaCategory: [],
       allergensDrinks : this.allergensDrinks,
       selectedAllergens: [],
@@ -316,13 +317,13 @@ export default {
             
                 axios.delete(`/api/categories/${this.categoryToDelete}`)
                 .then(response => {
-                const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToDelete);
+                const index = this.localcategory_venues.findIndex(category => category.id === this.categoryToDelete);
                 if (index !== -1) {
-                    this.localCategory_enoteca.splice(index, 1);
+                    this.localcategory_venues.splice(index, 1);
                 }
                 console.log('RESPONSE delete');
-                console.log(this.localCategory_enoteca);
-                this.$emit('update:category_enoteca', this.localCategory_enoteca);
+                console.log(this.localcategory_venues);
+                this.$emit('update:category_venues', this.localcategory_venues);
                 })
                 .catch(error => {
                 console.log(error);
@@ -337,14 +338,14 @@ export default {
         editCategory(id) {
             this.showEditModal = true;  
             this.categoryToEdit = id;
-            this.categoryNameToEdit = this.localCategory_enoteca.find(category => category.id === id).name;
+            this.categoryNameToEdit = this.localcategory_venues.find(category => category.id === id).name;
         },
         confirmEdit(value) {
             axios.put(`/api/categories/${this.categoryToEdit}`, { name: value })
             .then(response => {
-                const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToEdit)
+                const index = this.localcategory_venues.findIndex(category => category.id === this.categoryToEdit)
                 if (index !== -1) {
-                    this.localCategory_enoteca[index].name = value;
+                    this.localcategory_venues[index].name = value;
                 } 
                 this.category = response.data;
                 })
@@ -396,18 +397,18 @@ export default {
         confirmAddDrinks() {
 
           let formData = new FormData();
-          formData.append('name', this.drink_enoteca_category.name);
-          formData.append('description', this.drink_enoteca_category.description);
-          formData.append('price', this.drink_enoteca_category.price);
+          formData.append('name', this.drink_category.name);
+          formData.append('description', this.drink_category.description);
+          formData.append('price', this.drink_category.price);
           formData.append('image', this.file);
-          formData.append('instruction', this.drink_enoteca_category.instruction);
-          formData.append('degrees', this.drink_enoteca_category.degrees);
-          formData.append('origin', this.drink_enoteca_category.origin);
-          formData.append('color', this.drink_enoteca_category.color);
-          formData.append('production_method', this.drink_enoteca_category.production_method);
-          formData.append('flavour', this.drink_enoteca_category.flavour);
+          formData.append('instruction', this.drink_category.instruction);
+          formData.append('degrees', this.drink_category.degrees);
+          formData.append('origin', this.drink_category.origin);
+          formData.append('color', this.drink_category.color);
+          formData.append('production_method', this.drink_category.production_method);
+          formData.append('flavour', this.drink_category.flavour);
           formData.append('category_id', this.drinkToCreateId);
-          formData.append('venue_id', 3); 
+          formData.append('venue_id', this.selectedVenueId); 
         
           axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
             headers: {
@@ -424,7 +425,7 @@ export default {
               } else {
                 newDrink = response.data;
               }
-              let category = this.category_enoteca.find(category => category.id === this.drinkToCreateId);
+              let category = this.category_venues.find(category => category.id === this.drinkToCreateId);
               
               this.$emit('drinkAdded', newDrink);
 
@@ -443,12 +444,12 @@ export default {
             });
             this.selectedAllergens = [];
 
-            this.drink_enoteca_category.name = '';
-            this.drink_enoteca_category.description = '';
-            this.drink_enoteca_category.price = null;
+            this.drink_category.name = '';
+            this.drink_category.description = '';
+            this.drink_category.price = null;
             this.file = null;
             this.imagePreview = null;
-            this.drink_enoteca_category.production_method = null;
+            this.drink_category.production_method = null;
             newDrink = '';
           })
         
@@ -459,7 +460,7 @@ export default {
         },
         resetForm() {
           this.drinkToCreateId = '';
-          this.drink_enoteca_category = { name: '', description: '', price: null, image: null };
+          this.drink_category = { name: '', description: '', price: null, image: null };
           this.selectedAllergens = [];
           this.file = null;
           this.imagePreview = null;
@@ -498,14 +499,14 @@ export default {
         },
   },
   watch: {
-    category_enoteca(newVal) {
-      this.localCategory_enoteca = newVal;
+    category_venues(newVal) {
+      this.localcategory_venues = newVal;
     },
 
   },
   created() {
-          this.localDrinkEnotecaCategory = this.category_enoteca.map(category => {
-              let drinks = this.drink_enoteca_category.filter(drink => drink.category_id === category.id);
+          this.localDrinkEnotecaCategory = this.category_venues.map(category => {
+              let drinks = this.drink_category.filter(drink => drink.category_id === category.id);
               return {
                   ...category,
                   drinks: drinks
@@ -516,11 +517,11 @@ export default {
   },
   computed: {
     isFormFilled() {
-            return this.drink_enoteca_category.name && this.drink_enoteca_category.price;
+            return this.drink_category.name && this.drink_category.price;
         },
         activeDrinksCount() {
           let activeDrinksCount = {};
-          this.category_enoteca.forEach(category => {
+          this.category_venues.forEach(category => {
             let activeDrinks = category.drinks ? category.drinks.filter(drink => drink.is_active) : [];
             activeDrinksCount[category.id] = activeDrinks.length;
           });
