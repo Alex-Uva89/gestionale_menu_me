@@ -75,6 +75,10 @@ function updateCurrentPageComponent(value) {
             :categories="categories" 
             :dish_enoteca_category="dish_enoteca_category"
             :drink_enoteca_category="drink_enoteca_category"
+            :dish_laCucina_category="dish_laCucina_category"
+            :drink_laCucina_category="drink_laCucina_category"
+            :dish_scante_category="dish_scante_category"
+            :drink_scante_category="drink_scante_category"
             :messages="messages"
             @dishAdded="componentKey += 1"
             @drinkAdded="componentKey += 1"
@@ -86,6 +90,8 @@ function updateCurrentPageComponent(value) {
             :drinks="drinks"
             :dishes="dishes"
             :pairingsEnoteca="pairingsEnoteca"
+            :pairingsScante="pairingsScante"
+            :pairingsLaCucina="pairingsLaCucina"
             />     
         </div>
   
@@ -186,12 +192,18 @@ export default {
     category_enoteca: Array,
     dish_enoteca_category: Array,
     drink_enoteca_category: Array,
+    dish_laCucina_category: Array,
+    drink_laCucina_category: Array,
+    dish_scante_category: Array,
+    drink_scante_category: Array,
     allergensDishes: Array,
     allergensDrinks: Array,
     allergens: Array,
     receips: Array,
     drinks: Array,
     pairingsEnoteca: Array,
+    pairingsScante: Array,
+    pairingsLaCucina: Array,
     dishes: Array,
   },
   data() {
