@@ -6,7 +6,6 @@ import CategoryDrink from '@/Components/Sections/CategoryDrink.vue';
 
 
 const props = defineProps({
-    selectedVenueName: String,
     selectedVenueColor: String,
     category_scante: Array,
     dish_scante_category: Array,
@@ -64,9 +63,9 @@ const props = defineProps({
           </button>
       </form>
       <Category
+        :venue="2"
         :category_venues="category_scante"
         :selectedVenueColor="selectedVenueColor"
-        :venue="2"
         :deleteCategory="deleteCategory"
         :editCategory="editCategory"
         :updateIsShowStatus="updateIsShowStatus"
@@ -78,7 +77,7 @@ const props = defineProps({
         :allergens="allergens"
         :allergensDishes="allergensDishes"
         :drinks="drinks"
-        :pairingsEnoteca="pairingsEnoteca"
+        :pairingsScante="pairingsScante"
         :newDrink="newDrink"
       />
     </div>
@@ -155,7 +154,6 @@ export default {
         newCategoryDrink: {
           name: '',
         },
-        venues: [],
         localCategory_scante: this.category_scante,
         showDeleteModal: false,
         showEditModal: false,

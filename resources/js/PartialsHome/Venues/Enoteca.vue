@@ -98,9 +98,9 @@ const props = defineProps({
           </button>
       </form>
       <CategoryDrink
+        :venue="3"
         :category_venues="category_enoteca"
         :selectedVenueColor="selectedVenueColor"
-        :venue="3"
         :deleteCategory="deleteCategory"
         :editCategory="editCategory"
         :updateIsShowStatus="updateIsShowStatus"
