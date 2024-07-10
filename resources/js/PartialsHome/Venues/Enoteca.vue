@@ -6,7 +6,6 @@ import CategoryDrink from '@/Components/Sections/CategoryDrink.vue';
 
 
 const props = defineProps({
-    selectedVenueName: String,
     selectedVenueColor: String,
     category_enoteca: Array,
     dish_enoteca_category: Array,
@@ -25,7 +24,6 @@ const props = defineProps({
 <div class="section_accordion relative h-full" >
 
   <section class="sticky w-full top-0 z-10" >
-    
     <!-- <div class="bg-white p-2 border-2 border-black items-center">
       <div class="first-letter:uppercase font-bold flex justify-center items-center gap-2 margin-negative cursor-pointer" @click="toggleVisibility()" id="button-category">
         <svg xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
@@ -47,7 +45,7 @@ const props = defineProps({
     
   </section>
 
-  <section class="flex justify-evenly">
+  <section class="flex justify-center">
 
     <div class="container-food">
       <form class="grid grid-cols-5" @submit.prevent="createCategory(3)">
@@ -65,12 +63,13 @@ const props = defineProps({
           </button>
       </form>
       <Category
-        :category_enoteca="category_enoteca"
+        :venue="3"
+        :category_venues="category_enoteca"
         :selectedVenueColor="selectedVenueColor"
         :deleteCategory="deleteCategory"
         :editCategory="editCategory"
         :updateIsShowStatus="updateIsShowStatus"
-        :dish_enoteca_category="dish_enoteca_category"
+        :dish_category="dish_enoteca_category"
         :addDishes="addDishes"
         :showAddDishesModal="showAddDishesModal"
         :componentKey="componentKey"
@@ -99,12 +98,13 @@ const props = defineProps({
           </button>
       </form>
       <CategoryDrink
-        :category_enoteca="category_enoteca"
+        :category_venues="category_enoteca"
         :selectedVenueColor="selectedVenueColor"
+        :venue="3"
         :deleteCategory="deleteCategory"
         :editCategory="editCategory"
         :updateIsShowStatus="updateIsShowStatus"
-        :drink_enoteca_category="drink_enoteca_category"
+        :drink_category="drink_enoteca_category"
         :addDishes="addDishes"
         :showAddDishesModal="showAddDishesModal"
         :componentKey="componentKey"
@@ -154,7 +154,6 @@ export default {
         newCategoryDrink: {
           name: '',
         },
-        venues: [],
         localCategory_enoteca: this.category_enoteca,
         showDeleteModal: false,
         showEditModal: false,
@@ -279,8 +278,10 @@ section.accordion{
 }
 
 .container-food, .container-beverage{
+  width: 45%;
+  margin: 10px;
   form{
-    width: calc(100% - 35px);
+    width: 100%;
     margin: 20px auto 0px;
     border-bottom: none;
     padding: 10px;
