@@ -1,107 +1,268 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import Dropdown from '@/Components/Dropdown.vue';
+import ButtonCss from '@/Components/ButtonCss.vue';
+import Modal from '@/Components/Modal.vue';
+import Category from '@/Components/Sections/Category.vue';
+import CategoryDrink from '@/Components/Sections/CategoryDrink.vue';
+
 
 const props = defineProps({
     selectedVenueName: String,
     selectedVenueColor: String,
     category_scante: Array,
+    dish_scante_category: Array,
+    drink_scante_category: Array,
+    allergens: Array,
+    allergensDishes: Array,
+    allergensDrinks: Array,
+    drinks: Array,
+    pairingsscante: Array,
 });
+
 
 </script>
 
 <template>
-<div class="section_accordion">
-  <section class="accordion overflow-x-hidden">
-    <h2 class="p-3"  v-if="category_scante.length === 0">
-      ⭐ Inizia <strong class="uppercase">aggiungendo</strong> una categoria
-    </h2>
-   
-    <div 
-    class="tab border border-black" 
-    :class="{
-          'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
-          'bg-olive': selectedVenueColor === 'green',
-          'bg-stone-500': selectedVenueColor === 'gray',
-          'bg-enoteca': selectedVenueColor === 'red',
-          'text-orange-500': selectedVenueColor === 'gray',
-        }" v-for="category in category_scante">
-      <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
-      <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">{{ category.name }}</label>
-      <div class="tab__content bg-white">
-        <p>{{  }}</p>
+<div class="section_accordion relative h-full" >
+
+  <section class="sticky w-full top-0 z-10" >
+    <!-- <div class="bg-white p-2 border-2 border-black items-center">
+      <div class="first-letter:uppercase font-bold flex justify-center items-center gap-2 margin-negative cursor-pointer" @click="toggleVisibility()" id="button-category">
+        <svg xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        </svg>
+        <span class="leading-7">
+          opzioni
+        </span>
       </div>
-    </div>
-  
+      <div 
+      class="items-center pt-3 gap-2 grid-cols-4"
+      :class="isVisible? 'grid' : 'hidden' ">
+        
+        
+        
+      </div>
+    </div> -->
+    
   </section>
 
-  <section class="add_category fixed bottom-5 left-80 right-72" >
-    <div class="p-5 w-4/5 border-2 border-black rounded-t-2xl uppercase text-white text-center font-bold cursor-pointer" 
-    :class="{
-          'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
-          'bg-olive': selectedVenueColor === 'green',
-          'bg-stone-500': selectedVenueColor === 'gray',
-          'bg-enoteca': selectedVenueColor === 'red',
-          'text-orange-500': selectedVenueColor === 'gray',
-        }">aggiungi categorie</div>
-    
-    <div class="w-4/5 bg-white p-5 border-2 border-black rounded-b-2xl">
-      <form class="flex justify-between items-center" @submit.prevent="createCategory(category, 2)">
-        <input v-model="category.name" type="text" placeholder="Nome categoria" id="inputCategory">
-        <div>
-          <button type="submit">Salva</button>
-          <span> | </span>
-          <button type="reset">Annulla</button>
-        </div>
+  <section class="flex justify-center">
+
+    <div class="container-food">
+      <form class="grid grid-cols-5" @submit.prevent="createCategory(2)">
+          <h2 class="text-2xl col-span-5 font-bold text-center uppercase">food</h2>
+          <div class="flex flex-col gap-2 col-span-4">
+            <label for="inputCategory">Aggiungi categoria food</label>
+            <input v-model="newCategory.name" type="text" placeholder="Nome categoria" id="inputCategory">
+          </div>
+          
+          <button type="submit" class=" self-end col-span-1 justify-self-center">
+              <svg xmlns="https://www.w3.org/2000/svg" width="35" height="35" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              </svg>
+          </button>
       </form>
+      <Category
+        :category_venues="category_scante"
+        :selectedVenueColor="selectedVenueColor"
+        :venue="2"
+        :deleteCategory="deleteCategory"
+        :editCategory="editCategory"
+        :updateIsShowStatus="updateIsShowStatus"
+        :dish_category="dish_scante_category"
+        :addDishes="addDishes"
+        :showAddDishesModal="showAddDishesModal"
+        :componentKey="componentKey"
+        @dishAdded="$emit('dishAdded')"
+        :allergens="allergens"
+        :allergensDishes="allergensDishes"
+        :drinks="drinks"
+        :pairingsEnoteca="pairingsEnoteca"
+        :newDrink="newDrink"
+      />
     </div>
-  
+
+    <div class="container-beverage">
+      <form class="grid grid-cols-5" @submit.prevent="createCategoryDrink(2)">
+          <h2 class="text-2xl col-span-5 font-bold text-center uppercase">beverage</h2>
+          <div class="flex flex-col gap-2 col-span-4">
+            <label for="inputCategoryDrink">Aggiungi categoria beverage</label>
+            <input v-model="newCategoryDrink.name" type="text" placeholder="Nome categoria drink" id="inputCategoryDrink">
+          </div>
+          
+          <button type="submit" class=" self-end col-span-1 justify-self-center">
+              <svg xmlns="https://www.w3.org/2000/svg" width="35" height="35" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              </svg>
+          </button>
+      </form>
+        <CategoryDrink
+          :venue="2"
+          :category_venues="category_scante"
+          :selectedVenueColor="selectedVenueColor"
+          :deleteCategory="deleteCategory"
+          :editCategory="editCategory"
+          :updateIsShowStatus="updateIsShowStatus"
+          :drink_category="drink_scante_category"
+          :addDishes="addDishes"
+          :showAddDishesModal="showAddDishesModal"
+          :componentKey="componentKey"
+          @drinkAdded="handleNewDrink"
+          @updateDrinks="addDrink"
+          :allergens="allergens"
+          :allergensDrinks="allergensDrinks"
+        />
+    </div>
+
   </section>
+
+
+
+
+
 </div>
-    
+
+
+
+
 </template>
 
 <script>
 import axios from 'axios';
 
+
+
 export default {
-  data() {
-  return {
-    category: {
-      name: '',
+    emits: ['dishAdded', 'drinkAdded'],
+    components: {
+        Modal,
+        Category,
+        CategoryDrink,
+        ButtonCss,
     },
-    venues: []
-  }
-},
-methods: {
-  createCategory(category, venue_ids) {
-    const venue_id = [venue_ids];
+    props: {
+        category_scante: Array,
+        dish_scante_category: Array,
+    },
+    data() {
+      return {
+        componentKey: 0,
+        newCategory: {
+          name: '',
+        },
+        newCategoryDrink: {
+          name: '',
+        },
+        venues: [],
+        localCategory_scante: this.category_scante,
+        showDeleteModal: false,
+        showEditModal: false,
+        showAddDishesModal: false,
+        dishToCreateId: null,
+        isVisible: false,
+        newDrink: null,
+      }
+    },
+    methods: {
+        handleNewDrink(drinkEmit){
+          this.newDrink = drinkEmit;
+          return this.newDrink
+        },
+        createCategory(venue_ids) {
+          const venue_id = [venue_ids];
+          const newCategory = { name: this.newCategory.name, is_drink: false};
 
-    axios.post('/api/categories', {...category})
-     .then(response => {
-        console.log('RESPONSE category');
-        console.log(response.data);
-        this.category.name = '';
-        this.categories = response.data;
-        this.category_scante.push(response.data);
+          axios.post('/api/categories', newCategory)
+          .then(response => {
 
-        axios.post(`/api/categories/${response.data.id}/venues`, {category_id: category.id, venue_id})
-         .then(response => {
-            console.log('RESPONSE venue');
-            console.log(response.data);
-            venue_id.push(response.data);
+              this.category = response.data;
+              this.localCategory_scante.push(response.data);
+              
+              axios.post(`/api/categories/${response.data.id}/venues`, {category_id: response.data.id, venue_id})
+              .then(response => {
+                  venue_id.push(response.data);
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+
+              this.newCategory.name = '';
           })
-         .catch(error => {
-            console.log(error);
+          .catch(error => {
+              console.log(error);
           });
-      })
-     .catch(error => {
-        console.log(error);
-      });
-},
+        },
+        createCategoryDrink(venue_ids) {
+          const venue_id = [venue_ids];
+          const newCategoryDrink = { name: this.newCategoryDrink.name, is_drink: true};
 
-},
+          axios.post('/api/categories', newCategoryDrink)
+          .then(response => {
+
+              this.category = response.data;
+              this.localCategory_scante.push(response.data);
+              
+              axios.post(`/api/categories/${response.data.id}/venues`, {category_id: response.data.id, venue_id})
+              .then(response => {
+                  venue_id.push(response.data);
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+
+              this.newCategory.name = '';
+          })
+          .catch(error => {
+              console.log(error);
+          });
+        },
+        // toggleVisibility() {
+        //   const buttonCategory = document.getElementById('button-category');
+        //   this.isVisible = !this.isVisible;
+        //   if(this.isVisible) {
+        //     if(buttonCategory.innerText === '❌') {
+        //       buttonCategory.innerText = 'aggiungi categoria';
+        //       buttonCategory.style.borderBottom = 'none';
+        //       buttonCategory.style.paddingBottom = '0';
+        //     } else {
+        //       buttonCategory.innerText = '❌';
+        //       buttonCategory.style.borderBottom = '3px solid black';
+        //       buttonCategory.style.paddingBottom = '10px';
+        //     }
+        //   } else {
+        //     if(buttonCategory.innerText === '❌') {
+        //       buttonCategory.innerHTML = `<svg xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        //     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        //     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        //   </svg> opzioni`;
+        //       buttonCategory.style.borderBottom = 'none';
+        //       buttonCategory.style.paddingBottom = '0';
+        //     } else {
+        //       buttonCategory.innerText = '❌';
+        //       buttonCategory.style.borderBottom = '3px solid black';
+        //       buttonCategory.style.paddingBottom = '10px';
+        //     }
+        //   }
+        // },
+        addDrink(newDrink) {
+          this.drinks.push(newDrink);
+        },
+    },
+    watch: {
+        category_scante(newVal) {
+            this.localCategory_scante = newVal;
+        },
+        dish_scante_category(newVal) {
+            this.dish_scante_category = newVal;
+        },
+    },
+    created() {
+        this.componentKey = 0; 
+    }
 }
+
 </script>
 
 <style scoped>
@@ -110,15 +271,7 @@ methods: {
   overflow: scroll;
   overflow-x: hidden;
   min-height: calc(100vh - 7rem);
-  scrollbar-width: thin;
-}
-
-.bg-olive {
-    background-color: #6b7238;
-}
-
-.bg-enoteca {
-    background-color: #a51a1a;
+  scrollbar-width: none;
 }
 
 section.accordion{
@@ -126,9 +279,42 @@ section.accordion{
   margin: 10px auto;
 }
 
-.add_category{
-  margin: 10px auto;
-  width: 90%;
+.container-food, .container-beverage{
+  width: 45%;
+  margin: 10px;
+  form{
+    width: 100%;
+    margin: 20px auto 0px;
+    border-bottom: none;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.060);
+  }
+}
+
+.section-delete, .section-edit, .section-create-dishes{
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    .modal-confirm{
+        background-color: white;
+        padding: 60px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.margin-negative{
+  margin: 0 -10px;
 }
 
 </style>
