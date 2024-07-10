@@ -1,0 +1,1 @@
+import{_ as t}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{o as e,f as o,b as s}from"./app-DYwNpvgG.js";const c={},a={class:"flex lg:justify-center lg:col-start-2"},r=s("img",{src:"img/mammaelvira-logo_text_rect_alt_01.svg",alt:"Laravel",class:"w-32 h-32"},null,-1),_=[r];function l(n,i){return e(),o("div",a,_)}const d=t(c,[["render",l]]);export{d as A};
