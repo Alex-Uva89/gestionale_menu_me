@@ -1,9 +1,9 @@
 <?php
 
-namespace App\https\Controllers;
+namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\https\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Category;
 use App\Models\Venue;
@@ -11,7 +11,7 @@ use App\Models\Dish;
 use App\Models\Allergen;
 use App\Models\Drink;
 use App\Models\Recipe;
-use Illuminate\https\Request;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
