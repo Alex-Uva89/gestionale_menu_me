@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\https\Controllers;
 
 use Inertia\Inertia;
-use App\Http\Controllers\Controller;
+use App\https\Controllers\Controller;
 use App\Models\Message;
 use App\Models\Category;
 use App\Models\Venue;
@@ -11,7 +11,7 @@ use App\Models\Dish;
 use App\Models\Allergen;
 use App\Models\Drink;
 use App\Models\Recipe;
-use Illuminate\Http\Request;
+use Illuminate\https\Request;
 
 class HomeController extends Controller
 {
@@ -33,13 +33,17 @@ class HomeController extends Controller
         
         //devo rintracciare tutte le categorie presenti nella table category_venue che hanno come venue_id il valore di $laCucina->id
         
-        $category_laCucina = Category::whereHas('venues', function ($query) use ($laCucina) {
+        $category_laCucina = Category::with(['dishes', 'drinks'])
+        ->whereHas('venues', function ($query) use ($laCucina) {
             $query->where('venue_id', $laCucina->id);
-        })->get();
+        })
+        ->get();
 
-        $category_scante = Category::whereHas('venues', function ($query) use ($scante) {
+        $category_scante = Category::with(['dishes', 'drinks'])
+        ->whereHas('venues', function ($query) use ($scante) {
             $query->where('venue_id', $scante->id);
-        })->get();
+        })
+        ->get();
 
         $category_enoteca = Category::with(['dishes', 'drinks'])
             ->whereHas('venues', function ($query) use ($enoteca) {
@@ -53,6 +57,8 @@ class HomeController extends Controller
         $dish_scante_category = Dish::all()->where('venue_id', 2);
         $dish_enoteca_category = Dish::all()->where('venue_id', 3);
 
+        $drink_laCucina_category = Drink::all()->where('venue_id', 1);
+        $drink_scante_category = Drink::all()->where('venue_id', 2);
         $drink_enoteca_category = Drink::all()->where('venue_id', 3);
 
         $allergens = Allergen::all();
@@ -62,7 +68,9 @@ class HomeController extends Controller
 
       
 
-        $pairings_enoteca = Dish::with('drinks')->where('venue_id', 3)->get();                        
+        $pairings_enoteca = Dish::with('drinks')->where('venue_id', 3)->get();   
+        $pairings_laCucina = Dish::with('drinks')->where('venue_id', 1)->get();
+        $pairings_scante = Dish::with('drinks')->where('venue_id', 2)->get();                     
         
         // smash data
          $data = [
@@ -80,10 +88,14 @@ class HomeController extends Controller
                 'dish_scante_category' => $dish_scante_category,
                 'dish_enoteca_category' => $dish_enoteca_category,
                 'drink_enoteca_category' => $drink_enoteca_category,
+                'drink_laCucina_category' => $drink_laCucina_category,
+                'drink_scante_category' => $drink_scante_category,
                 'allergens' => $allergens,
                 'allergensDishes' => $allergensDishes,
                 'allergensDrinks' => $allergensDrinks,
-                'pairingsEnoteca' => $pairings_enoteca
+                'pairingsEnoteca' => $pairings_enoteca,
+                'pairingsLaCucina' => $pairings_laCucina,
+                'pairingsScante' => $pairings_scante
          ];
 
 
