@@ -22,7 +22,7 @@ let currentPageComponent = '';
 
 function updateSelectedVenueName(name) {
   selectedValueButton.value = '';
-  selectedVenueName.value = name;
+  // selectedVenueName.value = name;
   updateCurrentPageComponent(name);
 }
 
