@@ -269,6 +269,7 @@ export default {
       pairings: [],
       dishActive: [],
       newDrinko: this.newDrink,
+      dish_category: [],
     };
   },
   methods: {

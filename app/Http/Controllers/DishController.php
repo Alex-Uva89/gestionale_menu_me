@@ -39,7 +39,7 @@ class DishController extends Controller
             'description' => 'nullable',
             'category_id' => 'nullable',
             'venue_id' => 'nullable',
-            'image' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
         $dish = new Dish();
@@ -51,14 +51,8 @@ class DishController extends Controller
     
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            if ($image->isValid()) {
-                $imageName = time().'.'.$image->getClientOriginalExtension();
-                $destinationPath = public_path('/storage');
-                $image->move($destinationPath, $imageName);
-                $dish->image = $imageName;
-            } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
-            }
+            $imagePath = $image->store('immagini', 'public');
+            $dish->image = '/storage/' . $imagePath;
         } else {
             $dish->image = $validated['image'] ?? "";
         }
@@ -67,47 +61,57 @@ class DishController extends Controller
     
         return response()->json($dish, 201);
     }
-
-
-    public function update(Request $request, $id, Response $response)
+    
+    
+    public function update(Request $request, $id)
     {
         $dish = Dish::find($id);
-
+    
+        if (!$dish) {
+            return response()->json(['error' => 'Dish not found.'], 404);
+        }
+    
         if ($request->has('name')) {
-            $dish->name = request('name');
+            $dish->name = $request->input('name');
         }
         if ($request->has('description')) {
-            $dish->description = request('description');
+            $dish->description = $request->input('description');
         }
         if ($request->has('price')) {
-            $dish->price = request('price');
+            $dish->price = $request->input('price');
         }
         if ($request->has('category_id')) {
-            $dish->category_id = request('category_id');
+            $dish->category_id = $request->input('category_id');
         }
         if ($request->has('venue_id')) {
-            $dish->venue_id = request('venue_id');
+            $dish->venue_id = $request->input('venue_id');
         }
-
         if ($request->has('is_active')) {
-            $dish->is_active = request('is_active');
+            $dish->is_active = $request->input('is_active');
         }
-
+    
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
-                $imageName = time().'.'.$image->getClientOriginalExtension();
-                $destinationPath = public_path('/storage');
-                $image->move($destinationPath, $imageName);
-                $dish->image = $imageName;
+                
+                if ($dish->image) {
+                    $previousImagePath = public_path($dish->image);
+                    if (file_exists($previousImagePath)) {
+                        unlink($previousImagePath);
+                    }
+                }
+    
+                
+                $imagePath = $image->store('immagini', 'public');
+                $dish->image = '/storage/' . $imagePath;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
         }
-
+    
         $dish->save();
-
-        return response()->json($dish, 201);
+    
+        return response()->json($dish, 200);
     }
 
     public function destroyByCategory($categoryId)
