@@ -41,36 +41,35 @@ class DishController extends Controller
             'venue_id' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+
         $dish = new Dish();
         $dish->name = $validated['name'];
         $dish->description = $validated['description'] ?? '';
         $dish->price = $validated['price'];
         $dish->category_id = $validated['category_id'];
         $dish->venue_id = $validated['venue_id'];
-    
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('immagini', 'public');
-            $dish->image = '/storage/' . $imagePath;
+            $imagePath = $image->store('public/immagini', 'local');
+            $dish->image = '/storage/immagini/' . basename($imagePath);
         } else {
             $dish->image = $validated['image'] ?? "";
         }
-    
+
         $dish->save();
-    
+
         return response()->json($dish, 201);
     }
-    
-    
+
     public function update(Request $request, $id)
     {
         $dish = Dish::find($id);
-    
+
         if (!$dish) {
             return response()->json(['error' => 'Dish not found.'], 404);
         }
-    
+
         if ($request->has('name')) {
             $dish->name = $request->input('name');
         }
@@ -89,28 +88,19 @@ class DishController extends Controller
         if ($request->has('is_active')) {
             $dish->is_active = $request->input('is_active');
         }
-    
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
-                
-                if ($dish->image) {
-                    $previousImagePath = public_path($dish->image);
-                    if (file_exists($previousImagePath)) {
-                        unlink($previousImagePath);
-                    }
-                }
-    
-                
-                $imagePath = $image->store('immagini', 'public');
-                $dish->image = '/storage/' . $imagePath;
+                $imagePath = $image->store('public/immagini', 'local');
+                $dish->image = '/storage/immagini/' . basename($imagePath);
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
         }
-    
+
         $dish->save();
-    
+
         return response()->json($dish, 200);
     }
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\File;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Route image storage
-Route::get('/storage/{filename}', function ($filename) {
+Route::get('/storage/immagini/{filename}', function ($filename) {
     $path = storage_path('app/public/immagini/' . $filename);
 
     if (!File::exists($path)) {

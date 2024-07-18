@@ -6,10 +6,6 @@
 
 
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
     RewriteEngine On
 
     # Handle Authorization Header
@@ -22,10 +18,10 @@
     RewriteRule ^ %1 [L,R=301]
 
     # Serve static assets from the /storage directory
-    RewriteCond %{REQUEST_URI} ^/storage/
+    RewriteCond %{REQUEST_URI} ^/storage/immagini
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^storage/(.*)$ /storage/$1 [L]
+    RewriteRule ^ storage/app/public%{REQUEST_URI} [L]
 
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
