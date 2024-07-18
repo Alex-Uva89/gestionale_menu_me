@@ -36,7 +36,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "mkdir -p public/storage",
+            "mkdir -p storage/app/public/immagini",
             "chmod -R 775 public",
             "chmod -R 775 storage",
             "php artisan storage:link"
