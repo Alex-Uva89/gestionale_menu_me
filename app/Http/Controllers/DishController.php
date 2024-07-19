@@ -51,8 +51,8 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('public/immagini', 'local');
-            $dish->image = '/storage/immagini/' . basename($imagePath);
+            $imagePath = $image->store('immagini', 'public');
+            $dish->image = '/storage/' . $imagePath;
         } else {
             $dish->image = $validated['image'] ?? "";
         }
@@ -92,8 +92,15 @@ class DishController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
-                $imagePath = $image->store('public/immagini', 'local');
-                $dish->image = '/storage/immagini/' . basename($imagePath);
+                if ($dish->image) {
+                    $previousImagePath = public_path($dish->image);
+                    if (file_exists($previousImagePath)) {
+                        unlink($previousImagePath);
+                    }
+                }
+
+                $imagePath = $image->store('immagini', 'public');
+                $dish->image = '/storage/' . $imagePath;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
@@ -103,6 +110,7 @@ class DishController extends Controller
 
         return response()->json($dish, 200);
     }
+
 
     public function destroyByCategory($categoryId)
     {
