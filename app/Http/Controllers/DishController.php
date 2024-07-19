@@ -30,7 +30,6 @@ class DishController extends Controller
         return response()->json($data);
     }
 
-    //store
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -51,7 +50,7 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('immagini', 'public');
+            $imagePath = $image->store('immagini', 'images');
             $dish->image = '/storage/' . $imagePath;
         } else {
             $dish->image = $validated['image'] ?? "";
@@ -99,7 +98,7 @@ class DishController extends Controller
                     }
                 }
 
-                $imagePath = $image->store('immagini', 'public');
+                $imagePath = $image->store('immagini', 'images');
                 $dish->image = '/storage/' . $imagePath;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
@@ -110,6 +109,7 @@ class DishController extends Controller
 
         return response()->json($dish, 200);
     }
+
 
 
     public function destroyByCategory($categoryId)
