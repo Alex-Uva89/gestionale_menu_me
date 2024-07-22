@@ -29,6 +29,8 @@ class DishController extends Controller
     }
 
     function uploadImageToSupabase($file) {
+        dd('UPLOAD IMAGE TO SUPABASE')
+
         $supabaseUrl = 'https://quoufacprncabkhqbdpm.supabase.co'; 
         $bucketName = 'images_menu'; 
         $apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1b3VmYWNwcm5jYWJraHFiZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzOTExMjQsImV4cCI6MjAzNjk2NzEyNH0.xSLnJMTa80QxJIhNhEmiCKeBzvZYEu_CR8d_fHZQPOo'; 
@@ -36,8 +38,6 @@ class DishController extends Controller
         // Ottieni il nome del file
         $fileName = time() . '-' . $file->getClientOriginalName();
         $fileContent = file_get_contents($file->getPathname());
-
-        dd($fileName);
 
         // Carica il file su Supabase
         $response = Http::withHeaders([
@@ -120,12 +120,10 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            dd($image);
             if ($image->isValid()) {
                 try {
                     $imageUrl = uploadImageToSupabase($image);
                     $dish->image = $imageUrl;
-                    dd($dish->image);
                 } catch (\Exception $e) {
                     return response()->json(['error' => 'Image upload failed: ' . $e->getMessage()], 500);
                 }
