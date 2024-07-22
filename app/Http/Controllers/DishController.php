@@ -38,13 +38,13 @@ class DishController extends Controller
         // Ottieni il nome del file
         $fileName = time() . '-' . $file->getClientOriginalName();
         $fileContent = file_get_contents($file->getPathname());
-    
+
         // Carica il file su Supabase
         $response = Http::withHeaders([
             'Authorization' => "Bearer $apiKey",
             'Content-Type' => 'application/octet-stream'
         ])->put("$supabaseUrl/storage/v1/object/$bucketName/$fileName", $fileContent);
-    
+
         if ($response->successful()) {
             // Ottieni l'URL pubblico
             $publicUrl = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
