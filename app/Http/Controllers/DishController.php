@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Dish;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -60,9 +59,12 @@ class DishController extends Controller
         $dish->venue_id = $validated['venue_id'];
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $this->uploadToSupabase($image);
-            $dish->image = $imagePath;
+            $imagePath = $this->uploadToSupabase($request->file('image'));
+            if ($imagePath) {
+                $dish->image = $imagePath;
+            } else {
+                return response()->json(['error' => 'Impossibile caricare l\'immagine.'], 500);
+            }
         } else {
             $dish->image = $validated['image'] ?? "";
         }
@@ -100,16 +102,11 @@ class DishController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            if ($image->isValid()) {
-                if ($dish->image) {
-                    $this->deleteFromSupabase($dish->image);
-                }
-
-                $imagePath = $this->uploadToSupabase($image);
+            $imagePath = $this->uploadToSupabase($request->file('image'));
+            if ($imagePath) {
                 $dish->image = $imagePath;
             } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+                return response()->json(['error' => 'Impossibile caricare l\'immagine.'], 500);
             }
         }
 
@@ -135,29 +132,15 @@ class DishController extends Controller
 
             if ($response->getStatusCode() == 200) {
                 return $this->supabaseUrl . '/storage/v1/object/public/' . $this->bucketName . '/' . $imagePath;
+            } else {
+                return null;
             }
-        } catch (RequestException $e) {
-            Log::error('Supabase upload error: ' . $e->getMessage());
-        }
-
-        return null;
-    }
-
-    private function deleteFromSupabase($imagePath)
-    {
-        $client = new Client();
-        $path = str_replace($this->supabaseUrl . '/storage/v1/object/public/', '', $imagePath);
-
-        try {
-            $client->request('DELETE', $this->supabaseUrl . '/storage/v1/object/' . $path, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->supabaseKey,
-                ],
-            ]);
-        } catch (RequestException $e) {
-            Log::error('Supabase delete error: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return null;
         }
     }
+
+
 
     public function destroyByCategory($categoryId)
     {
