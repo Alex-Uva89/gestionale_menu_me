@@ -61,27 +61,8 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $client = new Client();
-            try {
-                $response = $client->request('POST', "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$image->getClientOriginalName()}", [
-                    'headers' => [
-                        'Authorization' => "Bearer {$this->supabaseKey}",
-                        'Content-Type' => $image->getMimeType(),
-                    ],
-                    'body' => file_get_contents($image->getRealPath()),
-                ]);
-
-                if ($response->getStatusCode() == 200) {
-                    $imagePath = json_decode($response->getBody(), true)['Key'];
-                    $dish->image = "{$this->supabaseUrl}/storage/v1/object/public/{$this->bucketName}/$imagePath";
-                } else {
-                    Log::error('Image upload failed', ['status' => $response->getStatusCode(), 'response' => $response->getBody()->getContents()]);
-                    return response()->json(['error' => 'Image upload failed.'], 500);
-                }
-            } catch (RequestException $e) {
-                Log::error('RequestException during image upload', ['message' => $e->getMessage(), 'request' => $e->getRequest(), 'response' => $e->getResponse()]);
-                return response()->json(['error' => 'Image upload failed.'], 500);
-            }
+            $imagePath = $this->uploadToSupabase($image);
+            $dish->image = $imagePath;
         } else {
             $dish->image = $validated['image'] ?? "";
         }
@@ -121,46 +102,63 @@ class DishController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
-                $client = new Client();
-                try {
-                    // Delete previous image from Supabase
+                $newImagePath = $this->uploadToSupabase($image);
+
+                if ($dish->image !== $newImagePath) {
                     if ($dish->image) {
-                        $previousImagePath = basename($dish->image);
-                        $client->request('DELETE', "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/$previousImagePath", [
-                            'headers' => [
-                                'Authorization' => "Bearer {$this->supabaseKey}",
-                            ],
-                        ]);
+                        $this->deleteFromSupabase($dish->image);
                     }
-
-                    // Upload new image to Supabase
-                    $response = $client->request('POST', "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$image->getClientOriginalName()}", [
-                        'headers' => [
-                            'Authorization' => "Bearer {$this->supabaseKey}",
-                            'Content-Type' => $image->getMimeType(),
-                        ],
-                        'body' => file_get_contents($image->getRealPath()),
-                    ]);
-
-                    if ($response->getStatusCode() == 200) {
-                        $imagePath = json_decode($response->getBody(), true)['Key'];
-                        $dish->image = "{$this->supabaseUrl}/storage/v1/object/public/{$this->bucketName}/$imagePath";
-                    } else {
-                        Log::error('Image upload failed', ['status' => $response->getStatusCode(), 'response' => $response->getBody()->getContents()]);
-                        return response()->json(['error' => 'Image upload failed.'], 500);
-                    }
-                } catch (RequestException $e) {
-                    Log::error('RequestException during image upload', ['message' => $e->getMessage(), 'request' => $e->getRequest(), 'response' => $e->getResponse()]);
-                    return response()->json(['error' => 'Image upload failed.'], 500);
+                    $dish->image = $newImagePath;
                 }
             } else {
-                return response()->json(['error' => 'Invalid image file.'], 400);
+                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
         }
 
         $dish->save();
 
         return response()->json($dish, 200);
+    }
+
+    private function uploadToSupabase($image)
+    {
+        $client = new Client();
+        $imagePath = 'images_menu/' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $imageContent = file_get_contents($image->getRealPath());
+
+        try {
+            $response = $client->request('POST', $this->supabaseUrl . '/storage/v1/object/' . $this->bucketName . '/' . $imagePath, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->supabaseKey,
+                    'Content-Type' => $image->getMimeType(),
+                ],
+                'body' => $imageContent,
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                return $this->supabaseUrl . '/storage/v1/object/public/' . $this->bucketName . '/' . $imagePath;
+            }
+        } catch (RequestException $e) {
+            Log::error('Supabase upload error: ' . $e->getMessage());
+        }
+
+        return null;
+    }
+
+    private function deleteFromSupabase($imagePath)
+    {
+        $client = new Client();
+        $path = str_replace($this->supabaseUrl . '/storage/v1/object/public/', '', $imagePath);
+
+        try {
+            $client->request('DELETE', $this->supabaseUrl . '/storage/v1/object/' . $path, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->supabaseKey,
+                ],
+            ]);
+        } catch (RequestException $e) {
+            Log::error('Supabase delete error: ' . $e->getMessage());
+        }
     }
 
 
