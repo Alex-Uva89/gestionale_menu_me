@@ -19,7 +19,7 @@ class DishController extends Controller
     {
         $this->supabaseUrl = env('SUPABASE_URL');
         $this->supabaseKey = env('SUPABASE_KEY');
-        $this->bucketName = env('SUPABASE_BUCKET_NAME'); // Assicurati di avere questa variabile d'ambiente nel tuo .env
+        $this->bucketName = 'images_menu'; // Nome del tuo bucket
     }
 
     public function index()
@@ -102,14 +102,12 @@ class DishController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
-                $newImagePath = $this->uploadToSupabase($image);
-
-                if ($dish->image !== $newImagePath) {
-                    if ($dish->image) {
-                        $this->deleteFromSupabase($dish->image);
-                    }
-                    $dish->image = $newImagePath;
+                if ($dish->image) {
+                    $this->deleteFromSupabase($dish->image);
                 }
+
+                $imagePath = $this->uploadToSupabase($image);
+                $dish->image = $imagePath;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
@@ -160,8 +158,6 @@ class DishController extends Controller
             Log::error('Supabase delete error: ' . $e->getMessage());
         }
     }
-
-
 
     public function destroyByCategory($categoryId)
     {
