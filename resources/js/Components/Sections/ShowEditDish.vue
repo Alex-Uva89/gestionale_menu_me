@@ -372,7 +372,7 @@ import SelectMultiple from '../SelectMultiple.vue';
                     console.log(formData.get('image'));
                 }
 
-                axios.put(`/api/dishes/${this.selectedDish.id}`, formData, {
+                axios.put(`/api/dishes/${this.selectedDish.id}`, fileInput.files[0] , {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
