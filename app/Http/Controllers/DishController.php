@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dish;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class DishController extends Controller
 {
@@ -117,25 +114,16 @@ class DishController extends Controller
 
     private function uploadToSupabase($image)
     {
-        $client = new Client();
         $imagePath = 'images_menu/' . uniqid() . '.' . $image->getClientOriginalExtension();
-        $imageContent = file_get_contents($image->getRealPath());
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->supabaseKey,
+            'Content-Type' => $image->getMimeType(),
+        ])->attach('file', file_get_contents($image->getRealPath()), $imagePath)
+          ->post($this->supabaseUrl . '/storage/v1/object/' . $this->bucketName . '/' . $imagePath);
 
-        try {
-            $response = $client->request('POST', $this->supabaseUrl . '/storage/v1/object/' . $this->bucketName . '/' . $imagePath, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->supabaseKey,
-                    'Content-Type' => $image->getMimeType(),
-                ],
-                'body' => $imageContent,
-            ]);
-
-            if ($response->getStatusCode() == 200) {
-                return $this->supabaseUrl . '/storage/v1/object/public/' . $this->bucketName . '/' . $imagePath;
-            } else {
-                return null;
-            }
-        } catch (\Exception $e) {
+        if ($response->successful()) {
+            return $this->supabaseUrl . '/storage/v1/object/public/' . $this->bucketName . '/' . $imagePath;
+        } else {
             return null;
         }
     }
