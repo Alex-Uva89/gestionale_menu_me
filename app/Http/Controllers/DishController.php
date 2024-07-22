@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dish;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class DishController extends Controller
 {
