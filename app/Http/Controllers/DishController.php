@@ -120,6 +120,7 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
+            dd($image);
             if ($image->isValid()) {
                 try {
                     $imageUrl = uploadImageToSupabase($image);
