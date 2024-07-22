@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dish;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class DishController extends Controller
 {
-    private $supabaseUrl;
-    private $supabaseKey;
-    private $bucketName;
-
-    public function __construct()
-    {
-        $this->supabaseUrl = env('SUPABASE_URL');
-        $this->supabaseKey = env('SUPABASE_KEY');
-        $this->bucketName = 'images_menu'; // Nome del tuo bucket
-    }
 
     public function index()
     {
@@ -56,12 +49,9 @@ class DishController extends Controller
         $dish->venue_id = $validated['venue_id'];
 
         if ($request->hasFile('image')) {
-            $imagePath = $this->uploadToSupabase($request->file('image'));
-            if ($imagePath) {
-                $dish->image = $imagePath;
-            } else {
-                return response()->json(['error' => 'Impossibile caricare l\'immagine.'], 500);
-            }
+            $image = $request->file('image');
+            $imagePath = $image->store('immagini', 'images');
+            $dish->image = '/storage/' . $imagePath;
         } else {
             $dish->image = $validated['image'] ?? "";
         }
@@ -99,33 +89,25 @@ class DishController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $imagePath = $this->uploadToSupabase($request->file('image'));
-            if ($imagePath) {
-                $dish->image = $imagePath;
+            $image = $request->file('image');
+            if ($image->isValid()) {
+                if ($dish->image) {
+                    $previousImagePath = public_path($dish->image);
+                    if (file_exists($previousImagePath)) {
+                        unlink($previousImagePath);
+                    }
+                }
+
+                $imagePath = $image->store('immagini', 'images');
+                $dish->image = '/storage/' . $imagePath;
             } else {
-                return response()->json(['error' => 'Impossibile caricare l\'immagine.'], 500);
+                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
         }
 
         $dish->save();
 
         return response()->json($dish, 200);
-    }
-
-    private function uploadToSupabase($image)
-    {
-        $imagePath = 'images_menu/' . uniqid() . '.' . $image->getClientOriginalExtension();
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->supabaseKey,
-            'Content-Type' => $image->getMimeType(),
-        ])->attach('file', file_get_contents($image->getRealPath()), $imagePath)
-          ->post($this->supabaseUrl . '/storage/v1/object/' . $this->bucketName . '/' . $imagePath);
-
-        if ($response->successful()) {
-            return $this->supabaseUrl . '/storage/v1/object/public/' . $this->bucketName . '/' . $imagePath;
-        } else {
-            return null;
-        }
     }
 
 
