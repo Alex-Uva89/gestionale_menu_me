@@ -376,12 +376,18 @@ import SelectMultiple from '../SelectMultiple.vue';
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
+                    
                 })
                 .then(response => {
                     let data = response.data;
                     newDish = data;
-                    
+
+                    console.log('DATA');
+                    console.log(data);
+
                     this.selectedDish.image = newDish.image;
+                    console.log('SELECT DISH');
+                    console.log(this.selectedDish.image);
                 })
                 .catch(error => {
                     console.error(error);
