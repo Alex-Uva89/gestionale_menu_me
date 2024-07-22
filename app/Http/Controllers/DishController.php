@@ -43,6 +43,9 @@ class DishController extends Controller
             'Content-Type' => 'application/octet-stream'
         ])->put("$supabaseUrl/storage/v1/object/$bucketName/$fileName", $fileContent);
 
+        // Stampa il corpo della risposta per il debug
+        logger()->info('Supabase Response:', ['response' => $response->body()]);
+
         if ($response->successful()) {
             // Ottieni l'URL pubblico
             $publicUrl = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
