@@ -30,6 +30,31 @@ class DishController extends Controller
         return response()->json($data);
     }
 
+    function uploadImageToSupabase($file) {
+        $supabaseUrl = 'https://quoufacprncabkhqbdpm.supabase.co'; // Modifica con il tuo URL
+        $bucketName = 'images_menu'; // Nome del bucket
+        $apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1b3VmYWNwcm5jYWJraHFiZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzOTExMjQsImV4cCI6MjAzNjk2NzEyNH0.xSLnJMTa80QxJIhNhEmiCKeBzvZYEu_CR8d_fHZQPOo'; // La tua chiave API
+    
+        // Ottieni il nome del file
+        $fileName = time() . '-' . $file->getClientOriginalName();
+        $fileContent = file_get_contents($file->getPathname());
+    
+        // Carica il file su Supabase
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer $apiKey",
+            'Content-Type' => 'application/octet-stream'
+        ])->put("$supabaseUrl/storage/v1/object/$bucketName/$fileName", $fileContent);
+    
+        if ($response->successful()) {
+            // Ottieni l'URL pubblico
+            $publicUrl = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
+            return $publicUrl;
+        } else {
+            // Gestisci l'errore
+            throw new \Exception('Failed to upload image: ' . $response->body());
+        }
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -50,8 +75,12 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('immagini', 'images');
-            $dish->image = '/storage/' . $imagePath;
+            try {
+                $imageUrl = uploadImageToSupabase($image);
+                $dish->image = $imageUrl;
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Image upload failed: ' . $e->getMessage()], 500);
+            }
         } else {
             $dish->image = $validated['image'] ?? "";
         }
@@ -62,55 +91,50 @@ class DishController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $dish = Dish::find($id);
+{
+    $dish = Dish::find($id);
 
-        if (!$dish) {
-            return response()->json(['error' => 'Dish not found.'], 404);
-        }
-
-        if ($request->has('name')) {
-            $dish->name = $request->input('name');
-        }
-        if ($request->has('description')) {
-            $dish->description = $request->input('description');
-        }
-        if ($request->has('price')) {
-            $dish->price = $request->input('price');
-        }
-        if ($request->has('category_id')) {
-            $dish->category_id = $request->input('category_id');
-        }
-        if ($request->has('venue_id')) {
-            $dish->venue_id = $request->input('venue_id');
-        }
-        if ($request->has('is_active')) {
-            $dish->is_active = $request->input('is_active');
-        }
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            if ($image->isValid()) {
-                if ($dish->image) {
-                    $previousImagePath = public_path($dish->image);
-                    if (file_exists($previousImagePath)) {
-                        unlink($previousImagePath);
-                    }
-                }
-
-                $imagePath = $image->store('immagini', 'images');
-                $dish->image = '/storage/' . $imagePath;
-            } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
-            }
-        }
-
-        $dish->save();
-
-        return response()->json($dish, 200);
+    if (!$dish) {
+        return response()->json(['error' => 'Dish not found.'], 404);
     }
 
+    if ($request->has('name')) {
+        $dish->name = $request->input('name');
+    }
+    if ($request->has('description')) {
+        $dish->description = $request->input('description');
+    }
+    if ($request->has('price')) {
+        $dish->price = $request->input('price');
+    }
+    if ($request->has('category_id')) {
+        $dish->category_id = $request->input('category_id');
+    }
+    if ($request->has('venue_id')) {
+        $dish->venue_id = $request->input('venue_id');
+    }
+    if ($request->has('is_active')) {
+        $dish->is_active = $request->input('is_active');
+    }
 
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        if ($image->isValid()) {
+            try {
+                $imageUrl = uploadImageToSupabase($image);
+                $dish->image = $imageUrl;
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Image upload failed: ' . $e->getMessage()], 500);
+            }
+        } else {
+            return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+        }
+    }
+
+    $dish->save();
+
+    return response()->json($dish, 200);
+}
 
     public function destroyByCategory($categoryId)
     {
