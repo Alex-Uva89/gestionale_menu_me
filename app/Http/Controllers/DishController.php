@@ -37,14 +37,14 @@ class DishController extends Controller
         $fileName = time() . '-' . $file->getClientOriginalName();
         $fileContent = file_get_contents($file->getPathname());
 
+        dd($fileName);
+
         // Carica il file su Supabase
         $response = Http::withHeaders([
             'Authorization' => "Bearer $apiKey",
             'Content-Type' => 'application/octet-stream'
         ])->put("$supabaseUrl/storage/v1/object/$bucketName/$fileName", $fileContent);
 
-        // Stampa il corpo della risposta per il debug
-        logger()->info('Supabase Response:', ['response' => $response->body()]);
 
         if ($response->successful()) {
             // Ottieni l'URL pubblico
@@ -124,6 +124,7 @@ class DishController extends Controller
                 try {
                     $imageUrl = uploadImageToSupabase($image);
                     $dish->image = $imageUrl;
+                    dd($dish->image);
                 } catch (\Exception $e) {
                     return response()->json(['error' => 'Image upload failed: ' . $e->getMessage()], 500);
                 }
