@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dish;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -50,15 +51,33 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('immagini', 'images');
-            $dish->image = '/storage/' . $imagePath;
-        } else {
-            $dish->image = $validated['image'] ?? "";
-        }
+            $supabaseUrl = env('SUPABASE_URL');
+            $supabaseKey = env('SUPABASE_KEY');
+            $bucketName = 'images_menu';
 
-        $dish->save();
+            // Upload the image to Supabase
+            $client = new Client();
+            $response = $client->request('POST', "$supabaseUrl/storage/v1/object/$bucketName/{$image->getClientOriginalName()}", [
+                'headers' => [
+                    'Authorization' => "Bearer $supabaseKey",
+                    'Content-Type' => $image->getMimeType(),
+                ],
+                'body' => file_get_contents($image->getRealPath()),
+            ]);
 
-        return response()->json($dish, 201);
+            if ($response->getStatusCode() == 200) {
+                $imagePath = json_decode($response->getBody())->Key;
+                $dish->image = "$supabaseUrl/storage/v1/object/public/$bucketName/$imagePath";
+            } else {
+                return response()->json(['error' => 'Image upload failed.'], 500);
+            }
+            } else {
+                $dish->image = $validated['image'] ?? "";
+            }
+
+            $dish->save();
+
+            return response()->json($dish, 201);
     }
 
     public function update(Request $request, $id)
@@ -91,17 +110,38 @@ class DishController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
+                $supabaseUrl = env('SUPABASE_URL');
+                $supabaseKey = env('SUPABASE_KEY');
+                $bucketName = 'images_menu';
+
+                // Delete previous image from Supabase
                 if ($dish->image) {
-                    $previousImagePath = public_path($dish->image);
-                    if (file_exists($previousImagePath)) {
-                        unlink($previousImagePath);
-                    }
+                    $previousImagePath = basename($dish->image);
+                    $client = new Client();
+                    $client->request('DELETE', "$supabaseUrl/storage/v1/object/$bucketName/$previousImagePath", [
+                        'headers' => [
+                            'Authorization' => "Bearer $supabaseKey",
+                        ],
+                    ]);
                 }
 
-                $imagePath = $image->store('immagini', 'images');
-                $dish->image = '/storage/' . $imagePath;
+                // Upload new image to Supabase
+                $response = $client->request('POST', "$supabaseUrl/storage/v1/object/$bucketName/{$image->getClientOriginalName()}", [
+                    'headers' => [
+                        'Authorization' => "Bearer $supabaseKey",
+                        'Content-Type' => $image->getMimeType(),
+                    ],
+                    'body' => file_get_contents($image->getRealPath()),
+                ]);
+
+                if ($response->getStatusCode() == 200) {
+                    $imagePath = json_decode($response->getBody())->Key;
+                    $dish->image = "$supabaseUrl/storage/v1/object/public/$bucketName/$imagePath";
+                } else {
+                    return response()->json(['error' => 'Image upload failed.'], 500);
+                }
             } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+                return response()->json(['error' => 'Invalid image file.'], 400);
             }
         }
 
