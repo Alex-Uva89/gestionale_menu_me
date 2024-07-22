@@ -376,8 +376,9 @@ import SelectMultiple from '../SelectMultiple.vue';
                 })
                 .then(response => {
                     let data = response.data;
-                    newDish = JSON.parse(data);
-
+                    newDish = data;
+                    console.log('DATA');
+                    console.log(newDish);
                     this.selectedDish.image = newDish.image;
                 })
                 .catch(error => {
