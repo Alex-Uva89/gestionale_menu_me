@@ -365,11 +365,11 @@ import SelectMultiple from '../SelectMultiple.vue';
                 const fileInput = document.querySelector('#editImg');
 
                 console.log('FILE INPUT BEFORE');
-                console.log(formData);
+                console.log(fileInput.files[0]);
                 if (fileInput.files[0]) {
                     formData.append('image', fileInput.files[0]);
                     console.log('FILE INPUT BEFORE');
-                    console.log(formData);
+                    console.log(formData.get('image'));
                 }
 
                 axios.put(`/api/dishes/${this.selectedDish.id}`, formData, {
