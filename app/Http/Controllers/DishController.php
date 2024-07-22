@@ -29,7 +29,7 @@ class DishController extends Controller
     }
 
     function uploadImageToSupabase($file) {
-        dd('UPLOAD IMAGE TO SUPABASE')
+        dd('UPLOAD IMAGE TO SUPABASE');
 
         $supabaseUrl = 'https://quoufacprncabkhqbdpm.supabase.co'; 
         $bucketName = 'images_menu'; 
