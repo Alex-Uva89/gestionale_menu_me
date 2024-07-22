@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Log;
 
 class DishController extends Controller
 {
+    private $supabaseUrl;
+    private $supabaseKey;
+    private $bucketName;
+
+    public function __construct()
+    {
+        $this->supabaseUrl = env('SUPABASE_URL');
+        $this->supabaseKey = env('SUPABASE_KEY');
+        $this->bucketName = env('SUPABASE_BUCKET_NAME'); // Assicurati di avere questa variabile d'ambiente nel tuo .env
+    }
 
     public function index()
     {
@@ -51,33 +61,34 @@ class DishController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $supabaseUrl = env('SUPABASE_URL');
-            $supabaseKey = env('SUPABASE_KEY');
-            $bucketName = 'images_menu';
-
-            // Upload the image to Supabase
             $client = new Client();
-            $response = $client->request('POST', "$supabaseUrl/storage/v1/object/$bucketName/{$image->getClientOriginalName()}", [
-                'headers' => [
-                    'Authorization' => "Bearer $supabaseKey",
-                    'Content-Type' => $image->getMimeType(),
-                ],
-                'body' => file_get_contents($image->getRealPath()),
-            ]);
+            try {
+                $response = $client->request('POST', "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$image->getClientOriginalName()}", [
+                    'headers' => [
+                        'Authorization' => "Bearer {$this->supabaseKey}",
+                        'Content-Type' => $image->getMimeType(),
+                    ],
+                    'body' => file_get_contents($image->getRealPath()),
+                ]);
 
-            if ($response->getStatusCode() == 200) {
-                $imagePath = json_decode($response->getBody())->Key;
-                $dish->image = "$supabaseUrl/storage/v1/object/public/$bucketName/$imagePath";
-            } else {
+                if ($response->getStatusCode() == 200) {
+                    $imagePath = json_decode($response->getBody(), true)['Key'];
+                    $dish->image = "{$this->supabaseUrl}/storage/v1/object/public/{$this->bucketName}/$imagePath";
+                } else {
+                    Log::error('Image upload failed', ['status' => $response->getStatusCode(), 'response' => $response->getBody()->getContents()]);
+                    return response()->json(['error' => 'Image upload failed.'], 500);
+                }
+            } catch (RequestException $e) {
+                Log::error('RequestException during image upload', ['message' => $e->getMessage(), 'request' => $e->getRequest(), 'response' => $e->getResponse()]);
                 return response()->json(['error' => 'Image upload failed.'], 500);
             }
-            } else {
-                $dish->image = $validated['image'] ?? "";
-            }
+        } else {
+            $dish->image = $validated['image'] ?? "";
+        }
 
-            $dish->save();
+        $dish->save();
 
-            return response()->json($dish, 201);
+        return response()->json($dish, 201);
     }
 
     public function update(Request $request, $id)
@@ -110,34 +121,36 @@ class DishController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             if ($image->isValid()) {
-                $supabaseUrl = env('SUPABASE_URL');
-                $supabaseKey = env('SUPABASE_KEY');
-                $bucketName = 'images_menu';
+                $client = new Client();
+                try {
+                    // Delete previous image from Supabase
+                    if ($dish->image) {
+                        $previousImagePath = basename($dish->image);
+                        $client->request('DELETE', "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/$previousImagePath", [
+                            'headers' => [
+                                'Authorization' => "Bearer {$this->supabaseKey}",
+                            ],
+                        ]);
+                    }
 
-                // Delete previous image from Supabase
-                if ($dish->image) {
-                    $previousImagePath = basename($dish->image);
-                    $client = new Client();
-                    $client->request('DELETE', "$supabaseUrl/storage/v1/object/$bucketName/$previousImagePath", [
+                    // Upload new image to Supabase
+                    $response = $client->request('POST', "{$this->supabaseUrl}/storage/v1/object/{$this->bucketName}/{$image->getClientOriginalName()}", [
                         'headers' => [
-                            'Authorization' => "Bearer $supabaseKey",
+                            'Authorization' => "Bearer {$this->supabaseKey}",
+                            'Content-Type' => $image->getMimeType(),
                         ],
+                        'body' => file_get_contents($image->getRealPath()),
                     ]);
-                }
 
-                // Upload new image to Supabase
-                $response = $client->request('POST', "$supabaseUrl/storage/v1/object/$bucketName/{$image->getClientOriginalName()}", [
-                    'headers' => [
-                        'Authorization' => "Bearer $supabaseKey",
-                        'Content-Type' => $image->getMimeType(),
-                    ],
-                    'body' => file_get_contents($image->getRealPath()),
-                ]);
-
-                if ($response->getStatusCode() == 200) {
-                    $imagePath = json_decode($response->getBody())->Key;
-                    $dish->image = "$supabaseUrl/storage/v1/object/public/$bucketName/$imagePath";
-                } else {
+                    if ($response->getStatusCode() == 200) {
+                        $imagePath = json_decode($response->getBody(), true)['Key'];
+                        $dish->image = "{$this->supabaseUrl}/storage/v1/object/public/{$this->bucketName}/$imagePath";
+                    } else {
+                        Log::error('Image upload failed', ['status' => $response->getStatusCode(), 'response' => $response->getBody()->getContents()]);
+                        return response()->json(['error' => 'Image upload failed.'], 500);
+                    }
+                } catch (RequestException $e) {
+                    Log::error('RequestException during image upload', ['message' => $e->getMessage(), 'request' => $e->getRequest(), 'response' => $e->getResponse()]);
                     return response()->json(['error' => 'Image upload failed.'], 500);
                 }
             } else {
