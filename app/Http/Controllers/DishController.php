@@ -87,7 +87,6 @@ class DishController extends Controller
         if ($request->has('is_active')) {
             $dish->is_active = $request->input('is_active');
         }
-        dd(request()->all());
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -100,7 +99,7 @@ class DishController extends Controller
                 }
 
                 $imagePath = $image->store('immagini', 'images');
-                $dish->image = '/storage/' . $imagePath;
+                $dish->image = '/storage/pippo' . $imagePath;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
