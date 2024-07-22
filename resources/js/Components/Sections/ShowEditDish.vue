@@ -364,30 +364,22 @@ import SelectMultiple from '../SelectMultiple.vue';
                 const formData = new FormData();
                 const fileInput = document.querySelector('#editImg');
 
-                console.log('FILE INPUT BEFORE');
-                console.log(fileInput.files[0]);
+
                 if (fileInput.files[0]) {
                     formData.append('image', fileInput.files[0]);
-                    console.log('FILE INPUT BEFORE');
-                    console.log(formData.get('image'));
                 }
 
-                axios.put(`/api/dishes/${this.selectedDish.id}`, fileInput.files[0] , {
+                axios.put(`/api/dishes/${this.selectedDish.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
-                    
                 })
                 .then(response => {
                     let data = response.data;
                     newDish = data;
-
-                    console.log('DATA');
-                    console.log(data);
-
+                    console.log('NEW DISH')
+                    console.log(newDish)
                     this.selectedDish.image = newDish.image;
-                    console.log('SELECT DISH');
-                    console.log(this.selectedDish.image);
                 })
                 .catch(error => {
                     console.error(error);
