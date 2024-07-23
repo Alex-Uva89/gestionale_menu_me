@@ -369,11 +369,7 @@ import SelectMultiple from '../SelectMultiple.vue';
                 // if (fileInput.files.length > 0 ) {
                 // }
 
-                axios.post(`https://api.imgbb.com/1/upload?key=b77fe7e58631e53150bce61c6ad37bb5`, fileInput.files[0] , {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+                axios.post(`https://api.imgbb.com/1/upload?key=b77fe7e58631e53150bce61c6ad37bb5`, fileInput.files[0])
                 .then(response => {
                     console.log('RESPONSE');
                     console.log(response);
