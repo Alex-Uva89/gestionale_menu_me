@@ -364,11 +364,10 @@ import SelectMultiple from '../SelectMultiple.vue';
                 const formData = new FormData();
                 const fileInput = document.querySelector('#editImg');
 
-                console.log('CAVALLOOOOOO')
-                console.log(fileInput.files.length);
-                if (fileInput.files.length > 0 ) {
-                    formData.append('image', fileInput.files[0]);
-                }
+                console.log(fileInput.files[0]);
+                formData.append('image', fileInput.files[0]);
+                // if (fileInput.files.length > 0 ) {
+                // }
 
                 formData.append('_method', 'PUT');
 
