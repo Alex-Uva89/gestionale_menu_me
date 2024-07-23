@@ -59,7 +59,7 @@ const props = defineProps({
                   <div class="w-full h-full" :class="dish.is_active ? 'opacity-100' : 'opacity-20'">
                     <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
                       <div class="flex">
-                        <img :src="dish.image === 'null' || dish.image === '' || dish.image === '' ? 'img/defaultDish.jpg' : '/storage/' + dish.image "  alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                        <img :src="dish.image === 'null' || dish.image === '' || dish.image === '' ? 'img/defaultDish.jpg' : dish.image "  alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
                       </div>
                       <div class="flex flex-col name">
                         <span class="first-letter:uppercase text-bold">{{ dish.name }}</span>
