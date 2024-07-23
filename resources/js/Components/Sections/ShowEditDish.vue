@@ -376,7 +376,7 @@ import SelectMultiple from '../SelectMultiple.vue';
                 })
                 .then(response => {
                     console.log('RESPONSE');
-                    console.log(response.data);
+                    console.log(response);
                     let data = response.data; 
                     newDish = data;
                 
