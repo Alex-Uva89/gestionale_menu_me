@@ -34,7 +34,7 @@
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDish.image === 'null' ? 'img/defaultDish.jpg' : '/storage/' + selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="selectedDish.image === 'null' ? 'img/defaultDish.jpg' :  selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
