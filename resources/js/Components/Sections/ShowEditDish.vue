@@ -382,10 +382,10 @@ import SelectMultiple from '../SelectMultiple.vue';
                         image: response.data.data.url
                     };
                     
+                
+                    // this.selectedDish.image = newDish.image;
 
-                    this.selectedDish.image = newDish.image;
-
-                    axios.put(`/api/dishes/${this.selectedDish.id}`, {
+                    return axios.put(`/api/dishes/${this.selectedDish.id}`, {
                         image: newDish.image
                     })
                 })
