@@ -33,7 +33,4 @@ export default defineConfig({
         assetsDir: 'assets',
         outDir: 'public/build',
     },
-    define: {
-        'process.env.NODE_ENV': JSON.stringify('production'),
-      }
 });

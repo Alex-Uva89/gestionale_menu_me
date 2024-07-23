@@ -364,8 +364,9 @@ import SelectMultiple from '../SelectMultiple.vue';
                 const formData = new FormData();
                 const fileInput = document.querySelector('#editImg');
 
-
-                if (fileInput.files[0]) {
+                console.log('CAVALLOOOOOO')
+                console.log(fileInput.files.length);
+                if (fileInput.files.length > 0 ) {
                     formData.append('image', fileInput.files[0]);
                 }
 
