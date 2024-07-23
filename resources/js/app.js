@@ -22,3 +22,8 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+if (process.env.NODE_ENV === 'production') {
+    app.config.devtools = true;
+}
+//:TODO

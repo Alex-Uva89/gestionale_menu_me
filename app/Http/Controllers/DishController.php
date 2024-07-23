@@ -30,6 +30,31 @@ class DishController extends Controller
         return response()->json($data);
     }
 
+    private function uploadImageToSupabase($file) {
+        $supabaseUrl = 'https://quoufacprncabkhqbdpm.supabase.co'; 
+        $bucketName = 'images_menu'; 
+        $apiKey = 'YOUR_SUPABASE_API_KEY'; 
+        
+        // Ottieni il nome del file
+        $fileName = time() . '-' . $file->getClientOriginalName();
+        $fileContent = file_get_contents($file->getPathname());
+    
+        // Carica il file su Supabase
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer $apiKey",
+            'Content-Type' => 'application/octet-stream'
+        ])->put("$supabaseUrl/storage/v1/object/$bucketName/$fileName", $fileContent);
+    
+        if ($response->successful()) {
+            // Ottieni l'URL pubblico
+            $publicUrl = "$supabaseUrl/storage/v1/object/public/$bucketName/$fileName";
+            return $publicUrl;
+        } else {
+            // Gestisci l'errore
+            throw new \Exception('Failed to upload image: ' . $response->body());
+        }
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -89,21 +114,19 @@ class DishController extends Controller
         }
 
         if ($request->hasFile('image')) {   
-            dd($request->file('image'));
             $image = $request->file('image');
-            if ($image->isValid()) {
-                if ($dish->image) {
-                    $previousImagePath = public_path($dish->image);
-                    if (file_exists($previousImagePath)) {
-                        unlink($previousImagePath);
-                    }
-                }
-
-                $imagePath = $image->store('immagini', 'images');
-                $dish->image = '/storage/pippo' . $imagePath;
-            } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
+            try {
+                $imageUrl = $this->uploadImageToSupabase($image);
+                logger()->info('Image uploaded successfully', ['imageUrl' => $imageUrl]);
+                $dish->image = $imageUrl;
+            } catch (\Exception $e) {
+                logger()->error('Image upload failed', ['exception' => $e->getMessage()]);
+                return response()->json(['error' => 'Image upload failed: ' . $e->getMessage()], 500);
             }
+        } else {
+            logger()->error('Invalid image file');
+            return response()->json(['error' => 'File upload failed.'], 400);
+        }
         }
 
         $dish->save();
