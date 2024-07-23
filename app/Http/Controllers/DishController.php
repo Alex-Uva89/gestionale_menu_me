@@ -89,12 +89,7 @@ class DishController extends Controller
         }
 
         if ($request->has('image')) {   
-            $image = $request->input('image');
-            if ($image->isValid()) {
-                $dish->image = $image;
-            } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
-            }
+            $dish->image = $request->input('image');
         }
 
         $dish->save();
