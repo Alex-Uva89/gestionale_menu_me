@@ -375,14 +375,14 @@ import SelectMultiple from '../SelectMultiple.vue';
                 const formData = new FormData();
                 const fileInput = document.querySelector('#editImg');
 
-                uploadImage(fileInput.files[0])
+                this.uploadImage(fileInput.files[0])
                 .then(response => {
                     newDish = {
                         ...dishNew,
                         image: response.data.data.url
                     };
                     
-                    
+
                     this.selectedDish.image = newDish.image;
 
                     axios.put(`/api/dishes/${this.selectedDish.id}`, {
