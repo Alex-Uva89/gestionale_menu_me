@@ -34,8 +34,6 @@ export default defineConfig({
         outDir: 'public/build',
     },
     define: {
-        'process.env': {
-          NODE_ENV: JSON.stringify('production'),
-        }
-    }
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      }
 });
