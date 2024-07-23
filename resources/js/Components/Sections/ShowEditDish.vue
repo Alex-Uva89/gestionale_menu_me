@@ -371,13 +371,13 @@ import SelectMultiple from '../SelectMultiple.vue';
 
                 formData.append('_method', 'PUT');
 
-                axios.post(`/api/dishes/${this.selectedDish.id}`, formData, {
+                axios.put(`/api/dishes/${this.selectedDish.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
                 .then(response => {
-                    let data = response.data;
+                    let data = response.data; 
                     newDish = data;
                 
                     this.selectedDish.image = newDish.image;
