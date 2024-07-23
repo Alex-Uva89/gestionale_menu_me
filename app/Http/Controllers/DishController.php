@@ -88,7 +88,8 @@ class DishController extends Controller
             $dish->is_active = $request->input('is_active');
         }
 
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {   
+            dd($request->file('image'));
             $image = $request->file('image');
             if ($image->isValid()) {
                 if ($dish->image) {
