@@ -26,20 +26,18 @@ class AllergenController extends Controller
             ]);
         }
 
-    public function store(Request $request)
+        public function store(Request $request)
         {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'icon' => 'required|image|mimes:png,svg|max:2048',
+                'icon' => 'required|url', 
             ]);
-
-            $iconPath = $request->file('icon')->store('allergens', 'public');
-
+        
             $allergen = new Allergen;
             $allergen->name = $request->name;
-            $allergen->icon = $iconPath;
+            $allergen->icon = $request->icon;
             $allergen->save();
-
+        
             return response()->json($allergen, 201);
         }
 
