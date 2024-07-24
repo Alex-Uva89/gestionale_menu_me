@@ -122,7 +122,7 @@ const props = defineProps({
                       <template v-for="allergen in allergens">
                         <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
-                            :src="'/storage/' + allergen.icon" 
+                            :src="allergen.icon" 
                             :alt="allergen.name + ' icon'" 
                             :id="allergen.id"
                             class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
@@ -377,24 +377,24 @@ export default {
             })
         },
         confirmAddDishes() {
-          let formData = new FormData();
-          formData.append('name', this.dish_category.name);
-          formData.append('description', this.dish_category.description);
-          formData.append('price', this.dish_category.price);
-          formData.append('category_id', this.dishToCreateId);
-          formData.append('venue_id', this.venue); 
-          
-          
-          this.uploadImage(this.file)
-          .then(response => {
-                  formData.append('image', response.data.data.url);
+            let formData = new FormData();
+            formData.append('name', this.dish_category.name);
+            formData.append('description', this.dish_category.description);
+            formData.append('price', this.dish_category.price);
+            formData.append('category_id', this.dishToCreateId);
+            formData.append('venue_id', this.venue);
 
-                  axios.post(`/api/dishes/${this.dishToCreateId}`, formData, { 
+            const submitForm = (imageURL) => {
+                if (imageURL) {
+                    formData.append('image', imageURL);
+                }
+
+                axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {
                     headers: {
-                      'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data'
                     }
-                  })
-                  .then(response => {
+                })
+                .then(response => {
                     let newDish;
                     if (typeof response.data === 'string') {
                         let data = response.data;
@@ -404,44 +404,50 @@ export default {
                         newDish = response.data;
                     }
                     let category = this.category_venues.find(category => category.id === this.dishToCreateId);
-                    
 
                     if (category) {
-                      if (!category.dishes) {
-                        category.dishes = [];
-                      }
-                      category.dishes.push(newDish);
-                      this.dishToCreateId = '';
+                        if (!category.dishes) {
+                            category.dishes = [];
+                        }
+                        category.dishes.push(newDish);
+                        this.dishToCreateId = '';
                     }
                     this.$emit('dishAdded');
                     this.componentKeyli++;
                     this.showAddDishesModal = false;
-                
+
                     this.selectedAllergens.forEach(allergenId => {
-                      this.matchAllergens(newDish.id, allergenId);
+                        this.matchAllergens(newDish.id, allergenId);
                     });
                     this.selectedAllergens = [];
-                
-                    
+
                     this.selectedDrinks.forEach(drinkId => {
-                      
-                      this.matchDrink(newDish.id, drinkId);
+                        this.matchDrink(newDish.id, drinkId);
                     });
                     this.selectedDrinks = [];
-
 
                     this.dish_category.name = '';
                     this.dish_category.description = '';
                     this.dish_category.price = null;
                     this.file = null;
                     this.imagePreview = null;
-                  })
-                
-                  .catch(error => {
-                    console.log('ERRORE AHI AHI AHI: '+ error);
-                  });
-          })
+                })
+                .catch(error => {
+                    console.log('ERRORE AHI AHI AHI: ' + error);
+                });
+            };
 
+            if (this.file) {
+                this.uploadImage(this.file)
+                    .then(response => {
+                        submitForm(response.data.data.url);
+                    })
+                    .catch(error => {
+                        console.log('ERRORE AHI AHI AHI: ' + error);
+                    });
+            } else {
+                submitForm(null);
+            }
         },
         matchAllergens(dishId, allergenId) {
 

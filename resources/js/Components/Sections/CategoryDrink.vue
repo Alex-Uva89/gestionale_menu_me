@@ -115,7 +115,7 @@ const props = defineProps({
                       <template v-for="allergen in allergens">
                         <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
-                            :src="'/storage/' + allergen.icon" 
+                            :src="allergen.icon" 
                             :alt="allergen.name + ' icon'" 
                             :id="allergen.id"
                             class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
@@ -197,6 +197,78 @@ const props = defineProps({
                           sapore:
                       </div>
                       <input class="w-full h-8" type="text" v-model="drink_category.flavour" :placeholder="drink_category.flavour">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: vitigno;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          vitigno:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.grape_variety" :placeholder="drink_category.grape_variety">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produttore;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          produttore:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.producer" :placeholder="drink_category.producer">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: denominazione;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          denominazione:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.denomination" :placeholder="drink_category.denomination">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: annata;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          annata:
+                      </div>
+                      <input class="w-full h-8" type="number" v-model="drink_category.vintage" :placeholder="drink_category.vintage">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          metodo di allevamento:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.breeding_method" :placeholder="drink_category.breeding_method">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          formato:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.format" :placeholder="drink_category.format">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: temperatura;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          temperatura di servizio:
+                      </div>
+                      <input class="w-full h-8" type="number" v-model="drink_category.serving_temperature" :placeholder="drink_category.serving_temperature">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: olfatto;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          olfatto:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.nose" :placeholder="drink_category.nose">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: certificazioni;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          certificazioni:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="drink_category.certifications" :placeholder="drink_category.certifications">
                   </div>
               </div>
           </div>
@@ -394,80 +466,89 @@ export default {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
         },
-        uploadImage(img) {
-                let body = new FormData()
-                body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
-                body.append('image', img)
-
-                return axios({
-                method: 'post',
-                url: 'https://api.imgbb.com/1/upload',
-                data: body
-            })
-        },
         confirmAddDrinks() {
+            let formData = new FormData();
+            formData.append('name', this.drink_category.name);
+            formData.append('description', this.drink_category.description);
+            formData.append('price', this.drink_category.price);
+            formData.append('instruction', this.drink_category.instruction);
+            formData.append('degrees', this.drink_category.degrees);
+            formData.append('origin', this.drink_category.origin);
+            formData.append('color', this.drink_category.color);
+            formData.append('production_method', this.drink_category.production_method);
+            formData.append('flavour', this.drink_category.flavour);
+            formData.append('category_id', this.drinkToCreateId);
+            formData.append('venue_id', this.selectedVenueId);
+            formData.append('grape_variety', this.drink_category.grape_variety);
+            formData.append('producer', this.drink_category.producer);
+            formData.append('denomination', this.drink_category.denomination);
+            formData.append('vintage', this.drink_category.vintage);
+            formData.append('breeding_method', this.drink_category.breeding_method);
+            formData.append('format', this.drink_category.format);
+            formData.append('serving_temperature', this.drink_category.serving_temperature);
+            formData.append('nose', this.drink_category.nose);
+            formData.append('certifications', this.drink_category.certifications);
 
-          let formData = new FormData();
-          formData.append('name', this.drink_category.name);
-          formData.append('description', this.drink_category.description);
-          formData.append('price', this.drink_category.price);
-          formData.append('instruction', this.drink_category.instruction);
-          formData.append('degrees', this.drink_category.degrees);
-          formData.append('origin', this.drink_category.origin);
-          formData.append('color', this.drink_category.color);
-          formData.append('production_method', this.drink_category.production_method);
-          formData.append('flavour', this.drink_category.flavour);
-          formData.append('category_id', this.drinkToCreateId);
-          formData.append('venue_id', this.selectedVenueId); 
-          
-
-
-          this.uploadImage(this.file)
-          .then(response => {
-            formData.append('image', response.data.data.url);
-            
-            axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            })
-            .then(response => {
-              let newDrink;
-              if (typeof response.data === 'string') {
-                  let data = response.data;
-                  data = data.substring(data.indexOf('{'));
-                  newDrink = JSON.parse(data);
-                } else {
-                  newDrink = response.data;
+            const submitForm = (imageURL) => {
+                if (imageURL) {
+                    formData.append('image', imageURL);
                 }
-                let category = this.category_venues.find(category => category.id === this.drinkToCreateId);
-                
-                this.$emit('drinkAdded', newDrink);
-  
-              if (category) {
-                if (!category.drinks) {
-                  category.drinks = [];
-                }
-                category.drinks.push(newDrink);
-                this.drinkToCreateId = '';
-              }
-              this.componentKeyli++;
-              this.showAddDrinksModal = false;
-          
-              this.selectedAllergens.forEach(allergenId => {
-                this.matchAllergens(newDrink.id, allergenId);
-              });
-  
-              this.selectedAllergens = [];
-  
-              this.resetForm();
-            })
-            
-            .catch(error => {
-              console.log('ERRORE AHI AHI AHI: '+ error);
-            });
-          })
-          
+
+                axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    let newDrink;
+                    if (typeof response.data === 'string') {
+                        let data = response.data;
+                        data = data.substring(data.indexOf('{'));
+                        newDrink = JSON.parse(data);
+                    } else {
+                        newDrink = response.data;
+                    }
+
+                    let category = this.category_venues.find(category => category.id === this.drinkToCreateId);
+
+                    if (category) {
+                        if (!category.drinks) {
+                            category.drinks = [];
+                        }
+                        category.drinks.push(newDrink);
+                        this.drinkToCreateId = '';
+                    }
+                    this.componentKeyli++;
+                    this.showAddDrinksModal = false;
+
+                    this.$emit('drinkAdded', newDrink);
+
+                    this.selectedAllergens.forEach(allergenId => {
+                        this.matchAllergens(newDrink.id, allergenId);
+                    });
+
+                    this.selectedAllergens = [];
+
+                    this.resetForm();
+                })
+                .catch(error => {
+                    console.log('ERRORE AHI AHI AHI: ' + error);
+                });
+            };
+
+            if (this.file) {
+                this.uploadImage(this.file)
+                    .then(response => {
+                        submitForm(response.data.data.url);
+                    })
+                    .catch(error => {
+                        console.log('ERRORE NELL\'UPLOAD DELL\'IMMAGINE: ' + error);
+                        // Puoi scegliere di inviare il form anche se c'è un errore di upload
+                        submitForm(null);
+                    });
+            } else {
+                submitForm(null);
+            }
         },
         resetForm() {
           this.drinkToCreateId = '';
@@ -559,7 +640,7 @@ export default {
 }
 
 .grid-show-drink{
-    display: grid;
+  display: grid;
     margin: 20px 0;
     height: 62vh;
     grid-template-areas: 
@@ -570,9 +651,14 @@ export default {
         "consigli consigli immagine immagine"
         "gradi gradi origine origine"
         "colore colore produzione produzione"
-        "sapore sapore ingredienti ingredienti";
+        "sapore sapore ingredienti ingredienti"
+        "vitigno vitigno produttore produttore"
+        "denominazione denominazione annata annata"
+        "allevamento allevamento formato formato"
+        "temperatura temperatura olfatto olfatto"
+        "certificazioni certificazioni . .";
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 2fr 2fr;
+    grid-template-rows: repeat(8, 1fr); /* Usa 8 righe di altezza uguale, adatta se necessario */
     gap: 10px;
     overflow-y: scroll;
     scrollbar-width: none;

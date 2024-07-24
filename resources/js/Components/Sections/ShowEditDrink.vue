@@ -64,7 +64,7 @@
             <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
                 <div class="w-full flex justify-between items-center font-black uppercase">
                     Consigli:
-                    <ButtonCss @click="openInputDescription()">
+                    <ButtonCss @click="openInputInstruction()">
                         Modifica
                     </ButtonCss>
                 </div>
@@ -94,7 +94,7 @@
                         {{ selectedDrink.degrees }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
+                <ButtonCss @click="openInputGrades()">
                     Modifica
                 </ButtonCss>
             </div>
@@ -107,7 +107,7 @@
                         {{ selectedDrink.color }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
+                <ButtonCss @click="openInputColor()">
                     Modifica
                 </ButtonCss>
             </div>
@@ -120,7 +120,7 @@
                         {{ selectedDrink.production_method }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
+                <ButtonCss @click="openInputProd()">
                     Modifica
                 </ButtonCss>
             </div>
@@ -133,7 +133,7 @@
                         {{ selectedDrink.flavour }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
+                <ButtonCss @click="openInputFlavour()">
                     Modifica
                 </ButtonCss>
             </div>
@@ -146,7 +146,7 @@
                         {{ selectedDrink.description }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
+                <ButtonCss @click="openInputDescription()">
                     Modifica
                 </ButtonCss>
             </div>   
@@ -159,11 +159,103 @@
                         {{ selectedDrink.origin }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
+                <ButtonCss @click="openInputOrigin()">
                     Modifica
                 </ButtonCss>
             </div>  
         </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: vitigno;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        vitigno:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.grape_variety }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputGrape()">
+                    Modifica
+                </ButtonCss>
+        </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produttore;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        produttore:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.producer }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputProducer()">
+                    Modifica
+                </ButtonCss>
+        </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: denominazione;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        denominazione:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.denomination }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputDenomination()">
+                    Modifica
+                </ButtonCss>
+        </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: annata;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        annata:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.vintage }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputVintage()">
+                    Modifica
+                </ButtonCss>
+        </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        metodo di allevamento:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.breeding_method }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputBreeding()">
+                    Modifica
+                </ButtonCss>
+        </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        formato:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.format }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputFormat()">
+                    Modifica
+                </ButtonCss>
+        </div>
+        <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: certificazioni;">
+                <div class="flex gap-2">
+                    <div class="font-black uppercase">
+                        certificazioni:
+                    </div>
+                    <span class="font-bold uppercase text-red-500">
+                        {{ selectedDrink.certifications }}
+                    </span>
+                </div>
+                <ButtonCss @click="openInputCertification()">
+                    Modifica
+                </ButtonCss>
+        </div>
+
         <div class="button_delete">
             <div @click="openDeleteModalDish( selectedDrink.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
                 Elimina drink: {{ selectedDrink.name }}
@@ -235,7 +327,7 @@
          </ModalAction>
      </div>
 
-     <div v-if="showModalEditDescription" class="z-50">
+     <div v-if="showModalEditInstruction" class="z-50">
         <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica i consigli del drink: 
@@ -316,6 +408,293 @@
         </ModalAction>
      </div>
 
+     <div v-if="showModalEditGrades" class="z-50">
+        <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica i gradi del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                    gradi attuali: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.degrees }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Gradi:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.degrees">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDegrees( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditGrades = false">Annulla</button>
+            </div>
+        </ModalAction>
+     </div>
+
+     <div v-if="showModalEditColor" class="z-50">
+        <ModalAction :showModal="showModalEditColor" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il colore del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                    colore attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.color }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Colore:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.color">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditColor( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditColor = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditProd" class="z-50">
+        <ModalAction :showModal="showModalEditProd" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il metodo di produzione del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                metodo di produzione attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.production_method }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Metodo di produzione:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.production_method">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditProd( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditProd = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditFlavour" class="z-50">
+        <ModalAction :showModal="showModalEditFlavour" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il gusto del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                gusto attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.flavour }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Gusto:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.flavour">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditFlavour( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditFlavour = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditOrigin" class="z-50">
+        <ModalAction :showModal="showModalEditOrigin" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica l'origine del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                origine attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.origin }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Origine:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.origin">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditOrigin( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditOrigin = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditGrape" class="z-50">
+        <ModalAction :showModal="showModalEditGrape" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il vitigno del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                Vitigno attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.grape_variety }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Vitigno:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.grape_variety">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditGrape( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditGrape = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditProducer" class="z-50">
+        <ModalAction :showModal="showModalEditProducer" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il produttore del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                Produttore attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.producer }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Produttore:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.producer">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditProducer( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditProducer = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditDenomination" class="z-50">
+        <ModalAction :showModal="showModalEditDenomination" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica la denominazione del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                denominazione attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.denomination }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Denominazione:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.denomination">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDenomination( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditDenomination = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditVintage" class="z-50">
+        <ModalAction :showModal="showModalEditVintage" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica l'annata del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                Annata attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.vintage }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Annata:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.vintage">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditVintage( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditVintage = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditBreeding" class="z-50">
+        <ModalAction :showModal="showModalEditBreeding" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il metodo di allevamento del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                metodo di allevamento attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.breeding_method }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Metodo di allevamento:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.breeding_method">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditBreeding( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditBreeding = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditFormat" class="z-50">
+        <ModalAction :showModal="showModalEditFormat" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica il formato del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                formato attuale: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.format }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Formato:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.format">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditFormat( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditFormat = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
+
+    <div v-if="showModalEditCertification" class="z-50">
+        <ModalAction :showModal="showModalEditCertification" :selectedDrink="selectedDrink">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica le certificazioni del drink: 
+            </h2>
+
+            <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                certificazioni attuali: 
+                    <span class="text-red-500 text-xl">
+                        {{ selectedDrink.certifications }}
+                    </span>
+            </div>
+
+            <label for="name" class="font-bold text-xl">Certificazioni:</label>
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.certifications">
+
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditCertification( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditCertification = false">Annulla</button>
+            </div>
+        </ModalAction>
+    </div>
 
 </template>
 
@@ -348,6 +727,18 @@ export default {
             showModalEditDescription: false,
             showModalEditImg: false,
             showModalEditPairings: false,
+            showModalEditGrades: false,
+            showModalEditColor: false,
+            showModalEditProd: false,
+            showModalEditFlavour: false,
+            showModalEditOrigin: false,
+            showModalEditGrape: false,
+            showModalEditProducer: false,
+            showModalEditDenomination: false,
+            showModalEditVintage: false,
+            showModalEditBreeding: false,
+            showModalEditFormat: false,
+            showModalEditCertification: false,
             dishIdToDelete: null,
             copySelectedDish: null,
             arrayAllergens: this.allergensDrinks,
@@ -407,8 +798,8 @@ export default {
 
             this.showModalEditPrice = false;
         },
-        openInputDescription(){
-            this.showModalEditDescription = true;
+        openInputInstruction(){
+            this.showModalEditInstruction = true;
         },
         confirmEditDescription(dishNew){
             this.selectedDrink.description = dishNew.description
@@ -516,7 +907,151 @@ export default {
                 });
 
             this.showModalEditPairings = false;
-        }
+        },
+        openInputGrades(){
+            this.showModalEditGrades = true;
+        },
+        confirmEditDegrees(dishNew){
+            this.selectedDrink.degrees = dishNew.degrees
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                degrees: dishNew.degrees
+            })
+
+            this.showModalEditGrades = false;
+        },
+        openInputColor(){
+            this.showModalEditColor = true;
+        },
+        confirmEditColor(dishNew){
+            this.selectedDrink.color = dishNew.color
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                color: dishNew.color
+            })
+
+            this.showModalEditColor = false;
+        },
+        openInputProd(){
+            this.showModalEditProd = true;
+        },
+        confirmEditProd(dishNew){
+            this.selectedDrink.production_method = dishNew.production_method
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                production_method: dishNew.production_method
+            })
+
+            this.showModalEditProd = false;
+        },
+        openInputFlavour(){
+            this.showModalEditFlavour = true;
+        },
+        confirmEditFlavour(dishNew){
+            this.selectedDrink.flavour = dishNew.flavour
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                flavour: dishNew.flavour
+            })
+
+            this.showModalEditFlavour = false;
+        },
+        openInputOrigin(){
+            this.showModalEditOrigin = true;
+        },
+        confirmEditOrigin(dishNew){
+            this.selectedDrink.origin = dishNew.origin
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                origin: dishNew.origin
+            })
+
+            this.showModalEditOrigin = false;
+        },
+        openInputGrape(){
+            this.showModalEditGrape = true;
+        },
+        confirmEditGrape(dishNew){
+            this.selectedDrink.grape_variety = dishNew.grape_variety
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                grape_variety: dishNew.grape_variety
+            })
+
+            this.showModalEditGrape = false;
+        },
+        openInputProducer(){
+            this.showModalEditProducer = true;
+        },
+        confirmEditProducer(dishNew){
+            this.selectedDrink.producer = dishNew.producer
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                producer: dishNew.producer
+            })
+
+            this.showModalEditProducer = false;
+        },
+        openInputDenomination(){
+            this.showModalEditDenomination = true;
+        },
+        confirmEditDenomination(dishNew){
+            this.selectedDrink.denomination = dishNew.denomination
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                denomination: dishNew.denomination
+            })
+
+            this.showModalEditDenomination = false;
+        },
+        openInputVintage(){
+            this.showModalEditVintage = true;
+        },
+        confirmEditVintage(dishNew){
+            this.selectedDrink.vintage = dishNew.vintage
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                vintage: dishNew.vintage
+            })
+
+            this.showModalEditVintage = false;
+        },
+        openInputBreeding(){
+            this.showModalEditBreeding = true;
+        },
+        confirmEditBreeding(dishNew){
+            this.selectedDrink.breeding_method = dishNew.breeding_method
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                breeding_method: dishNew.breeding_method
+            })
+
+            this.showModalEditBreeding = false;
+        },
+        openInputFormat(){
+            this.showModalEditFormat = true;
+        },
+        confirmEditFormat(dishNew){
+            this.selectedDrink.format = dishNew.format
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                format: dishNew.format
+            })
+
+            this.showModalEditFormat = false;
+        },
+        openInputCertification(){
+            this.showModalEditCertification = true;
+        },
+        confirmEditCertification(dishNew){
+            this.selectedDrink.certifications = dishNew.certifications
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                certifications: dishNew.certifications
+            })
+
+            this.showModalEditCertification = false;
+        },
     },
     computed: {
         activeAllergens() {
@@ -578,12 +1113,18 @@ export default {
         "nome nome immagine immagine"
         "prezzo prezzo immagine immagine"
         "allergeni allergeni immagine immagine"
+        "abbinamenti abbinamenti immagine immagine"
         "consigli consigli immagine immagine"
-        "ingredienti ingredienti colore colore"
         "gradi gradi origine origine"
-        "produzione produzione sapore sapore";
+        "colore colore produzione produzione"
+        "sapore sapore ingredienti ingredienti"
+        "vitigno vitigno produttore produttore"
+        "denominazione denominazione annata annata"
+        "allevamento allevamento formato formato"
+        "temperatura temperatura olfatto olfatto"
+        "certificazioni certificazioni . .";
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 2fr 2fr;
+    grid-template-rows: repeat(8, 1fr); /* Usa 8 righe di altezza uguale, adatta se necessario */
     gap: 10px;
     overflow-y: scroll;
     scrollbar-width: none;
