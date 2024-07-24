@@ -500,6 +500,7 @@ export default {
                     }
                 })
                 .then(response => {
+                    console.log('Response data:', response.data);
                     let newDrink;
                     if (typeof response.data === 'string') {
                         let data = response.data;
@@ -532,6 +533,7 @@ export default {
                     this.resetForm();
                 })
                 .catch(error => {
+                    console.log('Error response:', error.response);
                     console.log('ERRORE AHI AHI AHI: ' + error);
                 });
             };

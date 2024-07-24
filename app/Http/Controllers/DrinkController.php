@@ -17,6 +17,9 @@ class DrinkController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('Store method called.');
+        Log::info('Request data: ', $request->all());
+
         $validated = $request->validate([
             'name' => 'required',
             'price' => 'required',
@@ -28,7 +31,6 @@ class DrinkController extends Controller
             'origin' => 'nullable',
             'production_method' => 'nullable',
             'flavour' => 'nullable',
-            'production_method' => 'nullable',
             'grape_variety' => 'nullable',
             'producer' => 'nullable',
             'denomination' => 'nullable',
@@ -42,38 +44,45 @@ class DrinkController extends Controller
             'category_id' => 'nullable',
             'venue_id' => 'nullable'
         ]);
-    
-        $drink = new Drink();
-        $drink->name = $validated['name'];
-        $drink->description = $validated['description'] ?? '';
-        $drink->price = $validated['price'];
-        $drink->instructions = $validated['instructions'] ?? '';
-        $drink->color = $validated['color'] ?? '';
-        $drink->degrees = $validated['degrees'] ?? '';
-        $drink->origin = $validated['origin'] ?? '';
-        $drink->production_method = $validated['production_method'] ?? '';
-        $drink->flavour = $validated['flavour'] ?? '';
-        $drink->grape_variety = $validated['grape_variety'] ?? '';
-        $drink->producer = $validated['producer'] ?? '';
-        $drink->denomination = $validated['denomination'] ?? '';
-        $drink->vintage = $validated['vintage'] ?? '';
-        $drink->breeding_method = $validated['breeding_method'] ?? '';
-        $drink->format = $validated['format'] ?? '';
-        $drink->serving_temperature = $validated['serving_temperature'] ?? '';
-        $drink->nose = $validated['nose'] ?? '';
-        $drink->certifications = $validated['certifications'] ?? '';
-        $drink->is_active = $validated['is_active'] ?? 1;
 
-        $drink->category_id = $validated['category_id'];
-        $drink->venue_id = $validated['venue_id'];
-    
-        if ($request->has('image')) {   
-            $drink->image = $request->input('image');
+        Log::info('Validation passed.', $validated);
+
+        try {
+            $drink = new Drink();
+            $drink->name = $validated['name'];
+            $drink->description = $validated['description'] ?? '';
+            $drink->price = $validated['price'];
+            $drink->instructions = $validated['instructions'] ?? '';
+            $drink->color = $validated['color'] ?? '';
+            $drink->degrees = $validated['degrees'] ?? '';
+            $drink->origin = $validated['origin'] ?? '';
+            $drink->production_method = $validated['production_method'] ?? '';
+            $drink->flavour = $validated['flavour'] ?? '';
+            $drink->grape_variety = $validated['grape_variety'] ?? '';
+            $drink->producer = $validated['producer'] ?? '';
+            $drink->denomination = $validated['denomination'] ?? '';
+            $drink->vintage = $validated['vintage'] ?? '';
+            $drink->breeding_method = $validated['breeding_method'] ?? '';
+            $drink->format = $validated['format'] ?? '';
+            $drink->serving_temperature = $validated['serving_temperature'] ?? '';
+            $drink->nose = $validated['nose'] ?? '';
+            $drink->certifications = $validated['certifications'] ?? '';
+            $drink->is_active = $validated['is_active'] ?? 1;
+            $drink->category_id = $validated['category_id'];
+            $drink->venue_id = $validated['venue_id'];
+
+            if ($request->has('image')) {
+                $drink->image = $request->input('image');
+            }
+
+            $drink->save();
+            Log::info('Drink saved successfully.');
+
+            return response()->json($drink, 201);
+        } catch (\Exception $e) {
+            Log::error('Error saving drink: ', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to save drink.'], 500);
         }
-    
-        $drink->save();
-    
-        return response()->json($drink, 201);
     }
 
     public function update(Request $request, $id, Response $response)
