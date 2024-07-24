@@ -253,15 +253,17 @@ export default {
             const formData = new FormData();
             formData.append('name', name);
 
-            console.log('ICON CONTENT');
-            console.log(this.form.icon);
             this.uploadImageIcon(this.form.icon)
                 .then(response => {
                     const url = response.data.data.url;
-                    console.log('Uploaded Image URL:', url);  // Debug the image URL
+                    formData.append('icon', url);
+                    
                     if (url) {
-                        
-                        return axios.post('/api/allergens', url);
+                        return axios.post('/api/allergens', formData{
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
                     } else {
                         throw new Error('Image upload failed: URL is invalid');
                     }
