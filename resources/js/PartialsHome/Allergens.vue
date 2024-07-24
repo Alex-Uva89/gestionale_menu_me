@@ -247,7 +247,7 @@ export default {
                 method: 'post',
                 url: 'https://api.imgbb.com/1/upload',
                 data: body
-            })
+                })
         },
         createAllergen(name) {
             const formData = new FormData();
@@ -275,7 +275,7 @@ export default {
                     console.log(error);
                     this.isOpenModalAllergen = false; // Gestisci l'errore qui
                 });
-        }
+        },
         isListScrollable() {
             const list = document.getElementById('allergenList');
             const button = document.querySelector('.bi-arrow-down-circle');
