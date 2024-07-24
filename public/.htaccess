@@ -4,6 +4,9 @@
 #     Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
 # </IfModule>
 
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+</IfModule>
 
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
