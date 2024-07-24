@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Drink;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 
 
 class DrinkController extends Controller
