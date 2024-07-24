@@ -365,66 +365,82 @@ export default {
           this.showAddDishesModal = true;
           this.dishToCreateId = id;
         },
+        uploadImage(img) {
+                let body = new FormData()
+                body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
+                body.append('image', img)
+
+                return axios({
+                method: 'post',
+                url: 'https://api.imgbb.com/1/upload',
+                data: body
+            })
+        },
         confirmAddDishes() {
           let formData = new FormData();
           formData.append('name', this.dish_category.name);
           formData.append('description', this.dish_category.description);
           formData.append('price', this.dish_category.price);
-          formData.append('image', this.file);
           formData.append('category_id', this.dishToCreateId);
           formData.append('venue_id', this.venue); 
-        
-          axios.post(`/api/dishes/${this.dishToCreateId}`, formData, { 
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
+          
+          
+          this.uploadImage(this.file)
           .then(response => {
-            let newDish;
-            if (typeof response.data === 'string') {
-                let data = response.data;
-                data = data.substring(data.indexOf('{'));
-                newDish = JSON.parse(data);
-            } else {
-                newDish = response.data;
-            }
-            let category = this.category_venues.find(category => category.id === this.dishToCreateId);
-            
+                  formData.append('image', response.data.data.url);
 
-            if (category) {
-              if (!category.dishes) {
-                category.dishes = [];
-              }
-              category.dishes.push(newDish);
-              this.dishToCreateId = '';
-            }
-            this.$emit('dishAdded');
-            this.componentKeyli++;
-            this.showAddDishesModal = false;
-        
-            this.selectedAllergens.forEach(allergenId => {
-              this.matchAllergens(newDish.id, allergenId);
-            });
-            this.selectedAllergens = [];
-        
-            
-            this.selectedDrinks.forEach(drinkId => {
-              
-              this.matchDrink(newDish.id, drinkId);
-            });
-            this.selectedDrinks = [];
+                  axios.post(`/api/dishes/${this.dishToCreateId}`, formData, { 
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  })
+                  .then(response => {
+                    let newDish;
+                    if (typeof response.data === 'string') {
+                        let data = response.data;
+                        data = data.substring(data.indexOf('{'));
+                        newDish = JSON.parse(data);
+                    } else {
+                        newDish = response.data;
+                    }
+                    let category = this.category_venues.find(category => category.id === this.dishToCreateId);
+                    
+
+                    if (category) {
+                      if (!category.dishes) {
+                        category.dishes = [];
+                      }
+                      category.dishes.push(newDish);
+                      this.dishToCreateId = '';
+                    }
+                    this.$emit('dishAdded');
+                    this.componentKeyli++;
+                    this.showAddDishesModal = false;
+                
+                    this.selectedAllergens.forEach(allergenId => {
+                      this.matchAllergens(newDish.id, allergenId);
+                    });
+                    this.selectedAllergens = [];
+                
+                    
+                    this.selectedDrinks.forEach(drinkId => {
+                      
+                      this.matchDrink(newDish.id, drinkId);
+                    });
+                    this.selectedDrinks = [];
 
 
-            this.dish_category.name = '';
-            this.dish_category.description = '';
-            this.dish_category.price = null;
-            this.file = null;
-            this.imagePreview = null;
+                    this.dish_category.name = '';
+                    this.dish_category.description = '';
+                    this.dish_category.price = null;
+                    this.file = null;
+                    this.imagePreview = null;
+                  })
+                
+                  .catch(error => {
+                    console.log('ERRORE AHI AHI AHI: '+ error);
+                  });
           })
-        
-          .catch(error => {
-            console.log('ERRORE AHI AHI AHI: '+ error);
-          });
 
         },
         matchAllergens(dishId, allergenId) {

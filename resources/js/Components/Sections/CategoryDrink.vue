@@ -53,7 +53,7 @@ const props = defineProps({
                 <div class="w-full h-full" :class="drink.is_active ? 'opacity-100' : 'opacity-20'">
                   <div @click="openShowDrink(drink)" class="container-drinks px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="drink.image == 'null' || drink.image === '' || drink.image === 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                      <img :src="drink.image == 'null' || drink.image === '' || drink.image === 'undefined' ? 'img/defaultDish.jpg' : drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
                     </div>
                     <div class="flex flex-col name">
                       <span class="first-letter:uppercase text-bold">{{ drink.name }}</span>
@@ -394,13 +394,23 @@ export default {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
         },
+        uploadImage(img) {
+                let body = new FormData()
+                body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
+                body.append('image', img)
+
+                return axios({
+                method: 'post',
+                url: 'https://api.imgbb.com/1/upload',
+                data: body
+            })
+        },
         confirmAddDrinks() {
 
           let formData = new FormData();
           formData.append('name', this.drink_category.name);
           formData.append('description', this.drink_category.description);
           formData.append('price', this.drink_category.price);
-          formData.append('image', this.file);
           formData.append('instruction', this.drink_category.instruction);
           formData.append('degrees', this.drink_category.degrees);
           formData.append('origin', this.drink_category.origin);
@@ -409,54 +419,55 @@ export default {
           formData.append('flavour', this.drink_category.flavour);
           formData.append('category_id', this.drinkToCreateId);
           formData.append('venue_id', this.selectedVenueId); 
-        
-          axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
+          
+
+
+          this.uploadImage(this.file)
           .then(response => {
-            let newDrink;
-            if (typeof response.data === 'string') {
-                let data = response.data;
-                console.log('DAI CAVALLOOOOOO')
-                data = data.substring(data.indexOf('{'));
-                newDrink = JSON.parse(data);
-              } else {
-                newDrink = response.data;
+            formData.append('image', response.data.data.url);
+            
+            axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
               }
-              let category = this.category_venues.find(category => category.id === this.drinkToCreateId);
-              
-              this.$emit('drinkAdded', newDrink);
-
-            if (category) {
-              if (!category.drinks) {
-                category.drinks = [];
+            })
+            .then(response => {
+              let newDrink;
+              if (typeof response.data === 'string') {
+                  let data = response.data;
+                  data = data.substring(data.indexOf('{'));
+                  newDrink = JSON.parse(data);
+                } else {
+                  newDrink = response.data;
+                }
+                let category = this.category_venues.find(category => category.id === this.drinkToCreateId);
+                
+                this.$emit('drinkAdded', newDrink);
+  
+              if (category) {
+                if (!category.drinks) {
+                  category.drinks = [];
+                }
+                category.drinks.push(newDrink);
+                this.drinkToCreateId = '';
               }
-              category.drinks.push(newDrink);
-              this.drinkToCreateId = '';
-            }
-            this.componentKeyli++;
-            this.showAddDrinksModal = false;
-        
-            this.selectedAllergens.forEach(allergenId => {
-              this.matchAllergens(newDrink.id, allergenId);
+              this.componentKeyli++;
+              this.showAddDrinksModal = false;
+          
+              this.selectedAllergens.forEach(allergenId => {
+                this.matchAllergens(newDrink.id, allergenId);
+              });
+  
+              this.selectedAllergens = [];
+  
+              this.resetForm();
+            })
+            
+            .catch(error => {
+              console.log('ERRORE AHI AHI AHI: '+ error);
             });
-            this.selectedAllergens = [];
-
-            this.drink_category.name = '';
-            this.drink_category.description = '';
-            this.drink_category.price = null;
-            this.file = null;
-            this.imagePreview = null;
-            this.drink_category.production_method = null;
-            newDrink = '';
           })
-        
-          .catch(error => {
-            console.log('ERRORE AHI AHI AHI: '+ error);
-          });
-
+          
         },
         resetForm() {
           this.drinkToCreateId = '';
