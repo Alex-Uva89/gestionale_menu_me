@@ -297,7 +297,7 @@ const props = defineProps({
       </div>
   </ModalAction>
 
-  <!-- <ModalAction :showModal="showEditModal">
+  <ModalAction :showModal="showEditModal">
       <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
               Modifica categoria
@@ -308,7 +308,7 @@ const props = defineProps({
               <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
           </div>
       </div>
-  </ModalAction> -->
+  </ModalAction>
 
   <ModalAction :showModal="showModalDrink">
     <ShowDish 
