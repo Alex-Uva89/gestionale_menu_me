@@ -42,7 +42,7 @@
                         <tr v-for="allergen in allergens" class="grid grid-cols-6">
                             <td class="flex items-center border border-4 p-5">
                                 <div class="w-full  flex justify-center">
-                                    <img v-if="allergen.icon" :src="'/storage/' + allergen.icon" :alt="'icona '+ allergen.name + ' non trovata' "  >
+                                    <img v-if="allergen.icon" :src="allergen.icon" :alt="'icona '+ allergen.name + ' non trovata' "  >
                                 </div>
                             </td>
                             <td class="flex items-center gap-4 border border-4 border-s-0 p-4 col-span-3">
@@ -238,47 +238,44 @@ export default {
         handleFileUpload(e) {
             this.form.icon = e.target.files[0];
         },
+        uploadImageIcon(img) {
+                let body = new FormData()
+                body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
+                body.append('image', img)
+
+                return axios({
+                method: 'post',
+                url: 'https://api.imgbb.com/1/upload',
+                data: body
+            })
+        },
         createAllergen(name) {
             const formData = new FormData();
             formData.append('name', name);
-            formData.append('icon', this.form.icon);
 
-            console.log('FORM DATA');
-            console.log(formData);
-
-            console.log('ICON');
-            console.log(this.form.icon);
-        
-            axios.post('/api/allergens', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(response => {
-                const data = response.data.split('\n').pop();
-                const newAllergen = JSON.parse(data);
-        
-                const checkFile = () => {
-                    axios.get('/storage/' + newAllergen.icon)
-                    .then(response => {
-                        this.allergens.push(newAllergen);
-                        this.componenetAllergen++;
-                    })
-                    .catch(error => {
-                        setTimeout(checkFile, 1000);
+            this.uploadImageIcon(this.form.icon)
+                .then(response => {
+                    const url = response.data.data.url;
+                    formData.append('icon', url);
+                    return axios.post('/api/allergens', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
                     });
-                };
-        
-                
-                checkFile();
-            })
-            .catch(error => {
-                console.log('ERROR');
-                console.log(error);
-             });
-        
-            this.isOpenModalAllergen = false;
-        },
+                })
+                .then(response => {
+                    // Gestione della risposta della creazione dell'allergene
+                    const data = response.data.split('\n').pop();
+                    const newAllergen = JSON.parse(data);
+                    this.allergens.push(newAllergen);
+                    this.isOpenModalAllergen = false; // Chiudi il modal qui
+                })
+                .catch(error => {
+                    console.log('ERROR');
+                    console.log(error);
+                    this.isOpenModalAllergen = false; // Gestisci l'errore qui
+                });
+        }
         isListScrollable() {
             const list = document.getElementById('allergenList');
             const button = document.querySelector('.bi-arrow-down-circle');

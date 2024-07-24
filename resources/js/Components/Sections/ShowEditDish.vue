@@ -360,14 +360,14 @@ import SelectMultiple from '../SelectMultiple.vue';
                 this.showModalEditImg = true;
             },
             uploadImage(img) {
-            let body = new FormData()
-            body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
-            body.append('image', img)
+                let body = new FormData()
+                body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
+                body.append('image', img)
 
-            return axios({
-            method: 'post',
-            url: 'https://api.imgbb.com/1/upload',
-            data: body
+                return axios({
+                method: 'post',
+                url: 'https://api.imgbb.com/1/upload',
+                data: body
             })
             },
             confirmEditImg(dishNew){

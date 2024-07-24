@@ -35,7 +35,7 @@
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDrink.image === 'null' || selectedDrink.image === 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + selectedDrink.image" :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="selectedDrink.image === 'null' || selectedDrink.image === 'undefined' ? 'img/defaultDish.jpg' : selectedDrink.image" :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
@@ -52,7 +52,7 @@
                             @click="matchDish(selectedDrink.id, allergen.id)" 
                             :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }"
                         >
-                            <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
+                            <img :src="allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
                         </li>
                 </ul>
                 <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
@@ -422,34 +422,38 @@ export default {
         openInputImg(){
             this.showModalEditImg = true;
         },
+        uploadImage(img) {
+                let body = new FormData()
+                body.set('key', 'b77fe7e58631e53150bce61c6ad37bb5')
+                body.append('image', img)
+
+                return axios({
+                method: 'post',
+                url: 'https://api.imgbb.com/1/upload',
+                data: body
+            })
+        },
         confirmEditImg(drinkNew){
             let newDrink = null;
             const formData = new FormData();
             const fileInput = document.querySelector('#editImg');
 
-            console.log(fileInput.files[0])
+            this.uploadImage(fileInput.files[0])
+                .then(response => {
+                    newDrink = {
+                        ...drinkNew,
+                        image: response.data.data.url
+                    }
 
-            if (fileInput.files[0]) {
-                formData.append('image', fileInput.files[0]);
-            }
+                    this.selectedDrink.image = newDrink.image
 
-            formData.append('_method', 'PUT');
-
-            axios.post(`/api/drinks/${this.selectedDrink.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(response => {
-                let data = response.data;
-                data = data.substring(data.indexOf('{'));
-                newDrink = JSON.parse(data);
-
-                this.selectedDrink.image = newDrink.image;
-            })
-            .catch(error => {
-                console.error(error);
-            });
+                    axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                        image: newDrink.image
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
             this.showModalEditImg = false;
         },
