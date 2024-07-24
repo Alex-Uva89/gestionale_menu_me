@@ -260,12 +260,8 @@ export default {
                     const url = response.data.data.url;
                     console.log('Uploaded Image URL:', url);  // Debug the image URL
                     if (url) {
-                        formData.append('icon', url);
-                        return axios.post('/api/allergens', formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
+                        
+                        return axios.post('/api/allergens', url);
                     } else {
                         throw new Error('Image upload failed: URL is invalid');
                     }
