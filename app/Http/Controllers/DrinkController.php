@@ -28,13 +28,15 @@ class DrinkController extends Controller
             'origin' => 'nullable',
             'production_method' => 'nullable',
             'flavour' => 'nullable',
-            'origin' => 'nullable',
+            'production_method' => 'nullable',
             'grape_variety' => 'nullable',
             'producer' => 'nullable',
             'denomination' => 'nullable',
             'vintage' => 'nullable',
             'breeding_method' => 'nullable',
             'format' => 'nullable',
+            'serving_temperature' => 'nullable',
+            'nose' => 'nullable',
             'certifications' => 'nullable',
             'is_active' => 'nullable',
             'category_id' => 'nullable',
@@ -57,6 +59,8 @@ class DrinkController extends Controller
         $drink->vintage = $validated['vintage'] ?? '';
         $drink->breeding_method = $validated['breeding_method'] ?? '';
         $drink->format = $validated['format'] ?? '';
+        $drink->serving_temperature = $validated['serving_temperature'] ?? '';
+        $drink->nose = $validated['nose'] ?? '';
         $drink->certifications = $validated['certifications'] ?? '';
         $drink->is_active = $validated['is_active'] ?? 1;
 
@@ -132,6 +136,14 @@ class DrinkController extends Controller
 
         if ($request->has('format')) {
             $drink->format = request('format');
+        }
+
+        if ($request->has('serving_temperature')) {
+            $drink->serving_temperature = request('serving_temperature');
+        }
+
+        if ($request->has('nose')) {
+            $drink->nose = request('nose');
         }
 
         if ($request->has('certifications')) {
