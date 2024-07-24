@@ -28,6 +28,15 @@ class DrinkController extends Controller
             'origin' => 'nullable',
             'production_method' => 'nullable',
             'flavour' => 'nullable',
+            'origin' => 'nullable',
+            'grape_variety' => 'nullable',
+            'producer' => 'nullable',
+            'denomination' => 'nullable',
+            'vintage' => 'nullable',
+            'breeding_method' => 'nullable',
+            'format' => 'nullable',
+            'certifications' => 'nullable',
+            'is_active' => 'nullable',
             'category_id' => 'nullable',
             'venue_id' => 'nullable'
         ]);
@@ -42,21 +51,20 @@ class DrinkController extends Controller
         $drink->origin = $validated['origin'] ?? '';
         $drink->production_method = $validated['production_method'] ?? '';
         $drink->flavour = $validated['flavour'] ?? '';
+        $drink->grape_variety = $validated['grape_variety'] ?? '';
+        $drink->producer = $validated['producer'] ?? '';
+        $drink->denomination = $validated['denomination'] ?? '';
+        $drink->vintage = $validated['vintage'] ?? '';
+        $drink->breeding_method = $validated['breeding_method'] ?? '';
+        $drink->format = $validated['format'] ?? '';
+        $drink->certifications = $validated['certifications'] ?? '';
+        $drink->is_active = $validated['is_active'] ?? 1;
+
         $drink->category_id = $validated['category_id'];
         $drink->venue_id = $validated['venue_id'];
     
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            if ($image->isValid()) {
-                $imageName = time().'.'.$image->getClientOriginalExtension();
-                $destinationPath = public_path('/storage');
-                $image->move($destinationPath, $imageName);
-                $drink->image = $imageName;
-            } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
-            }
-        } else {
-            $drink->image = $validated['image'] ?? "";
+        if ($request->has('image')) {   
+            $drink->image = $request->input('image');
         }
     
         $drink->save();
@@ -102,6 +110,34 @@ class DrinkController extends Controller
             $drink->flavour = request('flavour');
         }
 
+        if ($request->has('grape_variety')) {
+            $drink->grape_variety = request('grape_variety');
+        }
+
+        if ($request->has('producer')) {
+            $drink->producer = request('producer');
+        }
+
+        if ($request->has('denomination')) {
+            $drink->denomination = request('denomination');
+        }
+
+        if ($request->has('vintage')) {
+            $drink->vintage = request('vintage');
+        }
+
+        if ($request->has('breeding_method')) {
+            $drink->breeding_method = request('breeding_method');
+        }
+
+        if ($request->has('format')) {
+            $drink->format = request('format');
+        }
+
+        if ($request->has('certifications')) {
+            $drink->certifications = request('certifications');
+        }
+
         if ($request->has('category_id')) {
             $drink->category_id = request('category_id');
         }
@@ -113,16 +149,8 @@ class DrinkController extends Controller
             $drink->is_active = request('is_active');
         }
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            if ($image->isValid()) {
-                $imageName = time().'.'.$image->getClientOriginalExtension();
-                $destinationPath = public_path('/storage');
-                $image->move($destinationPath, $imageName);
-                $drink->image = $imageName;
-            } else {
-                return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
-            }
+        if ($request->has('image')) {   
+            $drink->image = $request->input('image');
         }
 
         $drink->save();

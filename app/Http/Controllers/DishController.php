@@ -48,12 +48,8 @@ class DishController extends Controller
         $dish->category_id = $validated['category_id'];
         $dish->venue_id = $validated['venue_id'];
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('immagini', 'images');
-            $dish->image = '/storage/' . $imagePath;
-        } else {
-            $dish->image = $validated['image'] ?? "";
+        if ($request->has('image')) {   
+            $dish->image = $request->input('image');
         }
 
         $dish->save();
