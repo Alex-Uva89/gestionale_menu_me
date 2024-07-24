@@ -259,7 +259,7 @@ export default {
                     formData.append('icon', url);
                     
                     if (url) {
-                        return axios.post('/api/allergens', formData{
+                        return axios.post('/api/allergens', formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
