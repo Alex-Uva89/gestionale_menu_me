@@ -253,6 +253,8 @@ export default {
             const formData = new FormData();
             formData.append('name', name);
 
+            console.log('ICON CONTENT')
+            console.log(this.form.icon)
             this.uploadImageIcon(this.form.icon)
                 .then(response => {
                     const url = response.data.data.url;
