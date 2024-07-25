@@ -499,11 +499,14 @@ export default {
             addFieldToFormData('nose', this.drink_category.nose);
             addFieldToFormData('certifications', this.drink_category.certifications);
 
+            console.log(formData);
+
             const submitForm = (imageURL) => {
                 if (imageURL) {
                     addFieldToFormData('image', imageURL);
                 }
-
+                
+                console.log(formData);
                 axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
