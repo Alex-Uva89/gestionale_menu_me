@@ -17,7 +17,13 @@ defineProps({
 
 <aside id="sidebar-multi-level-sidebar" class="flex flex-col top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 border-e-2 border-black" aria-label="Sidebar">
    <div class="header-sidebar px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <ApplicationLogo />
+      <div class="flex lg:justify-center lg:col-start-2">
+                            <img
+                                src="img/mammaelvira-logo_text_rect_alt_01.svg"
+                                alt="Laravel"
+                                class="w-32 h-32"
+                            />
+      </div>
       <ul class="max-h-96 overflow-y-scroll scrolling space-y-2 font-medium">
          <li>
             <a @click="selectValueButton('Dashboard')" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer">
@@ -119,7 +125,6 @@ a:hover {
 </style>
 
 <script>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Footer from '@/Partials/Footer.vue';
 
 export default {
