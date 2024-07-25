@@ -20,6 +20,7 @@ export default defineConfig({
     ],
     server: {
         https: true,
+        cors: true,
     },
     build: {
         rollupOptions: {

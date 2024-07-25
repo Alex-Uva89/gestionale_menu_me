@@ -602,15 +602,6 @@ export default {
 
   },
   created() {
-          console.log(this.drink_category)
-
-          // this.localDrinkEnotecaCategory = this.category_venues.map(category => {
-          //     let drinks = this.drink_category.filter(drink => drink.category_id === category.id);
-          //     return {
-          //         ...category,
-          //         drinks: drinks
-          //     };
-          // });
 
           this.allergenDrinks = this.allergensDrinks
   },
