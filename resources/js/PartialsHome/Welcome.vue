@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import ApplicationLogo from '../Components/ApplicationLogo.vue';
 
 export default {
     components: {

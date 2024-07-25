@@ -1,6 +1,4 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Footer from '@/Partials/Footer.vue';
 
 defineProps({
       messages: Array,
@@ -121,10 +119,15 @@ a:hover {
 </style>
 
 <script>
-import { ref } from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import Footer from '@/Partials/Footer.vue';
 
 export default {
     emits: ['venueName', 'venueColor', 'valueButton'],
+    components: {
+         ApplicationLogo,
+         Footer
+      },
     methods: {
         toggleDropdown() {
             const dropdown = document.getElementById('dropdown-example');

@@ -1,6 +1,5 @@
 <script setup>
 import ButtonCss from '@/Components/ButtonCss.vue';
-import Modal from '@/Components/Modal.vue';
 import Category from '@/Components/Sections/Category.vue';
 import CategoryDrink from '@/Components/Sections/CategoryDrink.vue';
 
@@ -136,7 +135,6 @@ import axios from 'axios';
 export default {
     emits: ['dishAdded', 'drinkAdded'],
     components: {
-        Modal,
         Category,
         CategoryDrink,
         ButtonCss,
