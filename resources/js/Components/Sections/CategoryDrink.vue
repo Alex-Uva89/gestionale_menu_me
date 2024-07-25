@@ -500,7 +500,8 @@ export default {
             addFieldToFormData('certifications', this.drink_category.certifications);
 
             const submitForm = (imageURL) => {
-                if (imageURL === null) {
+              console.log('Image URL:', imageURL);
+                if (imageURL) {
                     formData.append('image', imageURL);
                 }
 
@@ -548,9 +549,7 @@ export default {
                 });
             };
 
-            if (this.file === null || this.file === undefined) {
-              submitForm(null);
-            } else {
+            if (this.file) {
               this.uploadImage(this.file)
                   .then(response => {
                       submitForm(response.data.data.url);
@@ -560,6 +559,8 @@ export default {
                       // Puoi scegliere di inviare il form anche se c'è un errore di upload
                       submitForm('null');
                   });
+            } else {
+              submitForm(null);
             }
         },
         matchAllergens(drinkId, allergenId) {
