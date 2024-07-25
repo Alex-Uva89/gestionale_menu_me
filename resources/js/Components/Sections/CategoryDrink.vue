@@ -85,7 +85,7 @@ const props = defineProps({
                   ❌
         </ButtonCss>
         <h2 class="h-16 font-bold text-2xl text-center">
-            Aggiungi nuova bevanda
+            Aggiungi nuova bevanda a {{ category_venues.find(category => category.id === drinkToCreateId).name }}
         </h2>
         <form  @submit.prevent="confirmAddDrinks">
           <div class="grid-show-drink">
@@ -375,6 +375,7 @@ export default {
       localDrinkEnotecaCategory: [],
       allergensDrinks : this.allergensDrinks,
       selectedAllergens: [],
+      venueId: null,
     };
   },
   methods: {
@@ -465,6 +466,7 @@ export default {
         addDrink(id) {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
+          this.venueId = this.category_venues.find(category => category.id === drinkToCreateId).id
         },
         confirmAddDrinks() {
             let formData = new FormData();
@@ -485,7 +487,7 @@ export default {
             addFieldToFormData('production_method', this.drink_category.production_method);
             addFieldToFormData('flavour', this.drink_category.flavour);
             addFieldToFormData('category_id', this.drinkToCreateId);
-            addFieldToFormData('venue_id', this.selectedVenueId);
+            addFieldToFormData('venue_id', this.venueId);
             addFieldToFormData('grape_variety', this.drink_category.grape_variety);
             addFieldToFormData('producer', this.drink_category.producer);
             addFieldToFormData('denomination', this.drink_category.denomination);
