@@ -17,8 +17,6 @@ class DrinkController extends Controller
 
     public function store(Request $request)
     {
-        
-        dd( $request->all());
 
         $validated = $request->validate([
             'name' => 'required',
@@ -45,9 +43,7 @@ class DrinkController extends Controller
             'venue_id' => 'nullable'
         ]);
 
-        Log::info('Validation passed.', $validated);
-
-        try {
+        
             $drink = new Drink();
             $drink->name = $validated['name'];
             $drink->description = $validated['description'] ?? '';
@@ -76,13 +72,8 @@ class DrinkController extends Controller
             }
 
             $drink->save();
-            Log::info('Drink saved successfully.');
 
             return response()->json($drink, 201);
-        } catch (\Exception $e) {
-            Log::error('Error saving drink: ', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Failed to save drink.'], 500);
-        }
     }
 
     public function update(Request $request, $id, Response $response)
