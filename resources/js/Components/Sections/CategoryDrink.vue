@@ -241,10 +241,13 @@ const props = defineProps({
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
                   <div class="w-full flex flex-col gap-2">
-                      <div class="font-black uppercase">
-                          formato:
-                      </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.format" :placeholder="drink_category.format">
+                      <div class="font-black           const category = this.category_venues.find(category => category.id === this.drinkToCreateId);
+          if (category) {
+              this.venueId = category.id;
+          } else {
+              console.error('Categoria non trovata');
+              // Gestisci il caso in cui la categoria non viene trovata
+          }t class="w-full h-8" type="text" v-model="drink_category.format" :placeholder="drink_category.format">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: temperatura;">
@@ -466,7 +469,7 @@ export default {
         addDrink(id) {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
-          this.venueId = this.category_venues.find(category => category.id === drinkToCreateId).id
+          this.venueId = this.category_venues.find(category => category.id === this.drinkToCreateId).id;
         },
         confirmAddDrinks() {
             let formData = new FormData();
