@@ -57,7 +57,7 @@ class DrinkController extends Controller
             $drink->grape_variety = $validated['grape_variety'] ?? '';
             $drink->producer = $validated['producer'] ?? '';
             $drink->denomination = $validated['denomination'] ?? '';
-            $drink->vintage = $validated['vintage'] ?? '';
+            $drink->vintage = !empty($validated['vintage']) ? $validated['vintage'] : null;
             $drink->breeding_method = $validated['breeding_method'] ?? '';
             $drink->format = $validated['format'] ?? '';
             $drink->serving_temperature = $validated['serving_temperature'] ?? '';
