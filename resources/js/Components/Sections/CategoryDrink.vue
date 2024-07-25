@@ -466,7 +466,7 @@ export default {
         addDrink(id) {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
-          this.venueId = this.category_venues.find(category => category.id === this.drinkToCreateId).id;
+          this.venueId = this.category_venues.find(category => console.log(category));
         },
         confirmAddDrinks() {
             let formData = new FormData();
