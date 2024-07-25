@@ -21,7 +21,7 @@ defineProps({
                             <img
                                 src="img/mammaelvira-color_2024.png"
                                 alt="Laravel"
-                                class="w-32 h-32"
+                                class="w-32 h-24"
                             />
       </div>
       <ul class="max-h-96 overflow-y-scroll scrolling space-y-2 font-medium">
