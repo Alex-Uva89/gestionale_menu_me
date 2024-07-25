@@ -468,26 +468,33 @@ export default {
         },
         confirmAddDrinks() {
             let formData = new FormData();
-            formData.append('name', this.drink_category.name);
-            formData.append('description', this.drink_category.description);
-            formData.append('price', this.drink_category.price);
-            formData.append('instruction', this.drink_category.instruction);
-            formData.append('degrees', this.drink_category.degrees);
-            formData.append('origin', this.drink_category.origin);
-            formData.append('color', this.drink_category.color);
-            formData.append('production_method', this.drink_category.production_method);
-            formData.append('flavour', this.drink_category.flavour);
-            formData.append('category_id', this.drinkToCreateId);
-            formData.append('venue_id', this.selectedVenueId);
-            formData.append('grape_variety', this.drink_category.grape_variety);
-            formData.append('producer', this.drink_category.producer);
-            formData.append('denomination', this.drink_category.denomination);
-            formData.append('vintage', this.drink_category.vintage);
-            formData.append('breeding_method', this.drink_category.breeding_method);
-            formData.append('format', this.drink_category.format);
-            formData.append('serving_temperature', this.drink_category.serving_temperature);
-            formData.append('nose', this.drink_category.nose);
-            formData.append('certifications', this.drink_category.certifications);
+
+            const addFieldToFormData = (key, value) => {
+                if (value !== undefined && value !== null) {
+                    formData.append(key, value);
+                }
+            };
+
+            addFieldToFormData('name', this.drink_category.name);
+            addFieldToFormData('description', this.drink_category.description);
+            addFieldToFormData('price', this.drink_category.price);
+            addFieldToFormData('instructions', this.drink_category.instructions); // corrected name
+            addFieldToFormData('degrees', this.drink_category.degrees);
+            addFieldToFormData('origin', this.drink_category.origin);
+            addFieldToFormData('color', this.drink_category.color);
+            addFieldToFormData('production_method', this.drink_category.production_method);
+            addFieldToFormData('flavour', this.drink_category.flavour);
+            addFieldToFormData('category_id', this.drinkToCreateId);
+            addFieldToFormData('venue_id', this.selectedVenueId);
+            addFieldToFormData('grape_variety', this.drink_category.grape_variety);
+            addFieldToFormData('producer', this.drink_category.producer);
+            addFieldToFormData('denomination', this.drink_category.denomination);
+            addFieldToFormData('vintage', this.drink_category.vintage);
+            addFieldToFormData('breeding_method', this.drink_category.breeding_method);
+            addFieldToFormData('format', this.drink_category.format);
+            addFieldToFormData('serving_temperature', this.drink_category.serving_temperature);
+            addFieldToFormData('nose', this.drink_category.nose);
+            addFieldToFormData('certifications', this.drink_category.certifications);
 
             const submitForm = (imageURL) => {
                 if (imageURL) {
@@ -551,13 +558,6 @@ export default {
             } else {
                 submitForm(null);
             }
-        },
-        resetForm() {
-          this.drinkToCreateId = '';
-          this.drink_category = { name: '', description: '', price: null, image: null };
-          this.selectedAllergens = [];
-          this.file = null;
-          this.imagePreview = null;
         },
         matchAllergens(drinkId, allergenId) {
 

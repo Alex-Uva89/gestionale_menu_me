@@ -24,7 +24,7 @@ class DrinkController extends Controller
             'name' => 'required',
             'price' => 'required',
             'description' => 'nullable',
-            'instructions' => 'nullable',
+            'instructions' => 'nullable', // corrected name
             'image' => 'nullable',
             'color' => 'nullable',
             'degrees' => 'nullable',
