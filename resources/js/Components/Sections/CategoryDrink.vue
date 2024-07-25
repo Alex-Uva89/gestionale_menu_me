@@ -9,6 +9,7 @@ const props = defineProps({
     allergens: Array,
     allergensDrinks: Array,
     drinks: Array,
+    venue: Number,
 });
 
 
@@ -375,7 +376,7 @@ export default {
       localDrinkEnotecaCategory: [],
       allergensDrinks : this.allergensDrinks,
       selectedAllergens: [],
-      venueId: null,
+      venueId: this.venue,
     };
   },
   methods: {
@@ -466,7 +467,7 @@ export default {
         addDrink(id) {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
-          this.venueId = this.category_venues.find(category => console.log(category));
+          console.log(this.venueId)
         },
         confirmAddDrinks() {
             let formData = new FormData();
