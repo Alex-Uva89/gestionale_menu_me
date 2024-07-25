@@ -130,7 +130,6 @@ import Footer from '@/Partials/Footer.vue';
 export default {
     emits: ['venueName', 'venueColor', 'valueButton'],
     components: {
-         ApplicationLogo,
          Footer
       },
     methods: {
