@@ -328,7 +328,7 @@
      </div>
 
      <div v-if="showModalEditInstruction" class="z-50">
-        <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
+        <ModalAction :showModal="showModalEditInstruction" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica i consigli del drink: 
             </h2>
@@ -336,12 +336,12 @@
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     descrizione attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDrink.description }}
+                        {{ selectedDrink.instructions }}
                     </span>
             </div>
 
             <label for="name" class="font-bold text-xl">Consiglio:</label>
-            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description">
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.instructions">
 
 
             <div class="flex w-full justify-between py-5">
@@ -409,7 +409,7 @@
      </div>
 
      <div v-if="showModalEditGrades" class="z-50">
-        <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
+        <ModalAction :showModal="showModalEditGrades" :selectedDrink="selectedDrink">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica i gradi del drink: 
             </h2>
@@ -800,6 +800,18 @@ export default {
         },
         openInputInstruction(){
             this.showModalEditInstruction = true;
+        },
+        confirmEditInstruction(dishNew){
+            this.selectedDrink.instructions = dishNew.instructions
+
+            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+                instructions: dishNew.instructions
+            })
+
+            this.showModalEditInstruction = false;
+        },
+        openInputDenomination(){
+            this.showModalEditDenomination = true;
         },
         confirmEditDescription(dishNew){
             this.selectedDrink.description = dishNew.description
