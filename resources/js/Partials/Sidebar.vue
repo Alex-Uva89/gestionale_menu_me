@@ -19,7 +19,7 @@ defineProps({
    <div class="header-sidebar px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800">
       <div class="flex lg:justify-center lg:col-start-2">
                             <img
-                                src="img/mammaelvira-logo_text_rect_alt_01.svg"
+                                src="img/mammaelvira-color_2024.png"
                                 alt="Laravel"
                                 class="w-32 h-32"
                             />
