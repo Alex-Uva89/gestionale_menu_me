@@ -560,7 +560,7 @@ export default {
                       submitForm('null');
                   });
             } else {
-              submitForm(null);
+              submitForm('ciccio');
             }
         },
         matchAllergens(drinkId, allergenId) {
