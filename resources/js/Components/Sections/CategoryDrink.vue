@@ -508,7 +508,10 @@ export default {
                     addFieldToFormData('image', imageURL);
                 }
                 
-                console.log(formData);
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+
                 axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'

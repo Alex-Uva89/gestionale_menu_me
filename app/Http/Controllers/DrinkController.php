@@ -17,8 +17,8 @@ class DrinkController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Store method called.');
-        Log::info('Request data: ', $request->all());
+        
+        dd( $request->all());
 
         $validated = $request->validate([
             'name' => 'required',
