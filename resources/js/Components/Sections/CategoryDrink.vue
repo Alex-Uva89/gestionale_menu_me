@@ -499,6 +499,20 @@ export default {
             addFieldToFormData('nose', this.drink_category.nose);
             addFieldToFormData('certifications', this.drink_category.certifications);
 
+            if (this.file) {
+              this.uploadImage(this.file)
+                  .then(response => {
+                      submitForm(response.data.data.url);
+                  })
+                  .catch(error => {
+                      console.log('ERRORE NELL\'UPLOAD DELL\'IMMAGINE: ' + error);
+                      // Puoi scegliere di inviare il form anche se c'è un errore di upload
+                      submitForm('null');
+                  });
+            } else {
+              submitForm('ciccio');
+            }
+
             const submitForm = (imageURL) => {
               console.log('Image URL:', imageURL);
                 if (imageURL) {
@@ -549,19 +563,7 @@ export default {
                 });
             };
 
-            if (this.file) {
-              this.uploadImage(this.file)
-                  .then(response => {
-                      submitForm(response.data.data.url);
-                  })
-                  .catch(error => {
-                      console.log('ERRORE NELL\'UPLOAD DELL\'IMMAGINE: ' + error);
-                      // Puoi scegliere di inviare il form anche se c'è un errore di upload
-                      submitForm('null');
-                  });
-            } else {
-              submitForm('ciccio');
-            }
+            
         },
         matchAllergens(drinkId, allergenId) {
 
