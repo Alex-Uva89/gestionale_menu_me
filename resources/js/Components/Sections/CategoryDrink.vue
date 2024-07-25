@@ -499,7 +499,9 @@ export default {
             addFieldToFormData('nose', this.drink_category.nose);
             addFieldToFormData('certifications', this.drink_category.certifications);
 
-            console.log(formData);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
 
             const submitForm = (imageURL) => {
                 if (imageURL) {
