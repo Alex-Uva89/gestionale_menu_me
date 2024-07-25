@@ -500,7 +500,7 @@ export default {
             addFieldToFormData('certifications', this.drink_category.certifications);
 
             const submitForm = (imageURL) => {
-                if (imageURL) {
+                if (imageURL === null) {
                     formData.append('image', imageURL);
                 }
 
