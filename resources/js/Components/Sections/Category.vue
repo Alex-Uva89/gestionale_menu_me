@@ -270,6 +270,7 @@ export default {
       dishActive: [],
       newDrinko: this.newDrink,
       dish_category: [],
+      venue: this.venue,
     };
   },
   methods: {
@@ -378,15 +379,22 @@ export default {
         },
         confirmAddDishes() {
             let formData = new FormData();
-            formData.append('name', this.dish_category.name);
-            formData.append('description', this.dish_category.description);
-            formData.append('price', this.dish_category.price);
-            formData.append('category_id', this.dishToCreateId);
-            formData.append('venue_id', this.venue);
+
+            const addFieldToFormData = (key, value) => {
+                if (value !== undefined && value !== null) {
+                    formData.append(key, value);
+                }
+            };
+
+            addFieldToFormData('name', this.dish_category.name);
+            addFieldToFormData('description', this.dish_category.description);
+            addFieldToFormData('price', this.dish_category.price);
+            addFieldToFormData('category_id', this.dishToCreateId);
+            addFieldToFormData('venue_id', this.venue);
 
             const submitForm = (imageURL) => {
                 if (imageURL) {
-                    formData.append('image', imageURL);
+                  addFieldToFormData('image', imageURL);
                 }
 
                 axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {

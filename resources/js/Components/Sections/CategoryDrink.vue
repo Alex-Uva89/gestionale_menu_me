@@ -66,7 +66,6 @@ const props = defineProps({
                 </div>
                 </li>
               </ul>
-
               
               <div type="button" @click="addDrink(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
                 <div class="font-bold text-lg">&#10133;</div>
@@ -499,18 +498,12 @@ export default {
             addFieldToFormData('nose', this.drink_category.nose);
             addFieldToFormData('certifications', this.drink_category.certifications);
 
-            for (let [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
-            }
-
+          
             const submitForm = (imageURL) => {
                 if (imageURL) {
                     addFieldToFormData('image', imageURL);
                 }
                 
-                for (let [key, value] of formData.entries()) {
-                    console.log(`${key}: ${value}`);
-                }
 
                 axios.post(`/api/drinks/${this.drinkToCreateId}`, formData, {
                     headers: {
@@ -518,7 +511,6 @@ export default {
                     }
                 })
                 .then(response => {
-                    console.log('Response data:', response.data);
                     let newDrink;
                     if (typeof response.data === 'string') {
                         let data = response.data;
@@ -610,13 +602,15 @@ export default {
 
   },
   created() {
-          this.localDrinkEnotecaCategory = this.category_venues.map(category => {
-              let drinks = this.drink_category.filter(drink => drink.category_id === category.id);
-              return {
-                  ...category,
-                  drinks: drinks
-              };
-          });
+          console.log(this.drink_category)
+
+          // this.localDrinkEnotecaCategory = this.category_venues.map(category => {
+          //     let drinks = this.drink_category.filter(drink => drink.category_id === category.id);
+          //     return {
+          //         ...category,
+          //         drinks: drinks
+          //     };
+          // });
 
           this.allergenDrinks = this.allergensDrinks
   },
