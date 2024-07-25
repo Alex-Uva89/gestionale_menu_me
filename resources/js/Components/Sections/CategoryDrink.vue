@@ -54,7 +54,7 @@ const props = defineProps({
                 <div class="w-full h-full" :class="drink.is_active ? 'opacity-100' : 'opacity-20'">
                   <div @click="openShowDrink(drink)" class="container-drinks px-3 cursor-pointer">
                     <div class="flex">
-                      <img :src="drink.image == 'null' || drink.image === '' || drink.image === 'undefined' ? 'img/defaultDish.jpg' : drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                      <img :src="drink.image == null || drink.image === '' || drink.image === 'undefined' ? 'img/defaultDish.jpg' : drink.image "  alt="drink image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
                     </div>
                     <div class="flex flex-col name">
                       <span class="first-letter:uppercase text-bold">{{ drink.name }}</span>
