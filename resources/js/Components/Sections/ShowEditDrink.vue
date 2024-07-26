@@ -1183,7 +1183,7 @@ export default {
         "allevamento allevamento formato formato"
         "temperatura temperatura olfatto olfatto"
         "certificazioni certificazioni certificazioni certificazioni"
-        ". . elimina elimina . .";
+        "elimina elimina elimina elimina";
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: repeat(8, 1fr);
     /* Usa 8 righe di altezza uguale, adatta se necessario */
