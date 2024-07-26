@@ -360,6 +360,33 @@
                 </ModalAction>
             </div>
 
+            <div v-if="showModalEditDescription" class="z-50">
+                <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Modifica gli ingredienti del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        ingredienti attuali:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.description }}
+                        </span>
+                    </div>
+
+                    <label for="name" class="font-bold text-xl">Ingredienti:</label>
+                    <input type="text" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.description">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmEditDescription(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalEditDescription = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
             <div v-if="showModalEditImg" class="z-50">
                 <ModalAction :showModal="showModalEditImg" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
