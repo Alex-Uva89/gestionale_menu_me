@@ -38,7 +38,7 @@ class DishController extends Controller
             'description' => 'nullable',
             'category_id' => 'nullable',
             'venue_id' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable',
         ]);
 
         $dish = new Dish();

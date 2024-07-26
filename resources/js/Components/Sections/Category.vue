@@ -452,6 +452,7 @@ export default {
                     })
                     .catch(error => {
                         console.log('ERRORE AHI AHI AHI: ' + error);
+                        submitForm('null');
                     });
             } else {
                 submitForm(null);
