@@ -255,7 +255,7 @@
                         Modifica
                     </ButtonCss>
                 </div>
-                <div class="button_delete">
+                <div class="button_delete" style="grid-area: elimina;">
                     <div @click="openDeleteModalDish(selectedDrink.id)"
                         class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
                         Elimina drink: {{ selectedDrink.name }}
@@ -1182,7 +1182,8 @@ export default {
         "denominazione denominazione annata annata"
         "allevamento allevamento formato formato"
         "temperatura temperatura olfatto olfatto"
-        "certificazioni certificazioni . .";
+        "certificazioni certificazioni certificazioni certificazioni"
+        ". . elimina elimina . .";
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: repeat(8, 1fr);
     /* Usa 8 righe di altezza uguale, adatta se necessario */
