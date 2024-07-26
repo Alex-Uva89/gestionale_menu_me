@@ -254,11 +254,11 @@
                     <ButtonCss @click="openInputCertification()">
                         Modifica
                     </ButtonCss>
-                    <div class="button_delete">
-                        <div @click="openDeleteModalDish(selectedDrink.id)"
-                            class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
-                            Elimina drink: {{ selectedDrink.name }}
-                        </div>
+                </div>
+                <div class="button_delete">
+                    <div @click="openDeleteModalDish(selectedDrink.id)"
+                        class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
+                        Elimina drink: {{ selectedDrink.name }}
                     </div>
                 </div>
             </div>
@@ -1170,13 +1170,13 @@ export default {
     margin: 20px 0;
     height: 62vh;
     grid-template-areas:
-        "nome nome immagine immagine"
-        "prezzo prezzo immagine immagine"
-        "allergeni allergeni immagine immagine"
-        "abbinamenti abbinamenti immagine immagine"
-        "consigli consigli immagine immagine"
-        "gradi gradi origine origine"
-        "colore colore produzione produzione"
+        "nome nome nome immagine"
+        "prezzo prezzo prezzo immagine"
+        "allergeni allergeni allergeni immagine"
+        "abbinamenti abbinamenti abbinamenti immagine"
+        "consigli consigli consigli immagine"
+        "gradi origine origine immagine"
+        "colore produzione produzione immagine"
         "sapore sapore ingredienti ingredienti"
         "vitigno vitigno produttore produttore"
         "denominazione denominazione annata annata"
