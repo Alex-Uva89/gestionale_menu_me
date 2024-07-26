@@ -1,267 +1,267 @@
 <template>
     <button class="absolute top-5 right-5" @click="showModalDrink()">❌</button>
     <div class="container-drink-show" :key="localComponentAllergen">
-        <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
-            Scheda del drink:
-            <span class="text-4xl uppercase text-red-500">
-                {{ selectedDrink.name }}
-            </span>
-            <SwitchButton :value="selectedDrink.is_active === 1 || selectedDrink.is_active === true"
-                @switchChanged="value => updateIsShowStatus(selectedDrink.id, value)" />
-        </h2>
-        <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
-            <span class="font-bold text-xl">ID Database: {{ selectedDrink.id }}</span>
-        </div>
-        <div class="grid-show-drink">
-
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        nome:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.name }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputName()">
-                    Modifica
-                </ButtonCss>
+            <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
+                Scheda del drink:
+                <span class="text-4xl uppercase text-red-500">
+                    {{ selectedDrink.name }}
+                </span>
+                <SwitchButton :value="selectedDrink.is_active === 1 || selectedDrink.is_active === true"
+                    @switchChanged="value => updateIsShowStatus(selectedDrink.id, value)" />
+            </h2>
+            <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
+                <span class="font-bold text-xl">ID Database: {{ selectedDrink.id }}</span>
             </div>
-            <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
-                <div class="flex justify-between items-center">
+            <div class="grid-show-drink">
+
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            nome:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.name }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputName()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
+                    <div class="flex justify-between items-center">
+                        <span class="font-black me-2 uppercase">
+                            immagine
+                        </span>
+                        <ButtonCss @click="openInputImg()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
+                    <img :src="selectedDrink.image === 'null' || selectedDrink.image === 'undefined' ? 'img/defaultDish.jpg' : selectedDrink.image"
+                        :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                </div>
+                <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                     <span class="font-black me-2 uppercase">
-                        immagine
+                        Allergeni:
                     </span>
-                    <ButtonCss @click="openInputImg()">
+
+                    <ul class="flex gap-2" v-if="activeAllergens.length">
+
+                        <li v-for="allergen in activeAllergens" :key="allergen.id" class="rounded-full cursor-pointer"
+                            :id="`${selectedDrink.id}-${allergen.id}`" @click="matchDish(selectedDrink.id, allergen.id)"
+                            :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }">
+                            <img :src="allergen.icon" :alt="allergen.name + ' icon'"
+                                class="object-contain w-10 h-10 rounded-full border border-3 border-black">
+                        </li>
+                    </ul>
+                    <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center"
+                        v-else>
+                        Non sono presenti allergeni attivi
+                    </div>
+
+
+                </div>
+                <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                    <div class="w-full flex justify-between items-center font-black uppercase">
+                        Consigli:
+                        <ButtonCss @click="openInputInstruction()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
+                    <span class="uppercase font-semibold text-red-500">
+                        {{ selectedDrink.instructions === 'undefined' ? 'Non ci sono consigli in questo drink al momento' :
+                        selectedDrink.instructions }}
+                    </span>
+                </div>
+                <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            prezzo:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.price }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputPrice()">
                         Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDrink.image === 'null' || selectedDrink.image === 'undefined' ? 'img/defaultDish.jpg' : selectedDrink.image"
-                    :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
-            </div>
-            <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
-                <span class="font-black me-2 uppercase">
-                    Allergeni:
-                </span>
-
-                <ul class="flex gap-2" v-if="activeAllergens.length">
-
-                    <li v-for="allergen in activeAllergens" :key="allergen.id" class="rounded-full cursor-pointer"
-                        :id="`${selectedDrink.id}-${allergen.id}`" @click="matchDish(selectedDrink.id, allergen.id)"
-                        :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }">
-                        <img :src="allergen.icon" :alt="allergen.name + ' icon'"
-                            class="object-contain w-10 h-10 rounded-full border border-3 border-black">
-                    </li>
-                </ul>
-                <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center"
-                    v-else>
-                    Non sono presenti allergeni attivi
-                </div>
-
-
-            </div>
-            <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
-                <div class="w-full flex justify-between items-center font-black uppercase">
-                    Consigli:
-                    <ButtonCss @click="openInputInstruction()">
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: gradi;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            gradi:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.degrees }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputGrades()">
                         Modifica
                     </ButtonCss>
                 </div>
-                <span class="uppercase font-semibold text-red-500">
-                    {{ selectedDrink.instructions === 'undefined' ? 'Non ci sono consigli in questo drink al momento' :
-                    selectedDrink.instructions }}
-                </span>
-            </div>
-            <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        prezzo:
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            colore:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.color }}
+                        </span>
                     </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.price }}
-                    </span>
+                    <ButtonCss @click="openInputColor()">
+                        Modifica
+                    </ButtonCss>
                 </div>
-                <ButtonCss @click="openInputPrice()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: gradi;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        gradi:
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produzione;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            metodo di produzione:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.production_method }}
+                        </span>
                     </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.degrees }}
-                    </span>
+                    <ButtonCss @click="openInputProd()">
+                        Modifica
+                    </ButtonCss>
                 </div>
-                <ButtonCss @click="openInputGrades()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        colore:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.color }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputColor()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produzione;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        metodo di produzione:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.production_method }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputProd()">
-                    Modifica
-                </ButtonCss>
-            </div>
 
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: sapore;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        sapore:
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: sapore;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            sapore:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.flavour }}
+                        </span>
                     </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.flavour }}
-                    </span>
+                    <ButtonCss @click="openInputFlavour()">
+                        Modifica
+                    </ButtonCss>
                 </div>
-                <ButtonCss @click="openInputFlavour()">
-                    Modifica
-                </ButtonCss>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            ingredienti:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.description }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputDescription()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            origine:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.origin }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputOrigin()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: vitigno;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            vitigno:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.grape_variety }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputGrape()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produttore;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            produttore:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.producer }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputProducer()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: denominazione;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            denominazione:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.denomination }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputDenomination()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: annata;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            annata:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.vintage }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputVintage()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            metodo di allevamento:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.breeding_method }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputBreeding()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            formato:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.format }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputFormat()">
+                        Modifica
+                    </ButtonCss>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: certificazioni;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            certificazioni:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.certifications }}
+                        </span>
+                    </div>
+                    <ButtonCss @click="openInputCertification()">
+                        Modifica
+                    </ButtonCss>
+                    <div class="button_delete">
+                        <div @click="openDeleteModalDish(selectedDrink.id)"
+                            class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
+                            Elimina drink: {{ selectedDrink.name }}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        ingredienti:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.description }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputDescription()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        origine:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.origin }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputOrigin()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: vitigno;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        vitigno:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.grape_variety }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputGrape()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produttore;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        produttore:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.producer }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputProducer()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: denominazione;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        denominazione:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.denomination }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputDenomination()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: annata;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        annata:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.vintage }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputVintage()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        metodo di allevamento:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.breeding_method }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputBreeding()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        formato:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.format }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputFormat()">
-                    Modifica
-                </ButtonCss>
-            </div>
-            <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: certificazioni;">
-                <div class="flex gap-2">
-                    <div class="font-black uppercase">
-                        certificazioni:
-                    </div>
-                    <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.certifications }}
-                    </span>
-                </div>
-                <ButtonCss @click="openInputCertification()">
-                    Modifica
-                </ButtonCss>
-                <div class="button_delete">
-                    <div @click="openDeleteModalDish(selectedDrink.id)"
-                        class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
-                        Elimina drink: {{ selectedDrink.name }}
-                    </div>
-                </div>
-            </div>
-        </div>
 
             <!-- MODALS -->
             <div v-if="showModalDeleteDish" class="z-50">
@@ -742,7 +742,7 @@
                     </div>
                 </ModalAction>
             </div>
-
+    </div>
 </template>
 
 
