@@ -21,10 +21,10 @@ const props = defineProps({
       <h2 class="p-3"  v-if="!category_venues.some(category => !category.is_drink)">
   ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria food
       </h2>
-     <div 
-     v-for="category in categoryVenues" 
-     class="last:mb-10 last:border-b-2  border-l-2 border-r-2  border-black"
-     :key="category.id">
+      <div 
+      v-for="category in categoryVenues" 
+      class="last:mb-10 last:border-b-2  border-l-2 border-r-2  border-black"
+      :key="category.id">
      <div 
      class="tab category  bg-white" 
      v-if="!category.is_drink">
@@ -120,7 +120,7 @@ const props = defineProps({
                   </span>
                   <ul class="flex gap-2">
                       <template v-for="allergen in allergens">
-                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
+                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer inactive" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
                             :src="allergen.icon" 
                             :alt="allergen.name + ' icon'" 
@@ -136,7 +136,7 @@ const props = defineProps({
               </div>
               <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
                   <div class="w-full flex justify-between items-center font-black uppercase">
-                      Consigli:
+                    Ingredienti:
                   </div>
                   <input class="w-full h-16" type="text" v-model="dish_category.description" :placeholder="dish_category.description">
               </div>
@@ -150,7 +150,7 @@ const props = defineProps({
               </div>
               <div style="grid-area: abbinamenti">
                 <p>Aggiungi abbinamenti:</p>
-                <SelectMultiple :options="drinks && newDrinkPairings" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+                <SelectMultiple :options="getAllDrinks" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
               </div>
           </div>
   
@@ -218,13 +218,15 @@ import ModalAction from '@/Components/ModalAction.vue';
 import ShowDish from '@/Components/Sections/ShowEditDish.vue';
 import ButtonCss from '@/Components/ButtonCss.vue';
 import defaultImgDish from '../../../../public/img/defaultDish.jpg';
+import SelectMultiple from '@/Components/SelectMultiple.vue';
 
 export default {
   components: {
     Switch_button,
     ModalAction,
     ShowDish,
-    ButtonCss
+    ButtonCss,
+    SelectMultiple
   },
   name: 'Category',
   emits: ['update:category_venues'],
@@ -353,12 +355,13 @@ export default {
         },
         toggleAllergen(allergenId) {
           const specificAllergen = document.getElementById(allergenId);
+          const containerSpecificAllergen = specificAllergen.parentElement;
           const index = this.selectedAllergens.indexOf(allergenId);
           if (index === -1) {
-            specificAllergen.classList.add('bg-olive');
+            containerSpecificAllergen.classList.remove('inactive');
             this.selectedAllergens.push(allergenId);
           } else {
-            specificAllergen.classList.remove('bg-olive');
+            containerSpecificAllergen.classList.add('inactive');
             this.selectedAllergens.splice(index, 1);
           }
         },
@@ -391,6 +394,7 @@ export default {
             addFieldToFormData('price', this.dish_category.price);
             addFieldToFormData('category_id', this.dishToCreateId);
             addFieldToFormData('venue_id', this.venue);
+            addFieldToFormData('is_active', 1);
 
             const submitForm = (imageURL) => {
                 if (imageURL) {
@@ -408,6 +412,7 @@ export default {
                         let data = response.data;
                         data = data.substring(data.indexOf('{'));
                         newDish = JSON.parse(data);
+                        console.log(newDish)
                     } else {
                         newDish = response.data;
                     }
@@ -439,6 +444,7 @@ export default {
                     this.dish_category.price = null;
                     this.file = null;
                     this.imagePreview = null;
+                    this.pairings = [];
                 })
                 .catch(error => {
                     console.log('ERRORE AHI AHI AHI: ' + error);
@@ -559,10 +565,11 @@ export default {
             activeDishesCount[category.id] = activeDishes.length;
           });
           return activeDishesCount;
-        }
-  },
-  mounted() {
-    console.log(this.newDrink)
+        },
+
+        getAllDrinks() {
+            return this.drinks.filter(drink => drink.is_active && drink.venue_id === this.venue);
+        },
   },
   watch: {
     newDrink(newVal) {
@@ -611,5 +618,8 @@ export default {
       height: 80%;
   }
 
+  .inactive{
+    opacity: 0.5;
+  }
 
 </style>

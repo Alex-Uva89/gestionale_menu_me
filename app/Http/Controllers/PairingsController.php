@@ -10,11 +10,11 @@ class PairingsController extends Controller
 {
     public function index(): JsonResponse
     {
-        $pairings_enoteca = Dish::with('drinks')->where('venue_id', 3)->get();
+        $pairings_All = Dish::with('drinks')->get();
 
 
         return response()->json([
-            'pairingsEnoteca' => $pairings_enoteca,
+            'pairings' => $pairings_All
         ]);
     }
 }

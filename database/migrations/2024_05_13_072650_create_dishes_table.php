@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image')->deafult('defaultDish.jpg');
+            $table->string('image')->default('defaultDish.jpg');
             $table->integer('price');
             $table->text('description');
             $table->boolean('is_active')->default(false);

@@ -60,7 +60,7 @@
 
 
                 </div>
-                <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                <!-- <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
                     <div class="w-full flex justify-between items-center font-black uppercase">
                         Consigli:
                         <ButtonCss @click="openInputInstruction()">
@@ -71,7 +71,7 @@
                         {{ selectedDrink.instructions === 'undefined' ? 'Non ci sono consigli in questo drink al momento' :
                         selectedDrink.instructions }}
                     </span>
-                </div>
+                </div> -->
                 <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
                     <div class="flex gap-2">
                         <div class="font-black uppercase">
@@ -333,7 +333,7 @@
                 </ModalAction>
             </div>
 
-            <div v-if="showModalEditInstruction" class="z-50">
+            <!-- <div v-if="showModalEditInstruction" class="z-50">
                 <ModalAction :showModal="showModalEditInstruction" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
                         Modifica i consigli del drink:
@@ -358,7 +358,7 @@
                             @click="showModalEditInstruction = false">Annulla</button>
                     </div>
                 </ModalAction>
-            </div>
+            </div> -->
 
             <div v-if="showModalEditDescription" class="z-50">
                 <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
@@ -1198,18 +1198,16 @@ export default {
     height: 62vh;
     grid-template-areas:
         "nome nome nome immagine"
-        "prezzo prezzo prezzo immagine"
+        "prezzo annata formato immagine"
+        "colore origine gradi immagine"
         "allergeni allergeni allergeni immagine"
-        "abbinamenti abbinamenti abbinamenti immagine"
-        "consigli consigli consigli immagine"
-        "gradi origine origine immagine"
-        "colore produzione produzione immagine"
-        "sapore sapore ingredienti ingredienti"
+        "certificazioni certificazioni certificazioni immagine"
+        "denominazione denominazione ingredienti ingredienti"
         "vitigno vitigno produttore produttore"
-        "denominazione denominazione annata annata"
-        "allevamento allevamento formato formato"
         "temperatura temperatura olfatto olfatto"
-        "certificazioni certificazioni certificazioni certificazioni";
+        "sapore sapore sapore sapore"
+        "allevamento allevamento allevamento allevamento"
+        "produzione produzione produzione produzione";
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: repeat(8, 1fr);
     /* Usa 8 righe di altezza uguale, adatta se necessario */

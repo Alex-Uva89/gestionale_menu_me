@@ -37,7 +37,7 @@ const props = defineProps({
        <div class="bg-yellow-500" :key="componentKeyli" >
             <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
             <label :for="'cb'+ category.id" class="tab__label uppercase text-white text-center font-bold cursor-pointer">
-              <span class="rounded-2xl text-black w-20 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinksCount[category.id] }} / {{ category.drinks ? category.drinks.length : 0 }}</span>            <span>
+              <span class="rounded-2xl text-black w-20 h-8 bg-white p-1 flex justify-center items-center">{{ activeDrinksCount[category.id] }} / {{ category.drinks.length }}</span>            <span>
                 {{ category.name }}
               </span>
               <span class="tab__label__arrow">
@@ -127,19 +127,21 @@ const props = defineProps({
                   </ul>
 
               </div>
-              <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
-                  <div class="w-full flex justify-between items-center font-black uppercase">
-                      Consigli:
-                  </div>
-                  <input class="w-full h-16" type="text" v-model="drink_category.instruction" :placeholder="drink_category.instruction">
-              </div>
+              <!--
+                <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                    <div class="w-full flex justify-between items-center font-black uppercase">
+                        Consigli:
+                    </div>
+                    <input class="w-full h-16" type="text" v-model="drink_category.instruction" :placeholder="drink_category.instruction">
+                </div>
+                -->
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
                   <div class="w-full flex flex-col gap-2">
                       <div class="font-black uppercase">
                           ingredienti:
                       </div>
                       <input class="w-full h-8" type="text" v-model="drink_category.description" :placeholder="drink_category.description">
-                  </div>
+              </div>
                   
               </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: gradi;">
@@ -394,8 +396,6 @@ export default {
                 if (index !== -1) {
                     this.localcategory_venues.splice(index, 1);
                 }
-                console.log('RESPONSE delete');
-                console.log(this.localcategory_venues);
                 this.$emit('update:category_venues', this.localcategory_venues);
                 })
                 .catch(error => {
@@ -429,12 +429,41 @@ export default {
                 this.showEditModal = false;
         },
         updateIsShowStatus(categoryId, value) {
-          axios.put(`/api/categories/${categoryId}`, { is_active: value })
-          .then(response => {
-              this.category = response.data;
+            axios.put(`/api/categories/${categoryId}`, { is_active: value })
+            .then(response => {
+                this.category = response.data;
+                if (value == 0 || value == false) {
+                    this.updateDrinksStatus(categoryId, value);
+                }
             })
-          .catch(error => {
-              console.log(error);
+            .catch(error => {
+                console.log(error);
+            });
+        },
+        updateDrinksStatus(categoryId, value) {
+            axios.put(`/api/drinks?category_id=${categoryId}`, { is_active: value })
+            .then(response => {
+                
+                this.category_venues.forEach(venue => {
+                        if(venue.id == categoryId){
+                            venue.drinks.forEach(drink => {
+                                drink.is_active = response.data.is_active;
+                        });
+                    }
+                });
+
+                if(this.category_venues == categoryId){
+                    this.category_venues.forEach(category => {
+                        category.drinks.forEach(drink => {
+                            drink.is_active = response.data.is_active;
+                        });
+                        
+                    });
+                }
+
+            })
+            .catch(error => {
+                console.log(error);
             });
         },
         onFileChange(e) {
@@ -594,29 +623,29 @@ export default {
           this.selectedDrink = drink;
           this.showModalDrink = !this.showModalDrink;
         },
-  },
-  watch: {
-    category_venues(newVal) {
-      this.localcategory_venues = newVal;
     },
-
-  },
-  created() {
-
-          this.allergenDrinks = this.allergensDrinks
-  },
-  computed: {
-    isFormFilled() {
+    watch: {
+        category_venues(newVal) {
+            this.localcategory_venues = newVal;
+        },
+        
+    },
+    created() {
+        
+        this.allergenDrinks = this.allergensDrinks
+    },
+    computed: {
+        isFormFilled() {
             return this.drink_category.name && this.drink_category.price;
         },
         activeDrinksCount() {
           let activeDrinksCount = {};
           this.category_venues.forEach(category => {
-            let activeDrinks = category.drinks ? category.drinks.filter(drink => drink.is_active) : [];
-            activeDrinksCount[category.id] = activeDrinks.length;
-          });
+              let activeDrinks = category.drinks ? category.drinks.filter(drink => drink.is_active) : [];
+              activeDrinksCount[category.id] = activeDrinks.length;
+            });
           return activeDrinksCount;
-        }
+        },
   },
 };
 </script>
@@ -646,7 +675,7 @@ export default {
         "prezzo prezzo immagine immagine"
         "allergeni allergeni immagine immagine"
         "abbinamenti abbinamenti immagine immagine"
-        "consigli consigli immagine immagine"
+        "certificazioni certificazioni immagine immagine"
         "gradi gradi origine origine"
         "colore colore produzione produzione"
         "sapore sapore ingredienti ingredienti"
@@ -654,7 +683,7 @@ export default {
         "denominazione denominazione annata annata"
         "allevamento allevamento formato formato"
         "temperatura temperatura olfatto olfatto"
-        "certificazioni certificazioni . .";
+        "consigli consigli . .";
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: repeat(8, 1fr); /* Usa 8 righe di altezza uguale, adatta se necessario */
     gap: 10px;

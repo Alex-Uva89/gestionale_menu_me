@@ -29,7 +29,7 @@ class CategoryController extends Controller
                 ]);
             }
 
-            public function update(Request $request, $id)
+    public function update(Request $request, $id)
             {
                 $category = Category::findOrFail($id);
             
@@ -41,7 +41,7 @@ class CategoryController extends Controller
                 $category->update($validatedData);
             
                 return response()->json($category, 200);
-            }
+}
 
             public function store(Request $request)
                 {

@@ -175,4 +175,23 @@ class DrinkController extends Controller
         Drink::where('category_id', $categoryId)->delete();
         return response()->json(null, 204);
     }
+
+    public function updateByCategory(Request $request) {
+        $categoryId = $request->query('category_id');
+        $status = $request->input('is_active');
+    
+        // Verifica che i dati siano validi
+        if (is_null($categoryId) || is_null($status)) {
+            return response()->json(['error' => 'Invalid input', 'category_id' => $categoryId, 'is_active' => $status], 400);
+        }
+    
+        // Trova tutti i drink con il category_id specificato e aggiorna il campo is_active
+        Drink::where('category_id', $categoryId)->update(['is_active' => $status]);
+    
+        // Recupera i drink aggiornati per restituirli nella risposta
+        $drinks = Drink::where('category_id', $categoryId)->get();
+    
+        return response()->json($drinks, 200);
+    }
+    
 }

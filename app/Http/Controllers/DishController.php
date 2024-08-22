@@ -39,6 +39,7 @@ class DishController extends Controller
             'category_id' => 'nullable',
             'venue_id' => 'nullable',
             'image' => 'nullable',
+            'is_active' => 'nullable',
         ]);
 
         $dish = new Dish();
@@ -47,6 +48,7 @@ class DishController extends Controller
         $dish->price = $validated['price'];
         $dish->category_id = $validated['category_id'];
         $dish->venue_id = $validated['venue_id'];
+        $dish->is_active = $validated['is_active'] ?? 1;
 
         if ($request->has('image')) {   
             $dish->image = $request->input('image');

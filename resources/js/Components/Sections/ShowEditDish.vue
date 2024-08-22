@@ -3,21 +3,22 @@
     <div class="container-dish-show" :key="localComponentAllergen">
         <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
             Scheda del piatto:
-            <span class="text-4xl uppercase text-red-500">
+            <span class="text-4xl text-red-500">
                 {{ selectedDish.name }}
             </span>  
-            <SwitchButton :value="selectedDish.is_active === 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
+            <SwitchButton :value="selectedDish.is_active == 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
         </h2>
         <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
             <span class="font-bold text-xl">ID Database: {{ selectedDish.id }}</span>
         </div>
+        
         <div class="grid-show-dish">
             <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                 <div class="flex gap-2">
                     <div class="font-black uppercase">
                         nome:
                     </div>
-                    <span class="font-bold uppercase text-red-500">
+                    <span class="font-bold text-red-500">
                         {{ selectedDish.name }}
                     </span>
                 </div>
@@ -61,12 +62,12 @@
             </div>
             <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
                 <div class="w-full flex justify-between items-center font-black uppercase">
-                    Consigli:
+                    Ingredienti:
                     <ButtonCss @click="openInputDescription()">
                         Modifica
                     </ButtonCss>
                 </div>
-                <span class="uppercase font-semibold text-red-500">
+                <span class="font-semibold text-red-500">
                     {{ selectedDish.description === 'undefined' ? 'Non ci sono consigli in questo piatto al momento' : selectedDish.description }}
                 </span>
             </div>
@@ -229,7 +230,6 @@
                 <h2 class="font-bold text-2xl text-center pb-6">
                     Modifica Gli abbinamenti del piatto: 
                 </h2>
-
                 <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     <span>
                         Abbinamenti attuali: 
@@ -237,7 +237,7 @@
                     <ul class="flex gap-2">
                         <template v-for="dish in pairings">
                             <template v-for="drink in dish.drinks">
-                                <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                                <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id && drink.is_active" >{{ drink.name }}</li>
                             </template>
                         </template>
                         
@@ -245,7 +245,7 @@
                 </div>
 
                 <label for="name" class="font-bold text-xl">Abbinamenti:</label>
-                <SelectMultiple ref="selectMultiple" :options="newPairings" :selected="selectedDishDrinks" @updateComponent="toggleDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+                <SelectMultiple ref="selectMultiple" :options="filteredPairings" :selected="selectedDishDrinks" @updateComponent="toggleDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
             <div class="flex w-full justify-between py-5">
                     <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPairings( copySelectedDish )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditPairings = false">Annulla</button>
@@ -395,7 +395,7 @@ import SelectMultiple from '../SelectMultiple.vue';
             updatePairings(dishId) {
                 axios.get(`/api/dishes/${dishId}/drinks`)
                     .then(response => {
-                        this.pairings = response.data.pairingsEnoteca
+                        this.pairings = response.data.pairings;
                     })
                     .catch(error => {
                         console.error(error);
@@ -417,7 +417,7 @@ import SelectMultiple from '../SelectMultiple.vue';
                     this.selectedDish.is_active = response.data.is_active
                 })
             .catch(error => {
-                console.log(error);
+                console.error(error);
                 });
             },
             openEditPairings(){
@@ -475,6 +475,9 @@ import SelectMultiple from '../SelectMultiple.vue';
                 const drinkIds = dish.drinks.map(drink => drink.id);
 
                 return drinkIds;
+            },
+            filteredPairings() {
+                return this.newPairings.filter(pairing => pairing.venue_id === this.copySelectedDish.venue_id);
             }
         },
         mounted() {

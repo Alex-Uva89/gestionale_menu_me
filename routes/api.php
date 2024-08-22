@@ -34,6 +34,7 @@ Route::put('/recipes/{id}', [RecipeController::class, 'update']);
 Route::put('/dishes/{id}', [DishController::class, 'update']);
 Route::put('/dishes/{id}/drinks', [DishController::class, 'updateDrinkMatch']);
 Route::put('/drinks/{id}', [DrinkController::class, 'update']);
+Route::put('/drinks', [DrinkController::class, 'updateByCategory']);
 
 // POST
 Route::post('/', [HomeController::class, 'store'])->name('store');
