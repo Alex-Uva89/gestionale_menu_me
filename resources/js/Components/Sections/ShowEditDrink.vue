@@ -98,7 +98,7 @@
                         Modifica
                     </ButtonCss>
                 </div>
-                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
+                <div class="h-fit px-1  py-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
                     <div class="flex gap-2">
                         <div class="font-black uppercase">
                             colore:
@@ -107,9 +107,14 @@
                             {{ selectedDrink.color }}
                         </span>
                     </div>
-                    <ButtonCss @click="openInputColor()">
-                        Modifica
-                    </ButtonCss>
+                    <div>
+                        <ButtonCss @click="openTraductionColor()">
+                            Traduci
+                        </ButtonCss>
+                        <ButtonCss @click="openInputColor()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
                 </div>
                 <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produzione;">
                     <div class="flex gap-2">
@@ -120,9 +125,14 @@
                             {{ selectedDrink.production_method }}
                         </span>
                     </div>
-                    <ButtonCss @click="openInputProd()">
-                        Modifica
-                    </ButtonCss>
+                    <div>
+                        <ButtonCss @click="openTraductionProd()">
+                            Traduci
+                        </ButtonCss>
+                        <ButtonCss @click="openInputProd()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
                 </div>
 
                 <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: sapore;">
@@ -134,9 +144,45 @@
                             {{ selectedDrink.flavour }}
                         </span>
                     </div>
-                    <ButtonCss @click="openInputFlavour()">
-                        Modifica
-                    </ButtonCss>
+                    <div>
+                        <ButtonCss @click="openTraductionFlavour()">
+                            Traduci
+                        </ButtonCss>
+                        <ButtonCss @click="openInputFlavour()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: olfatto;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            olfatto:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.nose }}
+                        </span>
+                    </div>
+                    <div>
+                        <ButtonCss @click="openTraductionNose()">
+                            Traduci
+                        </ButtonCss>
+                        <ButtonCss @click="openInputNose()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: temperatura;">
+                    <div class="flex gap-2">
+                        <div class="font-black uppercase">
+                            Temperatura di servizio:
+                        </div>
+                        <span class="font-bold uppercase text-red-500">
+                            {{ selectedDrink.serving_temperature }}
+                        </span>
+                    </div>
+                        <ButtonCss @click="openInputTemperature()">
+                            Modifica
+                        </ButtonCss>
                 </div>
                 <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
                     <div class="flex gap-2">
@@ -151,7 +197,7 @@
                         Modifica
                     </ButtonCss>
                 </div>
-                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
+                <div class="h-fit px-1 py-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
                     <div class="flex gap-2">
                         <div class="font-black uppercase">
                             origine:
@@ -160,9 +206,15 @@
                             {{ selectedDrink.origin }}
                         </span>
                     </div>
-                    <ButtonCss @click="openInputOrigin()">
-                        Modifica
-                    </ButtonCss>
+                    <div>
+                        <ButtonCss @click="openTraductionOrigin()">
+                            Traduci
+                        </ButtonCss>
+
+                        <ButtonCss @click="openInputOrigin()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
                 </div>
                 <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: vitigno;">
                     <div class="flex gap-2">
@@ -216,8 +268,8 @@
                         Modifica
                     </ButtonCss>
                 </div>
-                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
-                    <div class="flex gap-2">
+                <div class="h-fit px-1 py-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
+                    <div class="flex gap-2 flex-nowrap">
                         <div class="font-black uppercase">
                             metodo di allevamento:
                         </div>
@@ -225,9 +277,14 @@
                             {{ selectedDrink.breeding_method }}
                         </span>
                     </div>
-                    <ButtonCss @click="openInputBreeding()">
-                        Modifica
-                    </ButtonCss>
+                    <div class="flex">
+                        <ButtonCss @click="openTraductionBreeding()">
+                            Traduci
+                        </ButtonCss>
+                        <ButtonCss @click="openInputBreeding()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
                 </div>
                 <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
                     <div class="flex gap-2">
@@ -505,6 +562,35 @@
                 </ModalAction>
             </div>
 
+            <div v-if="showModalTraductionColor" class="z-50">
+                <ModalAction :showModal="showModalTraductionColor" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Inserisci la traduzione del colore:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.color }}
+                        </span>
+                    </div>
+
+                    <label for="color_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="color_en" class="w-full border-1 border-black rounded" v-model="copySelectedDish.color_en">
+
+                    <label for="color_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="color_fr" class="w-full border-1 border-black rounded" v-model="copySelectedDish.color_fr">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmTraductionColor(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductionColor = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
             <div v-if="showModalEditProd" class="z-50">
                 <ModalAction :showModal="showModalEditProd" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
@@ -528,6 +614,37 @@
                             @click="confirmEditProd(copySelectedDish)">Conferma</button>
                         <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
                             @click="showModalEditProd = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
+            <div v-if="showModalTraductiontProd" class="z-50">
+                <ModalAction :showModal="showModalTraductiontProd" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Traduci il metodo di produzione del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.production_method }}
+                        </span>
+                    </div>
+
+                    <label for="production_method_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="production_method_en" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.production_method_en">
+
+                    <label for="production_method_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="production_method_fr" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.production_method_fr">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmTraductionProd(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductiontProd = false">Annulla</button>
                     </div>
                 </ModalAction>
             </div>
@@ -558,6 +675,34 @@
                 </ModalAction>
             </div>
 
+            <div v-if="showModalTraductionFlavour" class="z-50">
+                <ModalAction :showModal="showModalTraductionFlavour" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Traduci il gusto del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.flavour }}
+                        </span>
+                    </div>
+
+                    <label for="flavour_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="flavour_en" class="w-full border-1 border-black rounded" v-model="copySelectedDish.flavour_en">
+
+                    <label for="flavour_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="flavour_fr" class="w-full border-1 border-black rounded" v-model="copySelectedDish.flavour_fr">
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmTraductionFlavour(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductionFlavour = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
             <div v-if="showModalEditOrigin" class="z-50">
                 <ModalAction :showModal="showModalEditOrigin" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
@@ -580,6 +725,35 @@
                             @click="confirmEditOrigin(copySelectedDish)">Conferma</button>
                         <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
                             @click="showModalEditOrigin = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
+            <div v-if="showModalTraductionOrigin" class="z-50">
+                <ModalAction :showModal="showModalTraductionOrigin" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Traduci l'origine del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.origin }}
+                        </span>
+                    </div>
+
+                    <label for="origin_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="origin_en" class="w-full border-1 border-black rounded" v-model="copySelectedDish.origin_en">
+
+                    <label for="origin_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="origin_fr" class="w-full border-1 border-black rounded" v-model="copySelectedDish.origin_fr">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmTraductionOrigin(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductionOrigin = false">Annulla</button>
                     </div>
                 </ModalAction>
             </div>
@@ -717,6 +891,37 @@
                 </ModalAction>
             </div>
 
+            <div v-if="showModalTraductionBreeding" class="z-50">
+                <ModalAction :showModal="showModalTraductionBreeding" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Traduci il metodo di allevamento del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.breeding_method }}
+                        </span>
+                    </div>
+
+                    <label for="breeding_method_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="breeding_method_en" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.breeding_method_en">
+
+                    <label for="breeding_method_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="breeding_method_fr" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.breeding_method_fr">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmTraductionBreeding(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductionBreeding = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
             <div v-if="showModalEditFormat" class="z-50">
                 <ModalAction :showModal="showModalEditFormat" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
@@ -769,6 +974,91 @@
                     </div>
                 </ModalAction>
             </div>
+
+            <div v-if="showModalEditTemperature" class="z-50">
+                <ModalAction :showModal="showModalEditTemperature" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Modifica la temperatura di servizio del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Temperatura attuale:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.serving_temperature }}
+                        </span>
+                    </div>
+
+                    <label for="name" class="font-bold text-xl">Temperatura:</label>
+                    <input type="text" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.serving_temperature">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmEditTemperature(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalEditTemperature = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
+            <div v-if="showModalEditNose" class="z-50">
+                <ModalAction :showModal="showModalEditNose" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Modifica l'olfatto' del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Olfatto attuale:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.nose }}
+                        </span>
+                    </div>
+
+                    <label for="name" class="font-bold text-xl">Olfatto:</label>
+                    <input type="text" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.nose">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmEditTemperature(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalEditNose = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
+            <div v-if="showModalTraductionNose" class="z-50">
+                <ModalAction :showModal="showModalTraductionNose" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Traduci l'olfatto' del drink:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.nose }}
+                        </span>
+                    </div>
+
+                    <label for="nose_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="node_id" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.nose_en">
+
+                    <label for="nose_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="nose_fr" class="w-full border-1 border-black rounded"
+                        v-model="copySelectedDish.nose_fr">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmEditTemperature(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductionNose = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
     </div>
 </template>
 
@@ -806,6 +1096,8 @@ export default {
             showModalEditColor: false,
             showModalEditProd: false,
             showModalEditFlavour: false,
+            showModalEditNose: false,
+            showModalEditTemperature: false,
             showModalEditOrigin: false,
             showModalEditGrape: false,
             showModalEditProducer: false,
@@ -814,6 +1106,12 @@ export default {
             showModalEditBreeding: false,
             showModalEditFormat: false,
             showModalEditCertification: false,
+            showModalTraductionColor: false,
+            showModalTraductionOrigin: false,
+            showModalTraductiontProd: false,
+            showModalTraductionFlavour: false,
+            showModalTraductionBreeding: false,
+            showModalTraductionNose: false,
             dishIdToDelete: null,
             copySelectedDish: null,
             arrayAllergens: this.allergensDrinks,
@@ -1019,6 +1317,20 @@ export default {
 
             this.showModalEditColor = false;
         },
+        openTraductionColor() {
+            this.showModalTraductionColor = true;
+        },
+        confirmTraductionColor(dishNew) {
+            this.selectedDrink.color_en = dishNew.color_en
+            this.selectedDrink.color_fr = dishNew.color_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                color_en: dishNew.color_en,
+                color_fr: dishNew.color_fr
+            })
+
+            this.showModalTraductionColor = false;
+        },
         openInputProd() {
             this.showModalEditProd = true;
         },
@@ -1030,6 +1342,20 @@ export default {
             })
 
             this.showModalEditProd = false;
+        },
+        openTraductionProd() {
+            this.showModalTraductiontProd = true;
+        },
+        confirmTraductionProd(dishNew) {
+            this.selectedDrink.production_method_en = dishNew.production_method_en
+            this.selectedDrink.production_method_fr = dishNew.production_method_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                production_method_en: dishNew.production_method_en,
+                production_method_fr: dishNew.production_method_fr
+            })
+
+            this.showModalTraductiontProd = false;
         },
         openInputFlavour() {
             this.showModalEditFlavour = true;
@@ -1043,6 +1369,58 @@ export default {
 
             this.showModalEditFlavour = false;
         },
+        openTraductionFlavour() {
+            this.showModalTraductionFlavour = true;
+        },
+        confirmTraductionFlavour(dishNew) {
+            this.selectedDrink.flavour_en = dishNew.flavour_en
+            this.selectedDrink.flavour_fr = dishNew.flavour_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                flavour_en: dishNew.flavour_en,
+                flavour_fr: dishNew.flavour_fr
+            })
+
+            this.showModalTraductionFlavour = false;
+        },
+        openInputNose() {
+            this.showModalEditNose = true;
+        },
+        confirmEditNose(dishNew) {
+            this.selectedDrink.nose = dishNew.nose
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                nose: dishNew.nose
+            })
+
+            this.showModalEditNose = false;
+        },
+        openTraductionNose() {
+            this.showModalTraductionNose = true;
+        },
+        confirmTraductionNose(dishNew) {
+            this.selectedDrink.nose_en = dishNew.nose_en
+            this.selectedDrink.nose_fr = dishNew.nose_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                nose_en: dishNew.nose_en,
+                nose_fr: dishNew.nose_fr
+            })
+
+            this.showModalTraductionNose = false;
+        },
+        openInputTemperature() {
+            this.showModalEditTemperature = true;
+        },
+        confirmEditTemperature(dishNew) {
+            this.selectedDrink.serving_temperature = dishNew.serving_temperature
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                serving_temperature: dishNew.serving_temperature
+            })
+
+            this.showModalEditTemperature = false;
+        },
         openInputOrigin() {
             this.showModalEditOrigin = true;
         },
@@ -1054,6 +1432,20 @@ export default {
             })
 
             this.showModalEditOrigin = false;
+        },
+        openTraductionOrigin() {
+            this.showModalTraductionOrigin = true;
+        },
+        confirmTraductionOrigin(dishNew) {
+            this.selectedDrink.origin_en = dishNew.origin_en
+            this.selectedDrink.origin_fr = dishNew.origin_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                origin_en: dishNew.origin_en,
+                origin_fr: dishNew.origin_fr
+            })
+
+            this.showModalTraductionOrigin = false;
         },
         openInputGrape() {
             this.showModalEditGrape = true;
@@ -1114,6 +1506,20 @@ export default {
             })
 
             this.showModalEditBreeding = false;
+        },
+        openTraductionBreeding() {
+            this.showModalTraductionBreeding = true;
+        },
+        confirmTraductionBreeding(dishNew) {
+            this.selectedDrink.breeding_method_en = dishNew.breeding_method_en
+            this.selectedDrink.breeding_method_fr = dishNew.breeding_method_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                breeding_method_en: dishNew.breeding_method_en,
+                breeding_method_fr: dishNew.breeding_method_fr
+            })
+
+            this.showModalTraductionBreeding = false;
         },
         openInputFormat() {
             this.showModalEditFormat = true;

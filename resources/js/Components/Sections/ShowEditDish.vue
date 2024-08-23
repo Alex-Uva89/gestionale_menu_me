@@ -22,9 +22,14 @@
                         {{ selectedDish.name }}
                     </span>
                 </div>
-                <ButtonCss @click="openInputName()">
-                    Modifica
-                </ButtonCss>
+                <div>
+                    <ButtonCss @click="openInputNameTraduction()">
+                        Traduci
+                    </ButtonCss>
+                    <ButtonCss @click="openInputName()">
+                        Modifica
+                    </ButtonCss>
+                </div>
             </div>
             <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
                 <div class="flex justify-between items-center">
@@ -63,9 +68,14 @@
             <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
                 <div class="w-full flex justify-between items-center font-black uppercase">
                     Ingredienti:
-                    <ButtonCss @click="openInputDescription()">
-                        Modifica
-                    </ButtonCss>
+                    <div>
+                        <ButtonCss @click="openTraductionDescription()">
+                            Traduci
+                        </ButtonCss>
+                        <ButtonCss @click="openInputDescription()">
+                            Modifica
+                        </ButtonCss>
+                    </div>
                 </div>
                 <span class="font-semibold text-red-500">
                     {{ selectedDish.description === 'undefined' ? 'Non ci sono consigli in questo piatto al momento' : selectedDish.description }}
@@ -149,6 +159,37 @@
          </ModalAction>
      </div>
 
+     <div v-if="showModalTraductionName" class="z-50">
+         <ModalAction :showModal="showModalTraductionName" :selectedDish="selectedDish">
+                <h2 class="font-bold text-2xl text-center">
+                Modifica le traduzioni del piatto: 
+                </h2>
+
+                <div class="flex flex-col gap-4 my-4">
+                    <div class="font-bold text-xl">
+                        Italiano: 
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDish.name }}
+                        </span>
+                    </div>
+    
+                    <label for="name" class="font-bold text-xl">Inglese:
+                        <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.name_en">
+                    </label>
+    
+                    <label for="name" class="font-bold text-xl">Francese:
+                        <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.name_fr">
+                    </label>
+                </div>
+
+
+                <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmTraductionName( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalTraductionName = false">Annulla</button>
+                </div>
+         </ModalAction>
+     </div>
+
      <div v-if="showModalEditPrice" class="z-50">
          <ModalAction :showModal="showModalEditPrice" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
@@ -176,23 +217,54 @@
      <div v-if="showModalEditDescription" class="z-50">
         <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica i consigli del piatto: 
+                Modifica gli ingredienti del piatto: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
-                    descrizione attuale: 
+                    Ingredienti attuali: 
                     <span class="text-red-500 text-xl">
                         {{ selectedDish.description }}
                     </span>
             </div>
 
-            <label for="name" class="font-bold text-xl">Consiglio:</label>
+            <label for="name" class="font-bold text-xl">Ingredienti:</label>
             <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description">
 
 
             <div class="flex w-full justify-between py-5">
                     <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDescription( copySelectedDish )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditDescription = false">Annulla</button>
+            </div>
+        </ModalAction>
+     </div>
+
+     <div v-if="showModalTraductionDescription" class="z-50">
+        <ModalAction :showModal="showModalTraductionDescription" :selectedDish="selectedDish">
+            <h2 class="font-bold text-2xl text-center pb-6">
+                Modifica gli ingredienti del piatto: 
+            </h2>
+            <div class="flex flex-col gap-4">
+
+                <div class="font-bold text-xl">
+                    Italiano: 
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDish.description }}
+                        </span>
+                </div>
+
+                <label for="name" class="font-bold text-xl">Inglese:
+                    <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description_en">
+                </label>
+                
+                <label for="name" class="font-bold text-xl">Francese:
+                    <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description_fr">
+                </label>
+                
+            </div>
+
+            <div class="flex w-full justify-between py-5">
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmTraductionDescription( copySelectedDish )">Conferma</button>
+                    <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalTraductionDescription = false">Annulla</button>
             </div>
         </ModalAction>
      </div>
@@ -285,6 +357,8 @@ import SelectMultiple from '../SelectMultiple.vue';
                 showModalEditDescription: false,
                 showModalEditImg: false,
                 showModalEditPairings: false,
+                showModalTraductionName: false,
+                showModalTraductionDescription: false,
                 dishIdToDelete: null,
                 copySelectedDish: null,
                 arrayAllergens: this.allergensDishes,
@@ -332,6 +406,20 @@ import SelectMultiple from '../SelectMultiple.vue';
 
 
             },
+            openInputNameTraduction(){
+                this.showModalTraductionName = true;
+            },
+            confirmTraductionName(dishNew){
+                this.selectedDish.name_en = dishNew.name_en
+                this.selectedDish.name_fr = dishNew.name_fr
+
+                axios.put(`/api/dishes/${this.selectedDish.id}`, {
+                    name_en: dishNew.name_en,
+                    name_fr: dishNew.name_fr
+                })
+
+                this.showModalTraductionName = false;
+            },
             openInputPrice(){
                 this.showModalEditPrice = true;
             },
@@ -355,6 +443,20 @@ import SelectMultiple from '../SelectMultiple.vue';
                 })
 
                 this.showModalEditDescription = false;
+            },
+            openTraductionDescription(){
+                this.showModalTraductionDescription = true;
+            },
+            confirmTraductionDescription(dishNew){
+                this.selectedDish.description_en = dishNew.description_en
+                this.selectedDish.description_fr = dishNew.description_fr
+
+                axios.put(`/api/dishes/${this.selectedDish.id}`, {
+                    description_en: dishNew.description_en,
+                    description_fr: dishNew.description_fr
+                })
+
+                this.showModalTraductionDescription = false;
             },
             openInputImg(){
                 this.showModalEditImg = true;

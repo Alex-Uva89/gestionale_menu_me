@@ -90,6 +90,22 @@ class DishController extends Controller
             $dish->image = $request->input('image');
         }
 
+        if ($request->has('name_fr')) {
+            $dish->name_fr = $request->input('name_fr');
+        }
+
+        if ($request->has('description_fr')) {
+            $dish->description_fr = $request->input('description_fr');
+        }
+
+        if ($request->has('name_en')) {
+            $dish->name_en = $request->input('name_en');
+        }
+
+        if ($request->has('description_en')) {
+            $dish->description_en = $request->input('description_en');
+        }
+
         $dish->save();
 
         return response()->json($dish, 200);

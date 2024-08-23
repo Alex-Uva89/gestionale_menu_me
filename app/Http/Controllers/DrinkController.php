@@ -38,9 +38,21 @@ class DrinkController extends Controller
             'serving_temperature' => 'nullable',
             'nose' => 'nullable',
             'certifications' => 'nullable',
+            // 'color_fr' => 'nullable',
+            // 'color_en' => 'nullable',
+            // 'origin_fr' => 'nullable',
+            // 'origin_en' => 'nullable',
+            // 'production_method_fr' => 'nullable',
+            // 'production_method_en' => 'nullable',
+            // 'flavour_fr' => 'nullable',
+            // 'flavour_en' => 'nullable',
+            // 'breeding_method_fr' => 'nullable',
+            // 'breeding_method_en' => 'nullable',
+            // 'nose_fr' => 'nullable',
+            // 'nose_en' => 'nullable',
             'is_active' => 'nullable',
             'category_id' => 'nullable',
-            'venue_id' => 'nullable'
+            'venue_id' => 'nullable',
         ]);
 
         
@@ -163,6 +175,54 @@ class DrinkController extends Controller
 
         if ($request->has('image')) {   
             $drink->image = $request->input('image');
+        }
+
+        if ($request->has('color_fr')) {
+            $drink->color_fr = $request->input('color_fr');
+        }
+
+        if ($request->has('color_en')) {
+            $drink->color_en = $request->input('color_en');
+        }
+
+        if ($request->has('origin_fr')) {
+            $drink->origin_fr = $request->input('origin_fr');
+        }
+
+        if ($request->has('origin_en')) {
+            $drink->origin_en = $request->input('origin_en');
+        }
+
+        if ($request->has('production_method_fr')) {
+            $drink->production_method_fr = $request->input('production_method_fr');
+        }
+
+        if ($request->has('production_method_en')) {
+            $drink->production_method_en = $request->input('production_method_en');
+        }
+
+        if ($request->has('flavour_fr')) {
+            $drink->flavour_fr = $request->input('flavour_fr');
+        }
+
+        if ($request->has('flavour_en')) {
+            $drink->flavour_en = $request->input('flavour_en');
+        }
+
+        if ($request->has('breeding_method_fr')) {
+            $drink->breeding_method_fr = $request->input('breeding_method_fr');
+        }
+
+        if ($request->has('breeding_method_en')) {
+            $drink->breeding_method_en = $request->input('breeding_method_en');
+        }
+
+        if ($request->has('nose_fr')) {
+            $drink->nose_fr = $request->input('nose_fr');
+        }
+
+        if ($request->has('nose_en')) {
+            $drink->nose_en = $request->input('nose_en');
         }
 
         $drink->save();

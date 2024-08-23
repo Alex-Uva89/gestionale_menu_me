@@ -31,17 +31,25 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
             {
-                $category = Category::findOrFail($id);
+                $category = Category::find($id);
             
-                $validatedData = $request->validate([
-                    'name' => 'sometimes|required',
-                    'is_active' => 'sometimes|boolean',
-                ]);
+                if ($category) {
+                    if ($request->has('name')) {
+                        $category->name = $request->name;
+                    }
+                    if ($request->has('name_en')) {
+                        $category->name_en = $request->name_en;
+                    }
+                    if ($request->has('name_fr')) {
+                        $category->name_fr = $request->name_fr;
+                    }
+                    $category->save();
             
-                $category->update($validatedData);
-            
-                return response()->json($category, 200);
-}
+                    return response()->json($category, 200);
+                } else {
+                    return response()->json(['message' => 'Category not found'], 404);
+                }
+    }
 
             public function store(Request $request)
                 {

@@ -16,7 +16,7 @@ class Drink extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image','price', 'description', 'instructions', 'degrees','origin'];
+    protected $fillable = ['name', 'image','price', 'description', 'instructions', 'degrees','origin','color','production_method','flavour','producer', 'grape_variety', 'denomination','vintage','breedeing_method','format','serving_temperature','nose','certification','color_fr','color_en','origin_fr','origin_en','production_method_fr','production_method_en','flavour_fr','flavour_en','breedeing_method_fr','breedeing_method_en','nose_fr','nose_en'];
 
     public function venues()
     {
