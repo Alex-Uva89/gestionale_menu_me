@@ -44,7 +44,7 @@ const props = defineProps({
     
   </section>
 
-  <section class="flex justify-center">
+  <section class="flex justify-center mobile">
 
     <div class="container-food">
       <form class="grid grid-cols-5" @submit.prevent="createCategory(3)">
@@ -311,6 +311,17 @@ section.accordion{
 
 .margin-negative{
   margin: 0 -10px;
+}
+
+@media screen and (max-width: 768px){
+.mobile{
+    display: flex;
+    flex-direction: column;
+    .container-food, .container-beverage{
+      width: 90%;
+      margin: auto;
+    }
+  }
 }
 
 </style>

@@ -122,6 +122,7 @@ function updateCurrentPageComponent(value) {
 <style scoped>
 .main-app{
     width: calc(100% - 250px);
+    margin-left: 250px;
     flex-direction: column;
     .scante{
         height: calc(100vh - 7rem);
@@ -180,6 +181,17 @@ function updateCurrentPageComponent(value) {
 .focus-instruction.visible {
     visibility: visible;
     opacity: 1;
+}
+
+@media screen and (max-width: 600px) {
+    .main-app{
+        width: 100%;
+        margin:0;
+    }
+    .focus-instruction {
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 </style>

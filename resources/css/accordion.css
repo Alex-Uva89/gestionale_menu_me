@@ -22,7 +22,7 @@
   }
 
   .tab input:checked ~ .tab__content {
-    max-height: 2800px;
+    max-height: 100%;
   }
 
 

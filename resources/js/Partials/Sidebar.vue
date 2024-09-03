@@ -7,33 +7,82 @@ defineProps({
 </script>
 
 <template>
-    
-<button data-drawer-target="sidebar-multi-level-sidebar" @click="toggleDropdown" data-drawer-toggle="sidebar-multi-level-sidebar" aria-controls="sidebar-multi-level-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-   <span class="sr-only">Open sidebar</span>
-   <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="https://www.w3.org/2000/svg">
-   <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-   </svg>
-</button>
-
-<aside id="sidebar-multi-level-sidebar" class="flex flex-col top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 border-e-2 border-black" aria-label="Sidebar">
-   <div class="header-sidebar px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <div class="flex lg:justify-center lg:col-start-2">
-                            <img
-                                src="img/mammaelvira-color_2024.png"
-                                alt="Laravel"
-                                class="w-32 h-24"
-                            />
-      </div>
-      <ul class="max-h-96 overflow-y-scroll scrolling space-y-2 font-medium">
-         <li>
-            <a @click="selectValueButton('Dashboard')" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer">
-               <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="https://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
-                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+   <div>
+     <!-- Toggle Button for Mobile -->
+     <button
+       data-drawer-target="sidebar-multi-level-sidebar"
+       @click="toggleSidebar"
+       aria-controls="sidebar-multi-level-sidebar"
+       type="button"
+       class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+     >
+       <span class="sr-only">Open sidebar</span>
+       <svg
+         class="w-6 h-6"
+         aria-hidden="true"
+         fill="currentColor"
+         viewBox="0 0 20 20"
+         xmlns="http://www.w3.org/2000/svg"
+       >
+         <path
+           clip-rule="evenodd"
+           fill-rule="evenodd"
+           d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+         ></path>
+       </svg>
+     </button>
+ 
+     <!-- Sidebar -->
+     <aside
+       id="sidebar-multi-level-sidebar"
+       :class="[
+         'fixed flex flex-col top-0 left-0 z-40 w-64 h-screen transition-transform transform sm:translate-x-0',
+         { '-translate-x-full': !isSidebarOpen }
+       ]"
+       aria-label="Sidebar"
+     >
+       <div class="header-sidebar px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800 h-full">
+         <div v-if="isSidebarOpen">
+            <button
+       data-drawer-target="sidebar-multi-level-sidebar"
+       @click="toggleSidebar"
+       aria-controls="sidebar-multi-level-sidebar"
+       type="button"
+       class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+     >
+       x
+     </button>
+         </div>
+         <div v-else class="flex lg:justify-center lg:col-start-2">
+           <img
+             src="img/mammaelvira-color_2024.png"
+             alt="Laravel"
+             class="w-32 h-24"
+           />
+         </div>
+         <ul class="max-h-96 overflow-y-scroll scrolling space-y-2 font-medium">
+           <li>
+             <a
+               @click="selectValueButton('Dashboard')"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+             >
+               <svg
+                 class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                 aria-hidden="true"
+                 xmlns="http://www.w3.org/2000/svg"
+                 fill="currentColor"
+                 viewBox="0 0 22 21"
+               >
+                 <path
+                   d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"
+                 />
+                 <path
+                   d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
+                 />
                </svg>
                <span class="ms-3">Dashboard</span>
-            </a>
-         </li>
+             </a>
+           </li>
          <li>
             <button type="button" @click="toggleDropdown" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                   <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true"  xmlns="https://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 448 512">
@@ -91,7 +140,8 @@ defineProps({
       </ul>
    </div>
    <Footer />
-</aside>
+     </aside>
+   </div>
 </template>
 
 <style scoped>
@@ -128,27 +178,32 @@ a:hover {
 import Footer from '@/Partials/Footer.vue';
 
 export default {
-    emits: ['venueName', 'venueColor', 'valueButton'],
-    components: {
-         Footer
-      },
-    methods: {
-        toggleDropdown() {
-            const dropdown = document.getElementById('dropdown-example');
-            dropdown.classList.toggle('hidden');
-        },
-        selectVenueName(venue) {
-            if (venue) {
-               this.$emit('venue-name', venue.name);
-               this.$emit('venue-color', venue.color);
-            }
-         },
-         selectValueButton(value) {
-            this.$emit('value-button', value);
-      
-         }
+  data() {
+    return {
+      isSidebarOpen: false, // Track if the sidebar is open
+    };
+  },
+  emits: ['venueName', 'venueColor', 'valueButton'],
+  components: {
+    Footer,
+  },
+  methods: {
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen; // Toggle sidebar visibility
+    },
+    toggleDropdown() {
+      const dropdown = document.getElementById('dropdown-example');
+      dropdown.classList.toggle('hidden');
+    },
+    selectVenueName(venue) {
+      if (venue) {
+        this.$emit('venue-name', venue.name);
+        this.$emit('venue-color', venue.color);
       }
-}
-
-
+    },
+    selectValueButton(value) {
+      this.$emit('value-button', value);
+    },
+  },
+};
 </script>

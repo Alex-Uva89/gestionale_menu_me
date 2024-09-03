@@ -43,6 +43,14 @@ class CategoryController extends Controller
                     if ($request->has('name_fr')) {
                         $category->name_fr = $request->name_fr;
                     }
+                    if ($request->has('is_drink')) {
+                        $category->is_drink = $request->is_drink;
+                    }
+                    
+                    if ($request->has('is_active')) {
+                        $category->is_active = $request->is_active;
+                    }
+
                     $category->save();
             
                     return response()->json($category, 200);
