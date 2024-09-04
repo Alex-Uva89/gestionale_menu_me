@@ -1128,9 +1128,16 @@ export default {
             this.dishIdToDelete = dishId;
             this.showModalDeleteDish = true;
         },
-        confirmDeleteDish(id) {
-            this.$emit('deleteDish', id);
-            this.showModalDeleteDish = false;
+        confirmDeleteDish() {
+            axios.delete(`/api/drinks/${this.dishIdToDelete}`)
+            .then(response => {
+                this.$emit('deleteDrink', this.selectedDrink.id);
+                this.showModalDeleteDish = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
         },
         matchDish(dishId, allergenId) {
             this.$emit('matchDish', dishId, allergenId);

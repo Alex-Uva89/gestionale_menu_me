@@ -332,7 +332,7 @@ const props = defineProps({
     :pairings="pairings"
     :drinks="drinks"
     @showModalDrink="showModalDrink = false"
-    @deleteDish="confirmDeleteDish"
+    @deleteDrink="confirmDeleteDrink"
     @matchDish="matchDish"
     />
   </ModalAction>
@@ -652,6 +652,14 @@ export default {
           this.selectedDrink = drink;
           this.showModalDrink = !this.showModalDrink;
         },
+        confirmDeleteDrink(drinkId){
+            this.showModalDrink = false;
+            this.category_venues.forEach(category => {
+                if(category.drinks){
+                    category.drinks = category.drinks.filter(drink => drink.id !== drinkId);
+                }
+            });
+        }
     },
     watch: {
         category_venues(newVal) {
@@ -675,6 +683,7 @@ export default {
             });
           return activeDrinksCount;
         },
+        
   },
 };
 </script>

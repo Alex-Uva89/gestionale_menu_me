@@ -253,5 +253,12 @@ class DrinkController extends Controller
     
         return response()->json($drinks, 200);
     }
+
+    public function destroy($id)
+    {
+        $drink = Drink::find($id);
+        $drink->delete();
+        return response()->json(null, 204);
+    }
     
 }
