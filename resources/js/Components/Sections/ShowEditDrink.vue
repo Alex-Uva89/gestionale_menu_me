@@ -3,7 +3,7 @@
     <div class="container-drink-show" :key="localComponentAllergen">
             <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
                 Scheda del drink:
-                <span class="text-4xl uppercase text-red-500">
+                <span class="text-4xl uppercase text-red-500 ellips">
                     {{ selectedDrink.name }}
                 </span>
                 <SwitchButton :value="selectedDrink.is_active === 1 || selectedDrink.is_active === true"
@@ -60,18 +60,18 @@
 
 
                 </div>
-                <!-- <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                 <div class="h-fit p-2 border-2 border-black" style="grid-area: descrizione;">
                     <div class="w-full flex justify-between items-center font-black uppercase">
-                        Consigli:
+                        Descrizione (solo per le birre) :
                         <ButtonCss @click="openInputInstruction()">
                             Modifica
                         </ButtonCss>
                     </div>
                     <span class="uppercase font-semibold text-red-500">
-                        {{ selectedDrink.instructions === 'undefined' ? 'Non ci sono consigli in questo drink al momento' :
+                        {{ selectedDrink.instructions === 'undefined' ? 'Il drink non è descritto' :
                         selectedDrink.instructions }}
                     </span>
-                </div> -->
+                </div> 
                 <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
                     <div class="flex gap-2">
                         <div class="font-black uppercase">
@@ -107,7 +107,7 @@
                             {{ selectedDrink.color }}
                         </span>
                     </div>
-                    <div>
+                    <div style="width: 50%;">
                         <ButtonCss @click="openTraductionColor()">
                             Traduci
                         </ButtonCss>
@@ -206,7 +206,7 @@
                             {{ selectedDrink.origin }}
                         </span>
                     </div>
-                    <div>
+                    <div  style="width: 50%;">
                         <ButtonCss @click="openTraductionOrigin()">
                             Traduci
                         </ButtonCss>
@@ -390,10 +390,10 @@
                 </ModalAction>
             </div>
 
-            <!-- <div v-if="showModalEditInstruction" class="z-50">
+            <div v-if="showModalEditInstruction" class="z-50">
                 <ModalAction :showModal="showModalEditInstruction" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
-                        Modifica i consigli del drink:
+                        Modifica la del drink:
                     </h2>
 
                     <div class="text-xl pb-4 first-letter:uppercase mb-8">
@@ -415,7 +415,7 @@
                             @click="showModalEditInstruction = false">Annulla</button>
                     </div>
                 </ModalAction>
-            </div> -->
+            </div>
 
             <div v-if="showModalEditDescription" class="z-50">
                 <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
@@ -1157,7 +1157,7 @@ export default {
         confirmEditName(dishNew) {
             this.selectedDrink.name = dishNew.name
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
                 name: dishNew.name
             })
 
@@ -1172,7 +1172,7 @@ export default {
         confirmEditPrice(dishNew) {
             this.selectedDrink.price = dishNew.price
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
                 price: dishNew.price
             })
 
@@ -1184,7 +1184,7 @@ export default {
         confirmEditInstruction(dishNew) {
             this.selectedDrink.instructions = dishNew.instructions
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
                 instructions: dishNew.instructions
             })
 
@@ -1196,7 +1196,7 @@ export default {
         confirmEditDescription(dishNew) {
             this.selectedDrink.description = dishNew.description
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
                 description: dishNew.description
             })
 
@@ -1610,6 +1610,7 @@ export default {
     margin: 20px 0;
     height: 62vh;
     grid-template-areas:
+        "descrizione descrizione descrizione descrizione"
         "nome nome nome immagine"
         "prezzo annata formato immagine"
         "colore origine gradi immagine"
@@ -1632,6 +1633,16 @@ export default {
         width: 100%;
         height: 80%;
     }
+}
+
+.ellips{
+    width: 50%;
+    height: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .button-delete {

@@ -50,6 +50,8 @@ class AllergenController extends Controller
 
             $request->validate([
                 'name' => 'sometimes|string|max:255',
+                'name_en' => 'sometimes|string|max:255',
+                'name_fr' => 'sometimes|string|max:255',
                 'icon' => 'sometimes|image|mimes:png,svg|max:2048',
                 'is_active' => 'sometimes|boolean',
             ]);
@@ -57,6 +59,14 @@ class AllergenController extends Controller
             
             if ($request->has('name')) {
                 $allergen->name = $request->name;                
+            }
+
+            if ($request->has('name_en')) {
+                $allergen->name_en = $request->name_en;                
+            }
+
+            if ($request->has('name_fr')) {
+                $allergen->name_fr = $request->name_fr;                
             }
 
             if ($request->hasFile('icon')) {

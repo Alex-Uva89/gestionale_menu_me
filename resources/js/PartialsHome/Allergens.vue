@@ -152,6 +152,17 @@
                     <label for="name" class="leading-9">Nome</label>
                     <input id="name" v-model="form.name" type="text" required class="col-span-3">
                 </div>
+
+                <div class="grid grid-cols-4 w-full">
+                    <label for="name_en" class="leading-9">Inglese:</label>
+                    <input id="name_en" v-model="form.name_en" type="text" required class="col-span-3">
+                </div>
+
+                <div class="grid grid-cols-4 w-full">
+                    <label for="name_fr" class="leading-9">Francese</label>
+                    <input id="name_fr" v-model="form.name_fr" type="text" required class="col-span-3">
+                </div>
+
                 <div class="grid grid-cols-4 w-full">
                     <label for="icon" class="leading-9">Icona</label>
                     <label class="custom-file-upload  col-span-3">
@@ -165,7 +176,7 @@
                         {{ form.icon ? form.icon.name : 'Seleziona un file dal tuo pc' }}
                     </label>
                 </div>
-                <ButtonCss type="submit" tooltipText="Conferma l'aggiunta dell'allergene" hoverColor="#4FDE10" @click="confirmEditAllergen(form.name, form.icon)">
+                <ButtonCss type="submit" tooltipText="Conferma l'aggiunta dell'allergene" hoverColor="#4FDE10" @click="confirmEditAllergen(form.name, form.name_en, form.name_fr, form.icon)">
                     <div class="w-96">
                         Conferma
                     </div>
@@ -325,10 +336,12 @@ export default {
             this.allergenId = id;
             this.isOpenModalEdit = true;
         },
-        confirmEditAllergen(value, valueIcon) {
+        confirmEditAllergen(value,valueEn, ValueFr, valueIcon) {
             let formData = new FormData();
             formData.append('_method', 'PUT');
             formData.append('name', value);
+            formData.append('name_en', valueEn);
+            formData.append('name_fr', ValueFr);
             formData.append('icon', valueIcon);
 
             axios.post(`/api/allergens/${this.allergenId}`, formData)

@@ -3,7 +3,7 @@
     <div class="container-dish-show" :key="localComponentAllergen">
         <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
             Scheda del piatto:
-            <span class="text-4xl text-red-500">
+            <span class="text-4xl text-red-500 ellips">
                 {{ selectedDish.name }}
             </span>  
             <SwitchButton :value="selectedDish.is_active == 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
@@ -645,6 +645,16 @@ import SelectMultiple from '../SelectMultiple.vue';
         width: 100%;
         height: 80%;
     }
+}
+
+.ellips {
+    width: 50%;
+    height: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .button-delete{
