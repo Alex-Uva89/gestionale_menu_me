@@ -63,9 +63,14 @@
                  <div class="h-fit p-2 border-2 border-black" style="grid-area: descrizione;">
                     <div class="w-full flex justify-between items-center font-black uppercase">
                         Descrizione (solo per le birre) :
-                        <ButtonCss @click="openInputInstruction()">
-                            Modifica
-                        </ButtonCss>
+                        <div>
+                            <ButtonCss @click="openInputInstruction()">
+                                Modifica
+                            </ButtonCss>
+                            <ButtonCss @click="openTraductionDescription()">
+                                Traduci
+                            </ButtonCss>
+                        </div>
                     </div>
                     <span class="uppercase font-semibold text-red-500">
                         {{ selectedDrink.instructions === 'undefined' ? 'Il drink non è descritto' :
@@ -393,7 +398,7 @@
             <div v-if="showModalEditInstruction" class="z-50">
                 <ModalAction :showModal="showModalEditInstruction" :selectedDrink="selectedDrink">
                     <h2 class="font-bold text-2xl text-center pb-6">
-                        Modifica la del drink:
+                        Modifica la descrizione del drink:
                     </h2>
 
                     <div class="text-xl pb-4 first-letter:uppercase mb-8">
@@ -403,7 +408,7 @@
                         </span>
                     </div>
 
-                    <label for="name" class="font-bold text-xl">Consiglio:</label>
+                    <label for="name" class="font-bold text-xl">Descrizione:</label>
                     <input type="text" class="w-full border-1 border-black rounded"
                         v-model="copySelectedDish.instructions">
 
@@ -413,6 +418,35 @@
                             @click="confirmEditInstruction(copySelectedDish)">Conferma</button>
                         <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
                             @click="showModalEditInstruction = false">Annulla</button>
+                    </div>
+                </ModalAction>
+            </div>
+
+            <div v-if="showModalTraductionDescription" class="z-50">
+                <ModalAction :showModal="showModalTraductionDescription" :selectedDrink="selectedDrink">
+                    <h2 class="font-bold text-2xl text-center pb-6">
+                        Inserisci la traduzione della descrizione:
+                    </h2>
+
+                    <div class="text-xl pb-4 first-letter:uppercase mb-8">
+                        Italiano:
+                        <span class="text-red-500 text-xl">
+                            {{ selectedDrink.instructions? selectedDrink.instructions : 'non è presente una descrizione' }}
+                        </span>
+                    </div>
+
+                    <label for="instructions_en" class="font-bold text-xl">Inglese:</label>
+                    <input type="text" id="instructions_en" class="w-full border-1 border-black rounded" v-model="copySelectedDish.instructions_en" :placeholder="copySelectedDish.instructions_en">
+
+                    <label for="instructions_fr" class="font-bold text-xl">Francese:</label>
+                    <input type="text" id="instructions_fr" class="w-full border-1 border-black rounded" v-model="copySelectedDish.instructions_fr" :placeholder="copySelectedDish.instructions_fr">
+
+
+                    <div class="flex w-full justify-between py-5">
+                        <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32"
+                            @click="confirmTraductionDescription(copySelectedDish)">Conferma</button>
+                        <button class="bg-white border-black border-2 rounded text-black p-3 w-32"
+                            @click="showModalTraductionDescription = false">Annulla</button>
                     </div>
                 </ModalAction>
             </div>
@@ -1112,6 +1146,7 @@ export default {
             showModalTraductionFlavour: false,
             showModalTraductionBreeding: false,
             showModalTraductionNose: false,
+            showModalTraductionDescription: false,
             dishIdToDelete: null,
             copySelectedDish: null,
             arrayAllergens: this.allergensDrinks,
@@ -1389,6 +1424,20 @@ export default {
             })
 
             this.showModalTraductionFlavour = false;
+        },
+        openTraductionDescription() {
+            this.showModalTraductionDescription = true;
+        },
+        confirmTraductionDescription(dishNew) {
+            this.selectedDrink.instructions_en = dishNew.instructions_en
+            this.selectedDrink.instructions_fr = dishNew.instructions_fr
+
+            axios.put(`/api/drinks/${this.selectedDrink.id}`, {
+                instructions_en: dishNew.instructions_en,
+                instructions_fr: dishNew.instructions_fr
+            })
+
+            this.showModalTraductionDescription = false;
         },
         openInputNose() {
             this.showModalEditNose = true;

@@ -225,6 +225,14 @@ class DrinkController extends Controller
             $drink->nose_en = $request->input('nose_en');
         }
 
+        if($request->has('instructions_en')) {
+            $drink->instructions_en = $request->input('instructions_en');
+        }
+
+        if($request->has('instructions_fr')) {
+            $drink->instructions_fr = $request->input('instructions_fr');
+        }
+
         $drink->save();
 
         return response()->json($drink, 201);
