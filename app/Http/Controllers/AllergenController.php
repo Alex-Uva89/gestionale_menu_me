@@ -47,15 +47,6 @@ class AllergenController extends Controller
         public function update(Request $request, $id)
         {
             $allergen = Allergen::findOrFail($id);
-
-            $request->validate([
-                'name' => 'sometimes|string|max:255',
-                'name_en' => 'sometimes|string|max:255',
-                'name_fr' => 'sometimes|string|max:255',
-                'icon' => 'sometimes|image|mimes:png,svg|max:2048',
-                'is_active' => 'sometimes|boolean',
-            ]);
-
             
             if ($request->has('name')) {
                 $allergen->name = $request->name;                

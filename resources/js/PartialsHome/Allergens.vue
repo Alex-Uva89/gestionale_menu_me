@@ -236,7 +236,8 @@ export default {
             componenetAllergen: 0,
             isScrollable: false,
             allergenId: null,
-            showModalUnderCostruction: false
+            showModalUnderCostruction: false,
+            selectedAllergen: null
         }
     },
     methods: {
@@ -333,23 +334,44 @@ export default {
             this.isOpenModalDelete = false;
         },
         editAllergen(id) {
+            this.form = { ...this.allergens.find(allergen => allergen.id === id) };
+
             this.allergenId = id;
             this.isOpenModalEdit = true;
         },
-        confirmEditAllergen(value,valueEn, ValueFr, valueIcon) {
+        confirmEditAllergen(value, valueEn, ValueFr, valueIcon) {
             let formData = new FormData();
             formData.append('_method', 'PUT');
             formData.append('name', value);
             formData.append('name_en', valueEn);
             formData.append('name_fr', ValueFr);
-            formData.append('icon', valueIcon);
 
-            axios.post(`/api/allergens/${this.allergenId}`, formData)
+            if (valueIcon) {
+                formData.append('icon', valueIcon);
+            }
+
+
+            axios.post(`/api/allergens/${this.allergenId}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
             .then(response => {
-                const data = response.data.split('\n').pop();
-                const editedAllergen = JSON.parse(data);
+                let editedAllergen;
 
-                const index = this.allergens.findIndex(allergen => allergen.id === this.allergenId)
+                if (typeof response.data === 'string') {
+                    try {
+                        const data = response.data.split('\n').pop().trim();
+                        editedAllergen = JSON.parse(data);
+                    } catch (error) {
+                        console.error('Errore nel parsing della stringa JSON:', error);
+                        return;
+                    }
+                } else {
+                    editedAllergen = response.data;
+                }
+
+                const index = this.allergens.findIndex(allergen => allergen.id === this.allergenId);
                 if (index !== -1) {
                     const checkFile = () => {
                         axios.get('/storage/' + editedAllergen.icon)
@@ -364,9 +386,11 @@ export default {
 
                     checkFile();
                 } 
+
+                this.selectedAllergen = editedAllergen;
             })
             .catch(error => {
-                console.log(error);
+                console.log(error.response?.data || error);
             });
 
             this.isOpenModalEdit = false;
@@ -415,16 +439,19 @@ export default {
     cursor: none;
 }
 .table-allergens{
-    width: 80%;
     margin: 0 auto;
 }
 .list-allergen{
+    min-width: 100%;
     min-height: 0;
     max-height: 400px;
     overflow-y: scroll;
     scrollbar-width: none;
 }
 
+tbody{
+    width: 70vw;
+}
 .section-create-allergen, .section-delete-allergen, .section-edit-allergen{
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;

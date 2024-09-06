@@ -180,18 +180,19 @@ const props = defineProps({
 
   <ModalAction :showModal="showEditModal">
       <div class="modal">
-          <h2 class="h-20 font-bold text-2xl text-center">
-              Modifica categoria
+        <h2 class="h-20 font-bold text-2xl text-center">
+          Modifica categoria
+          {{ category_venues.find(category => category.id === categoryToEdit).name }}
           </h2>
             <div class="flex flex-col gap-4 justify-between items-center">
                 <label for="categoryName">Nome categoria:</label>
-                <input type="text" id="categoryName" v-model="category_venues.name" :placeholder="category_venues.name">
+                <input type="text" id="categoryName" v-model="category_venues.name" :placeholder="category_venues.find(category => category.id === categoryToEdit).name">
                 
                 <label for="categoryNameEn">Inglese:</label>
-                <input type="text" id="categoryNameEn" v-model="category_venues.name_en" :placeholder="category_venues.name_en">
+                <input type="text" id="categoryNameEn" v-model="category_venues.name_en" :placeholder="category_venues.find(category => category.id === categoryToEdit).name_en">
                 
                 <label for="categoryNameFr">Francese:</label>
-                <input type="text" id="categoryNameFr" v-model="category_venues.name_fr" :placeholder="category_venues.name_fr">
+                <input type="text" id="categoryNameFr" v-model="category_venues.name_fr" :placeholder="category_venues.find(category => category.id === categoryToEdit).name_fr">
             </div>
           <div class="flex w-100 justify-between p-5 gap-2">
             <button class="bg-green-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(category_venues.name, category_venues.name_en, category_venues.name_fr)">Conferma</button>              
@@ -313,9 +314,17 @@ export default {
             this.showDeleteModal = false;
         },
         editCategory(id) {
-            this.showEditModal = true;  
+            const categoryToEdit = this.localcategory_venues.find(category => category.id === id);
+        
+            const index = this.category_venues.findIndex(category => category.id === id);
+            if (index !== -1) {
+                this.category_venues[index] = { ...categoryToEdit };
+            }
+        
+            // Mostra il modal di modifica
+            this.showEditModal = true;
             this.categoryToEdit = id;
-            this.categoryNameToEdit = this.localcategory_venues.find(category => category.id === id).name;
+            this.categoryNameToEdit = categoryToEdit.name;
         },
         confirmEdit(value, valueEn, valueFr) {
             let formData = new FormData();
