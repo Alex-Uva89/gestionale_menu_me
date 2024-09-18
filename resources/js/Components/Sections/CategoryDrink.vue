@@ -620,6 +620,30 @@ export default {
               submitForm(null);
             }
         },
+        resetForm(){
+            this.drink_category = {
+            name: '',
+            description: '',
+            price: '',
+            instructions: '',
+            degrees: '',
+            origin: '',
+            color: '',
+            production_method: '',
+            flavour: '',
+            grape_variety: '',
+            producer: '',
+            denomination: '',
+            vintage: '',
+            breeding_method: '',
+            format: '',
+            serving_temperature: '',
+            nose: '',
+            certifications: ''
+        };
+        this.file = null;
+        this.selectedAllergens = [];
+        },
         matchAllergens(drinkId, allergenId) {
 
           const isMatched = this.allergensDrinks.some(allergenDrink => allergenDrink.id === allergenId && allergenDrink.drinks.some(drinkAbb => drinkAbb.pivot.drink_id === drinkId));
