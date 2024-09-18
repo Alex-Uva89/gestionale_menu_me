@@ -522,6 +522,7 @@ export default {
           }
         },
         addDrink(id) {
+          this.resetForm();
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
           console.log(this.venueId)
