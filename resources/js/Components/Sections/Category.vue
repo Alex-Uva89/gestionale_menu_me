@@ -101,7 +101,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           nome:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="dish_category.name" :placeholder="dish_category.name">
+                      <input class="w-full h-8" type="text" v-model="dish_category.name" placeholder="nome">
                   </div>
                   
               </div>
@@ -138,14 +138,14 @@ const props = defineProps({
                   <div class="w-full flex justify-between items-center font-black uppercase">
                     Ingredienti:
                   </div>
-                  <input class="w-full h-16" type="text" v-model="dish_category.description" :placeholder="dish_category.description">
+                  <input class="w-full h-16" type="text" v-model="dish_category.description" placeholder="ingredienti">
               </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
                   <div class="flex flex-col gap-2 w-full">
                       <div class="font-black uppercase">
                           prezzo:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="dish_category.price" :placeholder="dish_category.price">
+                      <input class="w-full h-8" type="number" v-model="dish_category.price" placeholder="prezzo">
                   </div>
               </div>
               <div style="grid-area: abbinamenti">

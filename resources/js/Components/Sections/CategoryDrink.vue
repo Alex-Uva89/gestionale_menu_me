@@ -94,7 +94,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           nome:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.name" :placeholder="drink_category.name">
+                      <input class="w-full h-8" type="text" v-model="drink_category.name" placeholder="nome">
                   </div>
                   
               </div>
@@ -140,7 +140,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           ingredienti:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.description" :placeholder="drink_category.description">
+                      <input class="w-full h-8" type="text" v-model="drink_category.description" placeholder="ingredienti">
               </div>
                   
               </div>
@@ -149,7 +149,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           gradi:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="drink_category.degrees" :placeholder="drink_category.degrees">
+                      <input class="w-full h-8" type="number" v-model="drink_category.degrees" placeholder="gradi">
                   </div>
               </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
@@ -157,7 +157,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           prezzo:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="drink_category.price" :placeholder="drink_category.price">
+                      <input class="w-full h-8" type="number" v-model="drink_category.price" placeholder="prezzo">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
@@ -165,7 +165,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           origine:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.origin" :placeholder="drink_category.origin">
+                      <input class="w-full h-8" type="text" v-model="drink_category.origin" placeholder="origine">
                   </div>
                   
               </div>
@@ -174,7 +174,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           colore:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.color" :placeholder="drink_category.color">
+                      <input class="w-full h-8" type="text" v-model="drink_category.color" placeholder="colore">
                   </div>
                   
               </div>
@@ -198,7 +198,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           sapore:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.flavour" :placeholder="drink_category.flavour">
+                      <input class="w-full h-8" type="text" v-model="drink_category.flavour" placeholder="sapore">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: vitigno;">
@@ -206,7 +206,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           vitigno:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.grape_variety" :placeholder="drink_category.grape_variety">
+                      <input class="w-full h-8" type="text" v-model="drink_category.grape_variety" placeholder="vitigno">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produttore;">
@@ -214,7 +214,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           produttore:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.producer" :placeholder="drink_category.producer">
+                      <input class="w-full h-8" type="text" v-model="drink_category.producer" placeholder="produttore">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: denominazione;">
@@ -222,7 +222,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           denominazione:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.denomination" :placeholder="drink_category.denomination">
+                      <input class="w-full h-8" type="text" v-model="drink_category.denomination" placeholder="denominazione">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: annata;">
@@ -230,7 +230,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           annata:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="drink_category.vintage" :placeholder="drink_category.vintage">
+                      <input class="w-full h-8" type="number" v-model="drink_category.vintage" placeholder="annata">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: allevamento;">
@@ -238,7 +238,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           metodo di allevamento:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.breeding_method" :placeholder="drink_category.breeding_method">
+                      <input class="w-full h-8" type="text" v-model="drink_category.breeding_method" placeholder="metodo di allevamento">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: formato;">
@@ -246,7 +246,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           formato:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.format" :placeholder="drink_category.format">
+                      <input class="w-full h-8" type="text" v-model="drink_category.format" placeholder="formato">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: temperatura;">
@@ -254,7 +254,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           temperatura di servizio:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="drink_category.serving_temperature" :placeholder="drink_category.serving_temperature">
+                      <input class="w-full h-8" type="number" v-model="drink_category.serving_temperature" placeholder="temperatura di servizio">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: olfatto;">
@@ -262,7 +262,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           olfatto:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.nose" :placeholder="drink_category.nose">
+                      <input class="w-full h-8" type="text" v-model="drink_category.nose" placeholder="olfatto">
                   </div>
               </div>
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: certificazioni;">
@@ -270,7 +270,7 @@ const props = defineProps({
                       <div class="font-black uppercase">
                           certificazioni:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="drink_category.certifications" :placeholder="drink_category.certifications">
+                      <input class="w-full h-8" type="text" v-model="drink_category.certifications" placeholder="certificazioni">
                   </div>
               </div>
           </div>
@@ -522,7 +522,6 @@ export default {
           }
         },
         addDrink(id) {
-          this.resetForm();
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
           console.log(this.venueId)
