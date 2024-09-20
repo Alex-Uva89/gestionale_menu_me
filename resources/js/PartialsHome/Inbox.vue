@@ -8,7 +8,6 @@ const props = defineProps({
 
 <template>
     <div class="inbox relative">
-      {{ showModalMessage }}
         <h2 v-if="messages.some(message => !message.is_read)" class=" font-semibold p-4 border-4 border-blue-400 sticky top-0 bg-white">
             <span class="text-xl text-blue-700">Hai
               <strong class="text-2xl text-black"> {{ messages.filter(message => !message.is_read).length }} </strong>
