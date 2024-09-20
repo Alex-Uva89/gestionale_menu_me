@@ -44,6 +44,14 @@ export default {
         border-radius: 10px;
         box-shadow: 0 0 20px rgb(0, 0, 0), 0 0 40px rgb(255, 255, 255);
     }
+
 }
 
+@media screen and (max-width: 768px){
+    .modal-container{
+        width: 100vw;
+        height: 100vh;
+    }
+    
+}
 </style>

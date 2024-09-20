@@ -664,4 +664,27 @@ import SelectMultiple from '../SelectMultiple.vue';
     height: 10vh;
 }
 
+
+@media screen and (max-width: 768px) {
+    .container-dish-show{
+        width: calc(100vw - 60px);
+        height: calc(100vh - 80px);
+    }
+    .grid-show-dish{
+        grid-template-areas: 
+            "nome"
+            "immagine"
+            "prezzo"
+            "allergeni"
+            "consigli"
+            "abbinamenti";
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+    .h-image{
+        width: 100%;
+        height: 50%;
+    }
+    
+}
 </style>

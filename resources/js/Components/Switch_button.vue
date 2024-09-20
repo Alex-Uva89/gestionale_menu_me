@@ -84,4 +84,21 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+@media screen and (max-width: 768px){
+  .switch{
+    width: 35px;
+    height: 20px;
+  }
+  .slider:before {
+    height: 15px;
+    width: 15px;
+    top:1px;
+  }
+  input:checked + .slider:before {
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(15px);
+  }
+}
 </style>

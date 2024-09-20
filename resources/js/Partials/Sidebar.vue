@@ -50,7 +50,7 @@ defineProps({
        type="button"
        class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
      >
-       x
+     ❌
      </button>
          </div>
          <div v-else class="flex lg:justify-center lg:col-start-2">
@@ -171,7 +171,13 @@ a:hover {
    scrollbar-width: none;
 }
 
-
+@media screen and (max-width: 768px){
+   .header-sidebar{
+      width: 50vw;
+      height: 100vh;
+   }
+  
+}
 </style>
 
 <script>
