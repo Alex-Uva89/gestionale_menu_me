@@ -450,7 +450,6 @@ export default {
                         let data = response.data;
                         data = data.substring(data.indexOf('{'));
                         newDish = JSON.parse(data);
-                        console.log(newDish)
                     } else {
                         newDish = response.data;
                     }

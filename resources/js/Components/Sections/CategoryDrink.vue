@@ -586,18 +586,35 @@ export default {
                         category.drinks.push(newDrink);
                         this.drinkToCreateId = '';
                     }
+                    this.$emit('drinkAdded', newDrink);
                     this.componentKeyli++;
                     this.showAddDrinksModal = false;
-
-                    this.$emit('drinkAdded', newDrink);
 
                     this.selectedAllergens.forEach(allergenId => {
                         this.matchAllergens(newDrink.id, allergenId);
                     });
-
                     this.selectedAllergens = [];
 
-                    this.resetForm();
+                    this.drink_category.name = "";
+                    this.drink_category.price = "";
+                    this.drink_category.description = "";
+                    this.drink_category.instructions = "";
+                    this.drink_category.degrees = "";
+                    this.drink_category.origin = "";
+                    this.drink_category.color = "";
+                    this.drink_category.production_method = "";
+                    this.drink_category.flavour = "";
+                    this.drink_category.grape_variety = "";
+                    this.drink_category.producer = "";
+                    this.drink_category.denomination = "";
+                    this.drink_category.vintage = "";
+                    this.drink_category.breeding_method = "";
+                    this.drink_category.format = "";
+                    this.drink_category.serving_temperature = "";
+                    this.drink_category.nose = "";
+                    this.drink_category.certifications = "";
+                    this.file = null;
+                    this.imagePreview = null;
                 })
                 .catch(error => {
                     console.log('Error response:', error.response);
@@ -618,30 +635,6 @@ export default {
             } else {
               submitForm(null);
             }
-        },
-        resetForm(){
-            this.drink_category = {
-            name: '',
-            description: '',
-            price: '',
-            instructions: '',
-            degrees: '',
-            origin: '',
-            color: '',
-            production_method: '',
-            flavour: '',
-            grape_variety: '',
-            producer: '',
-            denomination: '',
-            vintage: '',
-            breeding_method: '',
-            format: '',
-            serving_temperature: '',
-            nose: '',
-            certifications: ''
-        };
-        this.file = null;
-        this.selectedAllergens = [];
         },
         matchAllergens(drinkId, allergenId) {
 
