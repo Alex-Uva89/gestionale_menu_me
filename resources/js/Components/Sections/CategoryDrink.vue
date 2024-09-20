@@ -333,7 +333,7 @@ const props = defineProps({
     :drinks="drinks"
     @showModalDrink="showModalDrink = false"
     @deleteDrink="confirmDeleteDrink"
-    @matchDish="matchDish"
+    @matchDish="matchAllergens"
     />
   </ModalAction>
 
@@ -524,7 +524,6 @@ export default {
         addDrink(id) {
           this.showAddDrinksModal = true;
           this.drinkToCreateId = id;
-          console.log(this.venueId)
         },
         confirmAddDrinks() {
             let formData = new FormData();
