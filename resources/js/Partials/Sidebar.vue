@@ -145,7 +145,9 @@ defineProps({
 </template>
 
 <style scoped>
-
+aside{
+    background-color: #f8f9fa;
+}
 li {
     padding: 10px;
 }
@@ -175,6 +177,11 @@ a:hover {
    .header-sidebar{
       width: 50vw;
       height: 100vh;
+   }
+   .header-sidebar li a span,
+   .header-sidebar li button span,
+   .header-sidebar li a{
+      font-size: 1.2rem;
    }
   
 }

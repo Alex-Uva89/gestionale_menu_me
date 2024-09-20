@@ -120,7 +120,7 @@ const props = defineProps({
                   </span>
                   <ul class="flex gap-2">
                       <template v-for="allergen in allergens">
-                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer inactive" @click="toggleAllergen(allergen.id)" :key="allergen.id">
+                        <li v-if="allergen.is_active" class="allergen-mobile rounded-full cursor-pointer inactive" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
                             :src="allergen.icon" 
                             :alt="allergen.name + ' icon'" 
@@ -657,6 +657,43 @@ export default {
 
   .inactive{
     opacity: 0.5;
+  }
+
+  
+  @media screen and (max-width: 768px) {
+    .grid-show-dish{
+        display: grid;
+        margin: 20px 0;
+        height: 62vh;
+        grid-template-areas: 
+            "nome nome"
+            "immagine immagine"
+            "prezzo prezzo"
+            "allergeni allergeni"
+            "abbinamenti abbinamenti"
+            "consigli consigli";
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 10px;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        ul{
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+    }
+
+    .allergen-mobile{
+      width: 25px;
+      height: 25px;
+    }
+    .allergen-mobile img{
+      width: 100%;
+      height: 100%;
+    }
+    
+    
   }
 
 </style>
