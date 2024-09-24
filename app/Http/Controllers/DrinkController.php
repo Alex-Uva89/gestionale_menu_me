@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Log;
 
 class DrinkController extends Controller
 {
-    public function getDrinks() {
+    public function getDrinks()
+    {
         $drinks = Drink::where('is_active', 1)->get();
         return response()->json($drinks, 200);
     }
@@ -53,39 +54,40 @@ class DrinkController extends Controller
             'is_active' => 'nullable',
             'category_id' => 'nullable',
             'venue_id' => 'nullable',
+            'url' => 'nullable',
         ]);
 
-        
-            $drink = new Drink();
-            $drink->name = $validated['name'];
-            $drink->description = $validated['description'] ?? '';
-            $drink->price = $validated['price'];
-            $drink->instructions = $validated['instructions'] ?? '';
-            $drink->color = $validated['color'] ?? '';
-            $drink->degrees = $validated['degrees'] ?? '';
-            $drink->origin = $validated['origin'] ?? '';
-            $drink->production_method = $validated['production_method'] ?? '';
-            $drink->flavour = $validated['flavour'] ?? '';
-            $drink->grape_variety = $validated['grape_variety'] ?? '';
-            $drink->producer = $validated['producer'] ?? '';
-            $drink->denomination = $validated['denomination'] ?? '';
-            $drink->vintage = !empty($validated['vintage']) ? $validated['vintage'] : null;
-            $drink->breeding_method = $validated['breeding_method'] ?? '';
-            $drink->format = $validated['format'] ?? '';
-            $drink->serving_temperature = $validated['serving_temperature'] ?? '';
-            $drink->nose = $validated['nose'] ?? '';
-            $drink->certifications = $validated['certifications'] ?? '';
-            $drink->is_active = $validated['is_active'] ?? 1;
-            $drink->category_id = $validated['category_id'];
-            $drink->venue_id = $validated['venue_id'];
 
-            if ($request->has('image')) {
-                $drink->image = $request->input('image');
-            }
+        $drink = new Drink();
+        $drink->name = $validated['name'];
+        $drink->description = $validated['description'] ?? '';
+        $drink->price = $validated['price'];
+        $drink->instructions = $validated['instructions'] ?? '';
+        $drink->color = $validated['color'] ?? '';
+        $drink->degrees = $validated['degrees'] ?? '';
+        $drink->origin = $validated['origin'] ?? '';
+        $drink->production_method = $validated['production_method'] ?? '';
+        $drink->flavour = $validated['flavour'] ?? '';
+        $drink->grape_variety = $validated['grape_variety'] ?? '';
+        $drink->producer = $validated['producer'] ?? '';
+        $drink->denomination = $validated['denomination'] ?? '';
+        $drink->vintage = !empty($validated['vintage']) ? $validated['vintage'] : null;
+        $drink->breeding_method = $validated['breeding_method'] ?? '';
+        $drink->format = $validated['format'] ?? '';
+        $drink->serving_temperature = $validated['serving_temperature'] ?? '';
+        $drink->nose = $validated['nose'] ?? '';
+        $drink->certifications = $validated['certifications'] ?? '';
+        $drink->is_active = $validated['is_active'] ?? 1;
+        $drink->category_id = $validated['category_id'];
+        $drink->venue_id = $validated['venue_id'];
 
-            $drink->save();
+        if ($request->has('image')) {
+            $drink->image = $request->input('image');
+        }
 
-            return response()->json($drink, 201);
+        $drink->save();
+
+        return response()->json($drink, 201);
     }
 
     public function update(Request $request, $id, Response $response)
@@ -173,7 +175,7 @@ class DrinkController extends Controller
             $drink->is_active = request('is_active');
         }
 
-        if ($request->has('image')) {   
+        if ($request->has('image')) {
             $drink->image = $request->input('image');
         }
 
@@ -225,12 +227,16 @@ class DrinkController extends Controller
             $drink->nose_en = $request->input('nose_en');
         }
 
-        if($request->has('instructions_en')) {
+        if ($request->has('instructions_en')) {
             $drink->instructions_en = $request->input('instructions_en');
         }
 
-        if($request->has('instructions_fr')) {
+        if ($request->has('instructions_fr')) {
             $drink->instructions_fr = $request->input('instructions_fr');
+        }
+
+        if ($request->has('url')) {
+            $drink->url = $request->input('url');
         }
 
         $drink->save();
@@ -238,27 +244,29 @@ class DrinkController extends Controller
         return response()->json($drink, 201);
     }
 
-    public function deleteByCategory(Request $request) {
+    public function deleteByCategory(Request $request)
+    {
         $categoryId = $request->query('category_id');
         Drink::where('category_id', $categoryId)->delete();
         return response()->json(null, 204);
     }
 
-    public function updateByCategory(Request $request) {
+    public function updateByCategory(Request $request)
+    {
         $categoryId = $request->query('category_id');
         $status = $request->input('is_active');
-    
+
         // Verifica che i dati siano validi
         if (is_null($categoryId) || is_null($status)) {
             return response()->json(['error' => 'Invalid input', 'category_id' => $categoryId, 'is_active' => $status], 400);
         }
-    
+
         // Trova tutti i drink con il category_id specificato e aggiorna il campo is_active
         Drink::where('category_id', $categoryId)->update(['is_active' => $status]);
-    
+
         // Recupera i drink aggiornati per restituirli nella risposta
         $drinks = Drink::where('category_id', $categoryId)->get();
-    
+
         return response()->json($drinks, 200);
     }
 
@@ -268,5 +276,4 @@ class DrinkController extends Controller
         $drink->delete();
         return response()->json(null, 204);
     }
-    
 }
