@@ -41,7 +41,7 @@ defineProps({
        ]"
        aria-label="Sidebar"
      >
-       <div class="header-sidebar px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800 h-full">
+       <div class="header-sidebar px-3 overflow-y-auto h-full">
          <div v-if="isSidebarOpen">
             <button
        data-drawer-target="sidebar-multi-level-sidebar"
