@@ -54,7 +54,7 @@ function updateCurrentPageComponent(value) {
       <Loading v-if="isLoading" /> <!-- Mostra il caricamento -->
       <div v-else>
 
-        <div class="bg-gray-50 flex dark:bg-gray-800 h-screen">
+        <div class="h-screen">
           <Sidebar :messages="messages" @venue-name="updateSelectedVenueName" @venue-color="updateSelectedVenueColor" @value-button="updateSelectedValueButton" />
 
           <div class="main-app flex">
