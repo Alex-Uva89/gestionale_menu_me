@@ -266,7 +266,7 @@ export default {
 .section_accordion{
   overflow: scroll;
   overflow-x: hidden;
-  min-height: calc(100vh - 7rem);
+  height: calc(100vh - 7rem);
   scrollbar-width: none;
 }
 
