@@ -437,6 +437,8 @@ export default {
             const submitForm = (imageURL) => {
                 if (imageURL) {
                   addFieldToFormData('image', imageURL);
+                } else {
+                  addFieldToFormData('image', 'null');
                 }
 
                 axios.post(`/api/dishes/${this.dishToCreateId}`, formData, {

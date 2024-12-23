@@ -599,6 +599,8 @@ export default {
             const submitForm = (imageURL) => {
                 if (imageURL) {
                     addFieldToFormData('image', imageURL);
+                } else {
+                    addFieldToFormData('image', null);
                 }
 
 
