@@ -4,8 +4,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "postinstall": "npm run build",
-        "prod": "npm run prod"
+        "postinstall": "composer install && npm run prod",
+        "prod": "vite build"
     },
     "dependencies": {
                 "@inertiajs/inertia": "^0.11.1",
