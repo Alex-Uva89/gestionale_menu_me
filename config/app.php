@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', true),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,8 +52,7 @@ return [
     |
     */
 
-    // 'url' => env('APP_ENV') === 'production' ? env('APP_URL_HTTPS', 'https://majestic-isle-royale-01245-f4e167ad8dbf.herokuapp.com') : env('APP_URL', 'http://localhost'),
-    'url' => env('APP_ENV') === 'production' ? env('APP_URL_HTTPS', '/') : env('APP_URL', 'http://localhost'),
+    'url' => env('APP_ENV') === 'production' ? env('APP_URL_HTTPS', 'https://majestic-isle-royale-01245-f4e167ad8dbf.herokuapp.com') : env('APP_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
