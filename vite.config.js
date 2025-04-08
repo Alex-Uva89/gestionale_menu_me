@@ -26,7 +26,7 @@ export default defineConfig({
         },
     },
     server: {
-        https: false // env('DEBUG_ENV') && env('DEBUG_ENV') === 'true' ? false : true,
+        https: true // env('DEBUG_ENV') && env('DEBUG_ENV') === 'true' ? false : true,
     },
     build: {            
         rollupOptions: {
