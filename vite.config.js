@@ -37,6 +37,6 @@ export default defineConfig({
         },
         sourcemap: true,
         assetsDir: 'assets',
-        outDir: 'build',
+        outDir: 'public/build',
     },
 });
