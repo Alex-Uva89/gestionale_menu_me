@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 
 
 export default defineConfig({
-    base: 'https://gestionale-menu-mamma-elvira-1bd41f37f5f9.herokuapp.com/', // Assicurati di impostare l'URL di base qui
+    base: '/', // Assicurati di impostare l'URL di base qui
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
