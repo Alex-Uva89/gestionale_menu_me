@@ -20,11 +20,11 @@ export default defineConfig({
             },
         }),
     ],
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'resources/js'), // Qui setti l'alias @ alla cartella resources/js
-        },
-    },
+    // resolve: {
+    //     alias: {
+    //         '@': path.resolve(__dirname, 'resources/js'), // Qui setti l'alias @ alla cartella resources/js
+    //     },
+    // },
     server: {
         https: true, // env('DEBUG_ENV') && env('DEBUG_ENV') === 'true' ? false : true,
         cors: true,
