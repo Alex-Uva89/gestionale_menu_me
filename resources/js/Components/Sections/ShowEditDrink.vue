@@ -4,12 +4,12 @@
         <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
             Scheda del drink:
             <span class="text-4xl uppercase text-red-500">
-                {{ selectedDrink.name }}
+                {{ selectedDish.name }}
             </span> 
-            <SwitchButton :value="selectedDrink.is_active === 1 || selectedDrink.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDrink.id, value)"  />
+            <SwitchButton :value="selectedDish.is_active === 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
         </h2>
         <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
-            <span class="font-bold text-xl">ID Database: {{ selectedDrink.id }}</span>
+            <span class="font-bold text-xl">ID Database: {{ selectedDish.id }}</span>
         </div>
         <div class="grid-show-drink">
             
@@ -19,7 +19,7 @@
                         nome:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.name }}
+                        {{ selectedDish.name }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -35,7 +35,7 @@
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDrink.image === 'null' || selectedDrink.image === 'undefined' ? 'img/defaultDish.jpg' : '/storage/' + selectedDrink.image" :alt="selectedDrink.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="selectedDish.image === 'null' || selectedDish.image === 'undefined' ? 'img/defaultDish.jpg' : selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
@@ -48,11 +48,11 @@
                             v-for="allergen in activeAllergens" 
                             :key="allergen.id" 
                             class="rounded-full cursor-pointer"
-                            :id="`${selectedDrink.id}-${allergen.id}`"
-                            @click="matchDish(selectedDrink.id, allergen.id)" 
+                            :id="`${selectedDish.id}-${allergen.id}`"
+                            @click="matchDish(selectedDish.id, allergen.id)" 
                             :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }"
                         >
-                            <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
+                            <img :src="allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
                         </li>
                 </ul>
                 <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
@@ -69,7 +69,7 @@
                     </ButtonCss>
                 </div>
                 <span class="uppercase font-semibold text-red-500">
-                    {{ selectedDrink.description === 'undefined' ? 'Non ci sono consigli in questo drink al momento' : selectedDrink.description }}
+                    {{ selectedDish.description === 'undefined' ? 'Non ci sono consigli in questo drink al momento' : selectedDish.description }}
                 </span>
             </div>
             <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
@@ -78,7 +78,7 @@
                         prezzo:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.price }}
+                        {{ selectedDish.price }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputPrice()">
@@ -91,7 +91,7 @@
                         gradi:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.degrees }}
+                        {{ selectedDish.degrees }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -104,7 +104,7 @@
                         colore:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.color }}
+                        {{ selectedDish.color }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -117,7 +117,7 @@
                         metodo di produzione:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.production_method }}
+                        {{ selectedDish.production_method }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -130,7 +130,7 @@
                         sapore:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.flavour }}
+                        {{ selectedDish.flavour }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -143,7 +143,7 @@
                         ingredienti:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.description }}
+                        {{ selectedDish.description }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -156,7 +156,7 @@
                         origine:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDrink.origin }}
+                        {{ selectedDish.origin }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -165,30 +165,30 @@
             </div>  
         </div>
         <div class="button_delete">
-            <div @click="openDeleteModalDish( selectedDrink.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
-                Elimina drink: {{ selectedDrink.name }}
+            <div @click="openDeleteModalDish( selectedDish )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
+                Elimina drink: {{ selectedDish.name }}
             </div>
         </div>
     </div>
 
     <!-- MODALS -->
      <div v-if="showModalDeleteDish" class="z-50">
-         <ModalAction :showModal="showModalDeleteDish" :selectedDrink="selectedDrink">
+         <ModalAction :showModal="showModalDeleteDish" :selectedDish="selectedDish">
              <h2 class="h-20 font-bold text-2xl text-center">
              Sei sicuro di voler eliminare il drink: 
              {{ 
-                 selectedDrink.name
+                 selectedDish.name
              }}?
              </h2>
              <div class="flex w-100 justify-between p-5">
-             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( selectedDrink.id )">Conferma</button>
+             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( selectedDish )">Conferma</button>
              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalDeleteDish = false">Annulla</button>
              </div>
          </ModalAction>
      </div>
 
      <div v-if="showModalEditName" class="z-50">
-         <ModalAction :showModal="showModalEditName" :selectedDrink="selectedDrink">
+         <ModalAction :showModal="showModalEditName" :selectedDish="selectedDish">
                 <h2 class="font-bold text-2xl text-center">
                 Modifica il nome del drink: 
                 </h2>
@@ -196,7 +196,7 @@
                 <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     nome attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDrink.name }}
+                        {{ selectedDish.name }}
                     </span>
                 </div>
 
@@ -212,7 +212,7 @@
      </div>
 
      <div v-if="showModalEditPrice" class="z-50">
-         <ModalAction :showModal="showModalEditPrice" :selectedDrink="selectedDrink">
+         <ModalAction :showModal="showModalEditPrice" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica il prezzo del drink: 
             </h2>
@@ -220,7 +220,7 @@
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     prezzo attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDrink.price }} €
+                        {{ selectedDish.price }} €
                     </span>
                 </div>
 
@@ -236,7 +236,7 @@
      </div>
 
      <div v-if="showModalEditDescription" class="z-50">
-        <ModalAction :showModal="showModalEditDescription" :selectedDrink="selectedDrink">
+        <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica i consigli del drink: 
             </h2>
@@ -244,7 +244,7 @@
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     descrizione attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDrink.description }}
+                        {{ selectedDish.description }}
                     </span>
             </div>
 
@@ -260,7 +260,7 @@
      </div>
 
      <div v-if="showModalEditImg" class="z-50">
-        <ModalAction :showModal="showModalEditImg" :selectedDrink="selectedDrink">
+        <ModalAction :showModal="showModalEditImg" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica l'immagine del drink: 
             </h2>
@@ -273,7 +273,7 @@
                     Anteprima Immagine:
                 </span>
                 <span class="container-edit-img">
-                        <img :src="imagePreview != null ? imagePreview : 'img/defaultDish.jpg'" :alt="selectedDrink.name + ' image'" class="object-img my-2 border border-3 border-black object-cover">                    
+                        <img :src="imagePreview != null ? imagePreview : 'img/defaultDish.jpg'" :alt="selectedDish.name + ' image'" class="object-img my-2 border border-3 border-black object-cover">                    
                     </span>
             </div>
 
@@ -288,7 +288,7 @@
      </div>
 
      <div v-if="showModalEditPairings" class="z-50">
-        <ModalAction :showModal="showModalEditPairings" :selectedDrink="selectedDrink">
+        <ModalAction :showModal="showModalEditPairings" :selectedDish="selectedDish">
             <h2 class="font-bold text-2xl text-center pb-6">
                 Modifica Gli abbinamenti del drink: 
             </h2>
@@ -300,7 +300,7 @@
                 <ul class="flex gap-2">
                     <template v-for="drink in pairings">
                         <template v-for="drink in drink.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="drink.id === selectedDrink.id" >{{ drink.name }}</li>
+                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="drink.id === selectedDish.id" >{{ drink.name }}</li>
                         </template>
                     </template>
                     
@@ -331,7 +331,7 @@ import SelectMultiple from '../SelectMultiple.vue';
 export default {
     
     name: 'ShowEditDish',
-    props: ['selectedDrink', 'showModalDrink', 'allergens','allergensDrinks', 'pairingsEnoteca', 'drinks'],
+    props: ['selectedDish', 'showModalDrink', 'allergens','allergensDrinks', 'pairingsEnoteca', 'drinks'],
     components: {
         ButtonCss,
         ModalAction,
@@ -365,6 +365,7 @@ export default {
             this.showModalDeleteDish = true;
         },
         confirmDeleteDish(id){
+            
             this.$emit('deleteDish', id);
             this.showModalDeleteDish = false;
         },
@@ -378,15 +379,15 @@ export default {
                 return false;
                 }
 
-            return allergenDrink.drinks.some(drink => drink.pivot.drink_id === this.selectedDrink.id);
+            return allergenDrink.drinks.some(drink => drink.pivot.drink_id === this.selectedDish.id);
         },
         openInputName(){
             this.showModalEditName = true;
         },
         confirmEditName(dishNew){
-            this.selectedDrink.name = dishNew.name
+            this.selectedDish.name = dishNew.name
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/dishes/${this.selectedDish.id}`, {
                 name: dishNew.name
             })
 
@@ -399,9 +400,9 @@ export default {
             this.showModalEditPrice = true;
         },
         confirmEditPrice(dishNew){
-            this.selectedDrink.price = dishNew.price
+            this.selectedDish.price = dishNew.price
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/dishes/${this.selectedDish.id}`, {
                 price: dishNew.price
             })
 
@@ -411,9 +412,9 @@ export default {
             this.showModalEditDescription = true;
         },
         confirmEditDescription(dishNew){
-            this.selectedDrink.description = dishNew.description
+            this.selectedDish.description = dishNew.description
 
-            axios.put(`/api/dishes/${this.selectedDrink.id}`, {
+            axios.put(`/api/dishes/${this.selectedDish.id}`, {
                 description: dishNew.description
             })
 
@@ -435,7 +436,7 @@ export default {
 
             formData.append('_method', 'PUT');
 
-            axios.post(`/api/drinks/${this.selectedDrink.id}`, formData, {
+            axios.post(`/api/drinks/${this.selectedDish.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -445,7 +446,7 @@ export default {
                 data = data.substring(data.indexOf('{'));
                 newDrink = JSON.parse(data);
 
-                this.selectedDrink.image = newDrink.image;
+                this.selectedDish.image = newDrink.image;
             })
             .catch(error => {
                 console.error(error);
@@ -475,7 +476,7 @@ export default {
         updateIsShowStatus(id, value) {
           axios.put(`/api/drinks/${id}`, { is_active: value })
           .then(response => {
-                this.selectedDrink.is_active = response.data.is_active
+                this.selectedDish.is_active = response.data.is_active
             })
           .catch(error => {
               console.log(error);
@@ -486,7 +487,7 @@ export default {
         },
         toggleDrink(drink) {
             this.pairings = this.pairings.map(pairing => {
-                if (pairing.id === this.selectedDrink.id) {
+                if (pairing.id === this.selectedDish.id) {
                     const drinkIndex = pairing.drinks.findIndex(d => d.id === drink.id);
                     if (drinkIndex !== -1) {
                         pairing.drinks.splice(drinkIndex, 1);
@@ -519,7 +520,7 @@ export default {
           return this.allergens.filter(allergen => allergen.is_active);
         },
         selectedDishDrinks() {
-            const drink = this.pairings.find(d => d.id === this.selectedDrink.id);
+            const drink = this.pairings.find(d => d.id === this.selectedDish.id);
             if (!drink || !drink.drinks) {
                 return [];
             }
@@ -530,7 +531,7 @@ export default {
         }
     },
     mounted() {
-        this.copySelectedDish = Object.assign({}, this.selectedDrink);
+        this.copySelectedDish = Object.assign({}, this.selectedDish);
         this.updatePairings(this.copySelectedDish.id);
     },
     watch: {

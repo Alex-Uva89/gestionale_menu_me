@@ -1,31 +1,32 @@
-<script>
+<script setup>
+import { defineProps } from 'vue';
 
-export default {
-  props: {
-    selectedVenueName: String,
-    selectedVenueColor: String, 
-    selectedValueButton: String
-  }
-};
+const { selectedVenue, selectedValueButton, components, default_id } = defineProps({
+  selectedVenue: Object,
+  selectedValueButton: Object,
+  components: Object,
+  default_id: Number
+});
 
-
+// ad apertura app ci mostra il component con il default_id che ci arriva da DB a 1, assegnato dal BE 
+// (il cliente che vorrà una pagina default diversa inserirà invece di 0, 1 al componente richiesto)
+// domattina è da completare il passaggio di click della sidebar, attualmente solo i ristoranti sono cliccabili
 </script>
 
 <template>
-    <header class="header">
-      <div class="flex h-full items-center"
-      :class="{
-        'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
-        'bg-olive': selectedVenueColor === 'green',
-        'bg-stone-500': selectedVenueColor === 'gray',
-        'bg-enoteca': selectedVenueColor === 'red',
-        'text-orange-500': selectedVenueColor === 'gray',
-      }">
-        <h1 v-if="selectedVenueName" class="ms-2">{{ selectedVenueName }}</h1>
-        <h1 v-else class="ms-2">{{ selectedValueButton }}</h1>
-      </div>
-    </header>
+  <!-- {{ console.log('DEBUG HEADER', components) }} -->
+  <header class="header">
+    <div v-if="selectedVenue" class="flex h-full items-center" 
+      :style="{ backgroundColor: selectedVenue.css.brand.bg_color }">
+      <h1 class="ms-2">{{ selectedVenue.name }}</h1>
+    </div>
+    <div v-else class="flex h-full items-center"
+      :style="{ backgroundColor: components[default_id]?.css?.bg_color || '' }">
+      <h1 class="ms-2">{{ components[default_id]?.name || '' }}</h1>
+    </div>
+  </header>
 </template>
+
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use App\Models\Dish;
@@ -38,7 +39,7 @@ class Venue extends Model
 
     public function categories() 
     {
-        return $this->belongsToMany(Category::class)->withPivot('category_id','venue_id');
+        return $this->belongsToMany(Category::class);
     }
 
     public function dishes() 
@@ -49,5 +50,12 @@ class Venue extends Model
     public function drinks() 
     {
         return $this->belongsToMany(Drink::class);
+    }
+
+    protected function css(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => json_decode($value, true) ?? [],
+        );
     }
 }

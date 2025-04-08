@@ -1,15 +1,15 @@
 <template>
-    <button class="absolute top-5 right-5" @click="showModalDish()">❌</button>
-    <div class="container-dish-show" :key="localComponentAllergen">
+    <button class="absolute top-5 right-5" @click="showModalItem()">❌</button>
+    <div class="container-dish-show" >
         <h2 class="h-20 flex justify-between items-center font-bold text-2xl border border-3 border-black px-5">
-            Scheda del piatto:
+            Scheda del {{ subjectModal.relation.table_category_name }}:
             <span class="text-4xl uppercase text-red-500">
-                {{ selectedDish.name }}
+                {{ subjectModal.selectedItem.name }}
             </span>  
-            <SwitchButton :value="selectedDish.is_active === 1 || selectedDish.is_active === true" @switchChanged="value => updateIsShowStatus(selectedDish.id, value)"  />
+            <SwitchButton :value="subjectModal.selectedItem.is_active === 1 || subjectModal.selectedItem.is_active === true" @switchChanged="value => updateIsShowStatus(subjectModal, value)"  />
         </h2>
         <div class="h-10 flex justify-between items-center border border-3 border-t-0 border-black px-5">
-            <span class="font-bold text-xl">ID Database: {{ selectedDish.id }}</span>
+            <span class="font-bold text-xl">Categoria n°: {{ subjectModal.selectedItem.id }}</span>
         </div>
         <div class="grid-show-dish">
             <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
@@ -18,7 +18,7 @@
                         nome:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDish.name }}
+                        {{ subjectModal.selectedItem.name }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputName()">
@@ -30,11 +30,12 @@
                     <span class="font-black me-2 uppercase">
                         immagine
                     </span>
+                    <!-- {{ console.log('PROVA', subjectModal.relation) }} -->
                     <ButtonCss @click="openInputImg()">
                             Modifica
                     </ButtonCss>
                 </div>
-                <img :src="selectedDish.image === 'null' ? 'img/defaultDish.jpg' : '/storage/' + selectedDish.image" :alt="selectedDish.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
+                <img :src="subjectModal.selectedItem.image === 'null' ? 'img/defaultDish.jpg' : subjectModal.selectedItem.image" :alt="subjectModal.selectedItem.name + ' image'" class="h-image my-2 border border-3 border-black object-cover">
             </div>
             <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
                 <span class="font-black me-2 uppercase">
@@ -46,11 +47,11 @@
                             v-for="allergen in activeAllergens" 
                             :key="allergen.id" 
                             class="rounded-full cursor-pointer"
-                            :id="`${selectedDish.id}-${allergen.id}`"
-                            @click="matchAllergens(selectedDish.id, allergen.id)" 
+                            :id="`${subjectModal.selectedItem.id}-${allergen.id}`"
+                            @click="matchAllergens(subjectModal.selectedItem.id, allergen.id)" 
                             :class="{ 'opacity-100': isAllergenMatched(allergen.id), 'opacity-20': !isAllergenMatched(allergen.id) }"
                         >
-                            <img :src="'/storage/' + allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
+                            <img :src="allergen.icon" :alt="allergen.name + ' icon'" class="object-contain w-10 h-10 rounded-full border border-3 border-black">
                         </li>
                 </ul>
                 <div class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center" v-else>
@@ -67,7 +68,7 @@
                     </ButtonCss>
                 </div>
                 <span class="uppercase font-semibold text-red-500">
-                    {{ selectedDish.description === 'undefined' ? 'Non ci sono consigli in questo piatto al momento' : selectedDish.description }}
+                    {{ subjectModal.selectedItem.description === 'undefined' ? `Non ci sono consigli in questo ${ subjectModal.relation.table_category_name } al momento` : subjectModal.selectedItem.description }}
                 </span>
             </div>
             <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
@@ -76,7 +77,7 @@
                         prezzo:
                     </div>
                     <span class="font-bold uppercase text-red-500">
-                        {{ selectedDish.price }}
+                        {{ subjectModal.selectedItem.price }}
                     </span>
                 </div>
                 <ButtonCss @click="openInputPrice()">
@@ -95,111 +96,111 @@
                 <ul class="flex gap-2">
                     <template v-for="dish in pairings">
                         <template v-for="drink in dish.drinks">
-                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id && (drink.is_active === true || drink.is_active === 1)" >{{ drink.name }}</li>
+                            <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === subjectModal.selectedItem.id && (drink.is_active === true || drink.is_active === 1)" >{{ drink.name }}</li>
                         </template>
                     </template>
                 </ul>
             </div>
         </div>
         <div class="button_delete">
-            <div @click="openDeleteModalDish( selectedDish.id )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
-                Elimina piatto: {{ selectedDish.name }}
+            <div @click="openDeleteModalDish( subjectModal )" class="p-2 rounded-2xl text-center text-white uppercase font-extrabold bg-red-600 cursor-pointer">
+                Elimina {{ subjectModal.relation.table_category_name }}: {{ subjectModal.selectedItem.name }}
             </div>
         </div>
     </div>
 
     <!-- MODALS -->
      <div v-if="showModalDeleteDish" class="z-50">
-         <ModalAction :showModal="showModalDeleteDish" :selectedDish="selectedDish">
+         <ModalAction :showModal="showModalDeleteDish" :subjectModal.selectedItem="subjectModal.selectedItem">
              <h2 class="h-20 font-bold text-2xl text-center">
-             Sei sicuro di voler eliminare il piatto: 
+             Sei sicuro di voler eliminare il {{ subjectModal.relation.table_category_name }}: 
              {{ 
-                 selectedDish.name
+                 subjectModal.selectedItem.name
              }}?
              </h2>
              <div class="flex w-100 justify-between p-5">
-             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( selectedDish.id )">Conferma</button>
+             <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDeleteDish( subjectModal )">Conferma</button>
              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalDeleteDish = false">Annulla</button>
              </div>
          </ModalAction>
      </div>
 
      <div v-if="showModalEditName" class="z-50">
-         <ModalAction :showModal="showModalEditName" :selectedDish="selectedDish">
+         <ModalAction :showModal="showModalEditName" :subjectModal.selectedItem="subjectModal.selectedItem">
                 <h2 class="font-bold text-2xl text-center">
-                Modifica il nome del piatto: 
+                Modifica il nome del {{ subjectModal.relation.table_category_name }}: 
                 </h2>
 
                 <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     nome attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDish.name }}
+                        {{ subjectModal.selectedItem.name }}
                     </span>
                 </div>
 
                 <label for="name" class="font-bold text-xl">Nome:</label>
-                <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.name">
+                <input type="text" class="w-full border-1 border-black rounded" v-model="copyselectedItem.name">
 
 
                 <div class="flex w-full justify-between py-5">
-                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditName( copySelectedDish )">Conferma</button>
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditName( subjectModal, copyselectedItem )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditName = false">Annulla</button>
                 </div>
          </ModalAction>
      </div>
 
      <div v-if="showModalEditPrice" class="z-50">
-         <ModalAction :showModal="showModalEditPrice" :selectedDish="selectedDish">
+         <ModalAction :showModal="showModalEditPrice" :subjectModal.selectedItem="subjectModal.selectedItem">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica il prezzo del piatto: 
+                Modifica il prezzo del {{ subjectModal.relation.table_category_name }}: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     prezzo attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDish.price }} €
+                        {{ subjectModal.selectedItem.price }} €
                     </span>
                 </div>
 
             <label for="name" class="font-bold text-xl">Nome:</label>
-            <input type="number" class="w-full border-1 border-black rounded" v-model="copySelectedDish.price">
+            <input type="number" class="w-full border-1 border-black rounded" v-model="copyselectedItem.price" step="0.01">
 
 
             <div class="flex w-full justify-between py-5">
-                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPrice( copySelectedDish )">Conferma</button>
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPrice( subjectModal, copyselectedItem )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditPrice = false">Annulla</button>
                 </div>
          </ModalAction>
      </div>
 
      <div v-if="showModalEditDescription" class="z-50">
-        <ModalAction :showModal="showModalEditDescription" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditDescription" :subjectModal.selectedItem="subjectModal.selectedItem">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica i consigli del piatto: 
+                Modifica i consigli del {{ subjectModal.relation.table_category_name }}: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
                     descrizione attuale: 
                     <span class="text-red-500 text-xl">
-                        {{ selectedDish.description }}
+                        {{ subjectModal.selectedItem.description }}
                     </span>
             </div>
 
             <label for="name" class="font-bold text-xl">Consiglio:</label>
-            <input type="text" class="w-full border-1 border-black rounded" v-model="copySelectedDish.description">
+            <input type="text" class="w-full border-1 border-black rounded" v-model="copyselectedItem.description">
 
 
             <div class="flex w-full justify-between py-5">
-                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDescription( copySelectedDish )">Conferma</button>
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditDescription( subjectModal, copyselectedItem )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditDescription = false">Annulla</button>
             </div>
         </ModalAction>
      </div>
 
      <div v-if="showModalEditImg" class="z-50">
-        <ModalAction :showModal="showModalEditImg" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditImg" :subjectModal.selectedItem="subjectModal.selectedItem">
             <h2 class="font-bold text-2xl text-center pb-6">
-                Modifica l'immagine del piatto: 
+                Modifica l'immagine del {{ subjectModal.relation.table_category_name }}: 
             </h2>
 
             <div class="text-xl pb-4 first-letter:uppercase mb-8">
@@ -210,7 +211,7 @@
                     Anteprima Immagine:
                 </span>
                 <span class="container-edit-img">
-                        <img :src="imagePreview != null ? imagePreview : 'img/defaultDish.jpg'" :alt="selectedDish.name + ' image'" class="object-img my-2 border border-3 border-black object-cover">                    
+                        <img :src="imagePreview != null ? imagePreview : 'img/defaultDish.jpg'" :alt="subjectModal.selectedItem.name + ' image'" class="object-img my-2 border border-3 border-black object-cover">                    
                     </span>
             </div>
 
@@ -218,16 +219,16 @@
             <input id="editImg" type="file" @change="previewImage" class="w-full border-1 border-black rounded">
 
             <div class="flex w-full justify-between py-5">
-                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditImg( copySelectedDish )">Conferma</button>
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditImg( copyselectedItem )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditImg = false">Annulla</button>
             </div>
         </ModalAction>
      </div>
 
      <div v-if="showModalEditPairings" class="z-50 container-editing-parings">
-        <ModalAction :showModal="showModalEditPairings" :selectedDish="selectedDish">
+        <ModalAction :showModal="showModalEditPairings" :subjectModal.selectedItem="subjectModal.selectedItem">
                 <h2 class="font-bold text-2xl text-center pb-6">
-                    Modifica Gli abbinamenti del piatto: 
+                    Modifica Gli abbinamenti del {{ subjectModal.relation.table_category_name }}: 
                 </h2>
 
                 <div class="text-xl pb-4 first-letter:uppercase mb-8">
@@ -237,7 +238,7 @@
                     <ul class="flex gap-2">
                         <template v-for="dish in pairings">
                             <template v-for="drink in dish.drinks">
-                                <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === selectedDish.id" >{{ drink.name }}</li>
+                                <li class="px-4 py-1 border border-3 border-black rounded-full" v-if="dish.id === subjectModal.selectedItem.id" >{{ drink.name }}</li>
                             </template>
                         </template>
                         
@@ -245,9 +246,9 @@
                 </div>
 
                 <label for="name" class="font-bold text-xl">Abbinamenti:</label>
-                <SelectMultiple ref="selectMultiple" :options="newPairings" :selected="selectedDishDrinks" @updateComponent="toggleDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
+                <SelectMultiple ref="selectMultiple" :options="newPairings" :selected="selectedItemDrinks" @updateComponent="toggleDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
             <div class="flex w-full justify-between py-5">
-                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPairings( copySelectedDish )">Conferma</button>
+                    <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEditPairings( copyselectedItem )">Conferma</button>
                     <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showModalEditPairings = false">Annulla</button>
             </div>
         </ModalAction>
@@ -268,14 +269,14 @@ import SelectMultiple from '../SelectMultiple.vue';
     export default {
         
         name: 'ShowEditDish',
-        props: ['selectedDish', 'showModalDish', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks','newDrinko'],
+        props: ['subjectModal', 'showModalItem', 'allergens','allergensDishes', 'pairingsEnoteca', 'drinks','newDrinko'],
         components: {
             ButtonCss,
             ModalAction,
             SwitchButton,
             SelectMultiple
         },
-        emits: ['showModalDish', 'deleteDish', 'matchAllergens'],
+        emits: ['showModalItem', 'deleteDish', 'matchAllergens'],
         data() {
             return {
                 imagePreview: null,
@@ -286,24 +287,26 @@ import SelectMultiple from '../SelectMultiple.vue';
                 showModalEditImg: false,
                 showModalEditPairings: false,
                 dishIdToDelete: null,
-                copySelectedDish: null,
+                copyselectedItem: null,
                 arrayAllergens: this.allergensDishes,
                 pairings: [],
                 localComponentAllergen: 0,
-                selectedDishDrinks: [],
+                selectedItemDrinks: [],
                 newPairings: null,
             }
         },
         methods: {
-            showModalDish(){
-                this.$emit('showModalDish');
+            showModalItem(){
+                console.log('CLICCATA X')
+                this.$emit('showModalItem');
             },
-            openDeleteModalDish(dishId){
-                this.dishIdToDelete = dishId;
+            openDeleteModalDish(_subjectModal){
+                console.log('OPEN MODAL DISH', _subjectModal)
+                this.dishIdToDelete = _subjectModal.selectedItem.id;
                 this.showModalDeleteDish = true;
             },
-            confirmDeleteDish(id){
-                this.$emit('deleteDish', id);
+            confirmDeleteDish(_subjectModal){
+                this.$emit('deleteDish', _subjectModal);
                 this.showModalDeleteDish = false;
             },
             matchAllergens(dishId, allergenId){
@@ -315,44 +318,62 @@ import SelectMultiple from '../SelectMultiple.vue';
                     return false;
                     }
 
-                return allergenDish.dishes.some(dish => dish.pivot.dish_id === this.selectedDish.id);
+                return allergenDish.dishes.some(dish => dish.pivot.dish_id === this.subjectModal.selectedItem.id);
             },
             openInputName(){
                 this.showModalEditName = true;
             },
-            confirmEditName(dishNew){
-                this.selectedDish.name = dishNew.name
+            confirmEditName(_subjectModal, _copySelectedItem){
 
-                axios.put(`/api/dishes/${this.selectedDish.id}`, {
-                    name: dishNew.name
+                axios.put(`/api/${_subjectModal.relation.table_category_name}/${_subjectModal.selectedItem.id}`, {
+                    name: _copySelectedItem.name
                 })
+                .then(response => {
+                    this.subjectModal.selectedItem.name = response.data.name
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
 
                 this.showModalEditName = false;
 
-
+                // :NOTE quello che abbiamo fatto (modificare la chiamata axios passando come argomento del confirm subjectModal 
+                // che contiene sia la categoria e i suoi dati, sia la relation) con confirm edit name deve essere ripetuto 
+                // con tutti i campi edit di showEditDish
             },
             openInputPrice(){
                 this.showModalEditPrice = true;
             },
-            confirmEditPrice(dishNew){
-                this.selectedDish.price = dishNew.price
-
-                axios.put(`/api/dishes/${this.selectedDish.id}`, {
-                    price: dishNew.price
+            confirmEditPrice(_subjectModal, _copySelectedItem){
+                
+                axios.put(`/api/${_subjectModal.relation.table_category_name}/${this.subjectModal.selectedItem.id}`, {
+                    price: _copySelectedItem.price
                 })
+                .then(response => {
+                    this.subjectModal.selectedItem.price = response.data.price
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
+                // FIXME: a db il prezzo deve essere float/decimal e non int attualmente invia un intero (vale solo per mammaelvira questo ragionamento) 
                 this.showModalEditPrice = false;
             },
             openInputDescription(){
                 this.showModalEditDescription = true;
             },
-            confirmEditDescription(dishNew){
-                this.selectedDish.description = dishNew.description
+            confirmEditDescription(_subjectModal, _copySelectedItem){
 
-                axios.put(`/api/dishes/${this.selectedDish.id}`, {
-                    description: dishNew.description
+                axios.put(`/api/${_subjectModal.relation.table_category_name}/${this.subjectModal.selectedItem.id}`, {
+                    description: _copySelectedItem.description
                 })
+                .then(response => {
+                    this.subjectModal.selectedItem.description = response.data.description
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
                 this.showModalEditDescription = false;
             },
@@ -372,7 +393,7 @@ import SelectMultiple from '../SelectMultiple.vue';
 
                 formData.append('_method', 'PUT');
 
-                axios.post(`/api/dishes/${this.selectedDish.id}`, formData, {
+                axios.post(`/api/dishes/${this.subjectModal.selectedItem.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -382,7 +403,7 @@ import SelectMultiple from '../SelectMultiple.vue';
                     data = data.substring(data.indexOf('{'));
                     newDish = JSON.parse(data);
 
-                    this.selectedDish.image = newDish.image;
+                    this.subjectModal.selectedItem.image = newDish.image;
                 })
                 .catch(error => {
                     console.error(error);
@@ -409,10 +430,10 @@ import SelectMultiple from '../SelectMultiple.vue';
                     reader.readAsDataURL(file);
                 }
             },
-            updateIsShowStatus(id, value) {
-            axios.put(`/api/dishes/${id}`, { is_active: value })
+            updateIsShowStatus(_subjectModal, value) {
+            axios.put(`/api/${_subjectModal.relation.table_category_name}/${_subjectModal.selectedItem.id}`, { is_active: value })
             .then(response => {
-                    this.selectedDish.is_active = response.data.is_active
+                    this.subjectModal.selectedItem.is_active = response.data.is_active
                 })
             .catch(error => {
                 console.log(error);
@@ -423,7 +444,7 @@ import SelectMultiple from '../SelectMultiple.vue';
             },
             toggleDrink(drink) {
                 this.pairings = this.pairings.map(pairing => {
-                    if (pairing.id === this.selectedDish.id) {
+                    if (pairing.id === this.subjectModal.selectedItem.id) {
                         const drinkIndex = pairing.drinks.findIndex(d => d.id === drink.id);
                         if (drinkIndex !== -1) {
                             pairing.drinks.splice(drinkIndex, 1);
@@ -464,8 +485,8 @@ import SelectMultiple from '../SelectMultiple.vue';
             activeAllergens() {
             return this.allergens.filter(allergen => allergen.is_active);
             },
-            selectedDishDrinks() {
-                const dish = this.pairings.find(d => d.id === this.selectedDish.id);
+            selectedItemDrinks() {
+                const dish = this.pairings.find(d => d.id === this.subjectModal.selectedItem.id);
                 if (!dish || !dish.drinks) {
                     return [];
                 }
@@ -476,8 +497,8 @@ import SelectMultiple from '../SelectMultiple.vue';
             }
         },
         mounted() {
-            this.copySelectedDish = Object.assign({}, this.selectedDish);
-            this.updatePairings(this.copySelectedDish.id);
+            this.copyselectedItem = Object.assign({}, this.subjectModal.selectedItem);
+            this.updatePairings(this.copyselectedItem.id);
             this.updateDrinks();
         },
         watch: {

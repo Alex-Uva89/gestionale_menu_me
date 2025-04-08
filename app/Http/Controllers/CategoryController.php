@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
 use App\Models\Drink;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 
 class CategoryController extends Controller
@@ -33,9 +35,10 @@ class CategoryController extends Controller
             {
                 $category = Category::findOrFail($id);
             
+                // Log::info('Category found: ', ['category' => $category]);
                 $validatedData = $request->validate([
-                    'name' => 'sometimes|required',
-                    'is_active' => 'sometimes|boolean',
+                    'name' => 'string',
+                    'is_active' => 'boolean',
                 ]);
             
                 $category->update($validatedData);
@@ -47,12 +50,16 @@ class CategoryController extends Controller
                 {
                     $request->validate([
                         'name' => 'required',
-                        'is_drink' => 'required|boolean',
+                        // 'is_drink' => 'required|boolean',
+                        'category_relations_id' => 'required|integer', // only Int number
+                        'venue_id' => 'required|integer'
                     ]);
 
                     $category = new Category;
                     $category->name = $request->name;
-                    $category->is_drink = $request->is_drink;
+                    // $category->is_drink = $request->is_drink; // da eliminare inserendo category_relations_id
+                    $category->category_relations_id = $request->category_relations_id; // per sostituire is_drink
+                    $category->venue_id = $request->venue_id;
                     $category->save();
 
                     return response()->json($category, 201);

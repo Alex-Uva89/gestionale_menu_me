@@ -7,21 +7,25 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 
 class DishController extends Controller
 {
 
     public function index()
     {
-        $dishes = Dish::all();
+        $items = Dish::all();
     
         // specific record if exists
-        $dish_laCucina_category = Dish::all()->where('category_id', 1)->first();
-        $dish_scante_category = Dish::all()->where('category_id', 2)->first();
-        $dish_enoteca_category = Dish::with('allergens')->where('category_id', 3)->first();
+        $dish_laCucina_category = Dish::all()->where('category_id', 1)->get();
+        $dish_scante_category = Dish::all()->where('category_id', 2)->get();
+        $dish_enoteca_category = Dish::with('allergens')->where('category_id', 3)->get();
+
+        var_dump($dish_enoteca_category);
     
         $data = [
-            'dishes' => $dishes,
+            'dishes' => $items,
             'dish_laCucina_category' => $dish_laCucina_category,
             'dish_scante_category' => $dish_scante_category,
             'dish_enoteca_category' => $dish_enoteca_category,
@@ -42,12 +46,12 @@ class DishController extends Controller
             'image' => 'nullable',
         ]);
     
-        $dish = new Dish();
-        $dish->name = $validated['name'];
-        $dish->description = $validated['description'] ?? '';
-        $dish->price = $validated['price'];
-        $dish->category_id = $validated['category_id'];
-        $dish->venue_id = $validated['venue_id'];
+        $item = new Dish();
+        $item->name = $validated['name'];
+        $item->description = $validated['description'];
+        $item->price = $validated['price'];
+        $item->category_id = $validated['category_id'];
+        $item->venue_id = $validated['venue_id'];
     
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -55,42 +59,82 @@ class DishController extends Controller
                 $imageName = time().'.'.$image->getClientOriginalExtension();
                 $destinationPath = public_path('/storage');
                 $image->move($destinationPath, $imageName);
-                $dish->image = $imageName;
+                $item->image = $imageName;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
         } else {
-            $dish->image = $validated['image'] ?? "";
+            $item->image = $validated['image'];
         }
     
-        $dish->save();
-    
-        return response()->json($dish, 201);
+        try {
+            return DB::transaction(function () use ($item) {
+                if (!$item->save()) {
+                    throw new \Exception('Errore nel salvataggio dell\'item');
+                }
+                Log::info('Item salvato correttamente');
+                return response()->json($item, 201);
+            });
+        } catch (\Exception $e) {
+            Log::error('Errore durante il salvataggio dell\'item: ' . $e->getMessage());
+        
+            return response()->json([
+                'error' => 'Errore interno del server',
+                'message' => $e->getMessage()
+            ], 202);
+        }
+        
+                // INFO [ come ripulire il database da valori nulli o undefined ]
+                // start transaction;
+                // SET SQL_SAFE_UPDATES = 0;
+                // UPDATE dishes 
+                // SET 
+                //     image = (SELECT NULL WHERE TRIM(image) IN ('null', 'undefined', '')),
+                //     description = (SELECT NULL WHERE TRIM(description) IN ('null', 'undefined', ''))
+                // WHERE 
+                //     TRIM(image) IN ('null', 'undefined', '') 
+                //     OR TRIM(description) IN ('null', 'undefined', '');
+        
+                // -- verifica con una select che i dati siano stati effettivamente ripuliti
+                // -- decommenta lancia questa select semparatamente (in un'altra query tab di mysql workbench) dall'update sopra e verifica che tutto sia stato ripulito nel modo giusto
+                // -- select * from dishes;
+        
+                // -- se la select è andata a buon fine puoi fare il commit così scrivi sul database le effettive modifiche
+                // -- decommenta e lancia questo separatamente
+                // -- commit;
+        
+                // -- se invece non ha funzionato o peggio tutto è andato in malora allora fai il rollback, ti ripristina lo stato precedente all'update
+                // -- decommenta e lancialo sepratamente
+                // -- rollback;
+        
+                // -- auguri :*
+        
+      
     }
 
 
     public function update(Request $request, $id, Response $response)
     {
-        $dish = Dish::find($id);
+        $item = Dish::find($id);
 
         if ($request->has('name')) {
-            $dish->name = request('name');
+            $item->name = request('name');
         }
         if ($request->has('description')) {
-            $dish->description = request('description');
+            $item->description = request('description');
         }
         if ($request->has('price')) {
-            $dish->price = request('price');
+            $item->price = request('price');
         }
         if ($request->has('category_id')) {
-            $dish->category_id = request('category_id');
+            $item->category_id = request('category_id');
         }
         if ($request->has('venue_id')) {
-            $dish->venue_id = request('venue_id');
+            $item->venue_id = request('venue_id');
         }
 
         if ($request->has('is_active')) {
-            $dish->is_active = request('is_active');
+            $item->is_active = request('is_active');
         }
 
         if ($request->hasFile('image')) {
@@ -99,62 +143,126 @@ class DishController extends Controller
                 $imageName = time().'.'.$image->getClientOriginalExtension();
                 $destinationPath = public_path('/storage');
                 $image->move($destinationPath, $imageName);
-                $dish->image = $imageName;
+                $item->image = $imageName;
             } else {
                 return response()->json(['error' => 'Il caricamento del file non è riuscito.'], 400);
             }
         }
 
-        $dish->save();
+        $item->save();
 
-        return response()->json($dish, 201);
+        return response()->json($item, 201);
     }
 
     public function destroyByCategory($categoryId)
     {
-        $dishes = Dish::where('category_id', $categoryId)->get();
+        // $affectedRows = Dish::where('category_id', $categoryId)
+        //                     ->update(['is_orphan' => true]);
 
-        foreach ($dishes as $dish) {
-            $dish->delete();
+        // return response()->json([
+        //     'success' => $affectedRows > 0 ? 'Dishes marked as orphans' : 'No dishes found',
+        // ], 200);
+
+        // try {
+        //     return DB::transaction(function () use ($item) {
+        //         if (!$item->save()) {
+        //             throw new \Exception('Errore nel salvataggio dell\'item');
+        //         }
+        //         Log::info('Item salvato correttamente');
+        //         return response()->json($item, 201);
+        //     });
+        // } catch (\Exception $e) {
+        //     Log::error('Errore durante il salvataggio dell\'item: ' . $e->getMessage());
+        
+        //     return response()->json([
+        //         'error' => 'Errore interno del server',
+        //         'message' => $e->getMessage()
+        //     ], 202);
+        // }
+
+        // rendiamo orfani tutti i piatti di una categoria che viene cancellata
+        try {
+            return DB::transaction(function () use ($categoryId) {
+                // Recupera tutti i piatti per la categoria specificata
+                $dishes = Dish::where('category_id', $categoryId)->get();
+
+                // DEBUG: per testare la transazione, cancella una categoria senza piatti
+                // if ($dishes->isEmpty()) {
+                //     throw new \Exception('Nessun piatto trovato per questa categoria');
+                // }
+
+                // Aggiorna i piatti segnandoli come orfani
+                $affectedRows = Dish::where('category_id', $categoryId)
+                                    ->update(['is_orphan' => true]);
+
+                // Verifica che il numero di righe aggiornate corrisponda al numero di piatti
+                if ($affectedRows !== $dishes->count()) {
+                    throw new \Exception('Il numero di piatti aggiornati non corrisponde al numero di piatti nella categoria');
+                }
+
+                // Se l'operazione è riuscita, ritorna una risposta positiva
+                Log::info('Piatti segnati come orfani con successo');
+                return response()->json([
+                    'success' => 'Dishes marked as orphans',
+                ], 200);
+            });
+        } catch (\Exception $e) {
+            // Log dell'errore e risposta con errore interno del server
+            Log::error('Errore durante l\'operazione: ' . $e->getMessage());
+
+            return response()->json([
+                'error' => 'Errore interno del server',
+                'message' => $e->getMessage()
+            ], 500);
         }
 
-        return response()->json(['success' => 'Dishes deleted successfully'], 200);
-    }
+        $categoryToDelete = Category::find($categoryId);
+
+        if ($categoryToDelete) {
+            $categoryToDelete->delete();
+            return response()->json(['message' => 'Category deleted successfully']);
+        } else {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+}
 
 
-    public function getAllergens(Dish $dish)
+
+    public function getAllergens(Dish $item)
     {
-        return response()->json($dish->allergens);
+        return response()->json($item->allergens);
     }
 
     
 
     public function addDrinkMatch(Request $request, $id)
     {
-        $dish = Dish::find($id);
+        $item = Dish::find($id);
         $drinkId = $request->input('drink_id');
-        $dish->drinks()->attach($drinkId);
+        $item->drinks()->attach($drinkId);
     
-        return response()->json($dish, 201);
+        return response()->json($item, 201);
     }
 
     public function updateDrinkMatch(Request $request, $id)
     {
-        $dish = Dish::find($id);
+        $item = Dish::find($id);
         $drinkId = $request->input('drink_id');
-        $dish->drinks()->sync($drinkId);
+        $item->drinks()->sync($drinkId);
         
     
-        return response()->json($dish, 201);
+        return response()->json($item, 201);
     }
+
 
     public function destroy($id)
     {
-        $dish = Dish::find($id);
+        $item = Dish::find($id);
 
-        if ($dish) {
-            $dish->delete();
-            return response()->json(['message' => 'dish deleted successfully']);
+        if ($item) {
+            $item->delete();
+            return response()->json(['message' => 'item deleted successfully']);
         } else {
             return response()->json(['message' => 'Dish not found'], 404);
         }

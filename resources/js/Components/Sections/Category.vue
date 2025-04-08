@@ -1,108 +1,109 @@
-<script setup>
-
-const props = defineProps({
-    selectedVenueName: String,
-    pairingsEnoteca: Array,
-    selectedVenueColor: String,
-    category_enoteca: Array,
-    dish_enoteca_category: Array,
-    allergens: Array,
-    allergensDishes: Array,
-    drinks: Array,
-    newDrink: Array,
-});
-
-
-</script>
-
 <template>
-    <section class="overflow-x-hidden mx-4" :key="keyComponentCategory">
-      <h2 class="p-3"  v-if="!category_enoteca.some(category => !category.is_drink)">
-  ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria food
-      </h2>
-      
-     <div 
-     v-for="category in categoryEnoteca" 
-     class="last:mb-10 last:border-b-2  border-l-2 border-r-2  border-black"
-     :key="category.id">
-     <div 
-     class="tab category  bg-white" 
-     v-if="!category.is_drink">
-      <div class="flex max-h-20 bg-white justify-evenly items-center gap-3 p-2">
-          <button @click="deleteCategory(category.id)">❌</button>
-          <button @click="editCategory(category.id)">Edit</button>
-          <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
-      </div>
-      
-      <div
-      class="p-2"
-      :class="{
-        'bg-blue-700': selectedVenueColor === 'blue'|| selectedVenueColor === '',
-        'bg-olive': selectedVenueColor === 'green',
-        'bg-stone-500': selectedVenueColor === 'gray',
-        'bg-enoteca': selectedVenueColor === 'red',
-        'text-orange-500': selectedVenueColor === 'gray',
-      }" :key="componentKeyli">
-          <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
-          <label :for="'cb'+ category.id" class="tab__label uppercase text-white font-bold cursor-pointer">
-            <span class="rounded-2xl text-black w-20 h-8 bg-white p-1 flex justify-center items-center">{{ activeDishesCount[category.id] }} / {{ category.dishes ? category.dishes.length : 0 }}</span>            <span>
-              {{ category.name }}
-            </span>
-            <span class="tab__label__arrow">
-              <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-              </svg>
-            </span>
-          </label>
-          <div class="tab__content bg-white" >
-              <ul class="max-w-full">
-                <li v-for="dish in category.dishes" :key="dish.id" class="border-b-2 border-black p-2">
-                  <div class="w-full h-full" :class="dish.is_active ? 'opacity-100' : 'opacity-20'">
-                    <div @click="openShowDish(dish)" class="container-dishes px-3 cursor-pointer">
-                      <div class="flex">
-                        <img :src="dish.image == 'null' ? 'img/defaultDish.jpg' : '/storage/' + dish.image "  alt="dish image" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
-                      </div>
-                      <div class="flex flex-col name">
-                        <span class="first-letter:uppercase text-bold">{{ dish.name }}</span>
-                      </div>
-                      <div class="flex flex-col price">
-                        <span class="text-bold">{{ dish.price }} €</span>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-         
- 
-            <div type="button" @click="addDishes(category.id)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
-              <div class="font-bold text-lg">&#10133;</div>
-              <span>Aggiungi piatto</span>
+  <section class="flex gap-10 overflow-x-hidden mx-4">
+    <h2 class="p-3"  v-if="!venue.categories">
+  ⭐    Inizia <strong class="uppercase">aggiungendo</strong> una categoria {{ category_relation.table_category_name }}
+    </h2>
+
+    <template v-else>
+      <!-- food -->
+      <div v-for="relation1 in category_relations" class="container-category">
+    
+        
+        <form class="grid grid-cols-5" @submit.prevent="createCategory(venue.id, relation1)">
+            <h2 class="text-2xl col-span-5 font-bold text-center uppercase">{{ relation1.classification }}</h2>
+            <div class="flex flex-col gap-2 col-span-4">
+              <label for="inputCategory">Aggiungi categoria {{ relation1.classification }}</label>
+              <input v-model="newCategory[relation1.table_category_name].name" type="text" placeholder="Nome categoria" :id="`input${relation1.table_category_name}`">
             </div>
- 
+            
+            <button type="submit" class=" self-end col-span-1 justify-self-center">
+                <svg xmlns="https://www.w3.org/2000/svg" width="35" height="35" fill="green" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+            </button>
+        </form>
+    
+        <!-- categorie -->
+        <div v-for="category in venue.categories"  :key="keyComponentCategory">
+          <!-- {{ console.log('RELATIONS',venue.categories) }} -->
+          
+          <div v-if="category.category_relations_id===relation1.id">
+            <!-- {{ category.name }} -->
+
+            <div class="last:border-b-2  border-l-2 border-r-2  border-black">
+              <div class="tab category  bg-white" v-if="!category.deleted_at ">
+                <div class="flex max-h-20 bg-white justify-evenly items-center gap-3 p-2">
+                  <button @click="deleteCategory(category, relation1)">❌</button>
+                  <button @click="editCategory(category)">Edit</button>
+                  <Switch_button :value="category.is_active === 1 || category.is_active === true" @switchChanged="value => updateIsShowStatus(category.id, value)" />
+                </div>
+              <div class="p-2 bg-header-category" :style="{ backgroundColor: relation1.css.bg_color, color: relation1.css.color }" :key="componentKeyli">
+                <input type="checkbox" name="accordion-1" :id="'cb' + category.id">
+                <label :for="'cb'+ category.id" class="tab__label uppercase text-white font-bold cursor-pointer">
+                  <span class="rounded-2xl text-black w-20 h-8 bg-white p-1 flex justify-center items-center">{{ activeDishesCount(category, relation1) }} / {{ category[relation1.table_category_name].length }}</span>            
+                  <!-- {{ console.log(typeof(activeDishesCount(category.id, relation1))) }} -->
+                  <span>
+                    {{ category.name }}
+                  </span>
+                  <span class="tab__label__arrow">
+                    <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                    </svg>
+                  </span>
+                </label>
+                <div class="tab__content text-black bg-white" >
+                    <ul class="max-w-full">
+                      <li v-for="item in category[relation1.table_category_name]" :key="item.name" class="border-b-2 border-black p-2">
+                        <div class="w-full h-full" :class="item.is_active ? 'opacity-100' : 'opacity-20'">
+                          <div @click="openShow(item, relation1)" class="px-3 cursor-pointer" :class="`container-{{ relation1.table_category_name }}`">
+                            <div class="flex">
+                              <img :src="item.image == null ? 'img/defaultDish.jpg' : item.image "  alt="{{item.name}}" class="sm:max-h-32 md:max-h-40 object-cover p-1" >                    
+                            </div>
+                            <div class="flex flex-col name">
+                              <span class="first-letter:uppercase text-bold">{{ item.name }}</span>
+                            </div>
+                            <div class="flex flex-col price">
+                              <span class="text-bold">{{ item.price }} €</span>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <div type="button" @click="addItem(category, relation1)" class="p-4 flex justify-start items-center gap-2 cursor-pointer">
+                      <div class="font-bold text-lg">&#10133;</div>
+                      <span>Aggiungi {{ relation1.table_category_name }}</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            </div>
           </div>
+        </div>
       </div>
-     </div>
-     </div>
+    </template>
   </section>
+
 
 <!-- MODALS -->
 
-  <ModalAction :showModal="showAddDishesModal" :key="keyComponent">
+  <ModalAction :showModal="showAddsubjectModal" :key="keyComponent">
     <div class="modal-confirm relative">
-        <ButtonCss hoverColor="#DC2626" @click="showAddDishesModal = false" style="position: absolute; right:-10px; top:-20px;">
+        <ButtonCss hoverColor="#DC2626" @click="showAddsubjectModal = false" style="position: absolute; right:-10px; top:-20px;">
                   ❌
         </ButtonCss>
         <h2 class="h-16 font-bold text-2xl text-center">
             Aggiungi nuovo piatto
         </h2>
-        <form  @submit.prevent="confirmAddDishes">
+        <!-- {{ console.log('DEBUG MODALE', newItem) }} -->
+        <form @submit.prevent="confirmAddDishes">
           <div class="grid-show-dish">
               <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
                   <div class="w-full flex flex-col gap-2">
                       <div class="font-black uppercase">
                           nome:
                       </div>
-                      <input class="w-full h-8" type="text" v-model="dish_enoteca_category.name" :placeholder="dish_enoteca_category.name">
+                      <input class="w-full h-8" type="text" v-model="newItem.name" :placeholder="newItem.name">
                   </div>
                   
               </div>
@@ -123,7 +124,7 @@ const props = defineProps({
                       <template v-for="allergen in allergens">
                         <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
                           <img 
-                            :src="'/storage/' + allergen.icon" 
+                            :src="allergen.icon" 
                             :alt="allergen.name + ' icon'" 
                             :id="allergen.id"
                             class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
@@ -139,20 +140,23 @@ const props = defineProps({
                   <div class="w-full flex justify-between items-center font-black uppercase">
                       Consigli:
                   </div>
-                  <input class="w-full h-16" type="text" v-model="dish_enoteca_category.description" :placeholder="dish_enoteca_category.description">
+                  <input class="w-full h-16" type="text" v-model="newItem.description" :placeholder="newItem.description">
               </div>
               <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
                   <div class="flex flex-col gap-2 w-full">
                       <div class="font-black uppercase">
                           prezzo:
                       </div>
-                      <input class="w-full h-8" type="number" v-model="dish_enoteca_category.price" :placeholder="dish_enoteca_category.price">
+                      <input class="w-full h-8" type="number" v-model="newItem.price" :placeholder="newItem.price">
+                      <input type="hidden"  value="{{ this.subjectModal }}" v-model="newItem.relation">
                   </div>
               </div>
               <div style="grid-area: abbinamenti">
                 <p>Aggiungi abbinamenti:</p>
                 <SelectMultiple :options="drinks && newDrinkPairings" @updateComponent="addDrink" defaultLabel="Abbinamenti" style="text-transform: uppercase" />
               </div>
+
+
           </div>
   
           <div class="flex w-full justify-center">
@@ -163,18 +167,148 @@ const props = defineProps({
                 </ButtonCss>
           </div>
         </form>
+
+        <!-- <form v-else @submit.prevent="confirmAddDrinks">
+          <input type="hidden"  value="drinks" v-model="newItem.relation">
+          <div class="grid-show-drink">
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: nome;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          nome:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="newItem.name" :placeholder="newItem.name">
+                  </div>
+                  
+              </div>
+              <div class="min-h-30 p-2 border-2 border-black" style="grid-area: immagine;">
+                  <div class="flex flex-col justify-between items-start">
+                      <span class="font-black me-2 uppercase">
+                          immagine
+                      </span>
+                      <input type="file" @change="onFileChange" accept="image/*">
+                  </div>
+                  <img :src="imagePreview == null? defaultImgDish : imagePreview" class="h-image my-2 border border-3 border-black object-cover">
+              </div>            
+              <div class="h-fit flex items-center p-2 border-2 border-black" style="grid-area: allergeni;">
+                  <span class="font-black me-2 uppercase">
+                      Allergeni: 
+                  </span>
+                  <ul class="flex gap-2">
+                      <template v-for="allergen in allergens">
+                        <li v-if="allergen.is_active" class="rounded-full cursor-pointer" @click="toggleAllergen(allergen.id)" :key="allergen.id">
+                          <img 
+                            :src="allergen.icon" 
+                            :alt="allergen.name + ' icon'" 
+                            :id="allergen.id"
+                            class="object-scale-down w-10 h-10 rounded-full border border-3 border-black">
+                        </li>
+                      </template>
+                      <li v-if="!allergens.some(allergen => allergen.is_active)" class="w-full ps-2 font-black uppercase text-red-600 underline decoration-4 underline-offset-4 text-center">
+                        Non sono presenti allergeni attivi
+                      </li>
+                  </ul>
+
+              </div>
+              <div class="h-fit p-2 border-2 border-black" style="grid-area: consigli;">
+                  <div class="w-full flex justify-between items-center font-black uppercase">
+                      Consigli:
+                  </div>
+                  <input class="w-full h-16" type="text" v-model="newItem.instruction" :placeholder="newItem.instruction">
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: ingredienti;">
+                  <div class="w-full flex flex-col gap-2">
+                    <div class="font-black uppercase">
+                      ingredienti:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="newItem.description" :placeholder="newItem.description">
+                  </div>
+                  
+              </div>
+              <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: gradi;">
+                  <div class="flex flex-col gap-2 w-full">
+                      <div class="font-black uppercase">
+                          gradi:
+                      </div>
+                      <input class="w-full h-8" type="number" v-model="newItem.degrees" :placeholder="newItem.degrees">
+                  </div>
+              </div>
+              <div class="h-fit p-2 border-2 border-black flex items-center justify-between" style="grid-area: prezzo;">
+                  <div class="flex flex-col gap-2 w-full">
+                      <div class="font-black uppercase">
+                          prezzo:
+                      </div>
+                      <input class="w-full h-8" type="number" v-model="newItem.price" :placeholder="newItem.price">
+                  </div>
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: origine;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          origine:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="newItem.origin" :placeholder="newItem.origin">
+                  </div>
+                  
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: colore;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          colore:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="newItem.color" :placeholder="newItem.color">
+                  </div>
+                  
+              </div>
+              <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: produzione;">
+                  <div class="w-full flex flex-col gap-2">
+                      <div class="font-black uppercase">
+                          metodo di produzione:
+                      </div>
+                      <select class="w-full h-8" v-model="newItem.production_method" placeholder="Scegli un metodo">
+                          <option value="distillazione">Distillazione</option>
+                          <option value="aFreddo">A freddo</option>
+                          <option value="infusione">Infusione</option>
+                          <option value="macerazione">Macerazione</option>
+                          <option value="percolazione">Percolazione</option>
+                      </select>
+                  </div>
+                  
+                </div>
+                <div class="h-fit  p-2 border-2 border-black flex items-center justify-between" style="grid-area: sapore;">
+                  <div class="w-full flex flex-col gap-2">
+                    <div class="font-black uppercase">
+                      sapore:
+                      </div>
+                      <input class="w-full h-8" type="text" v-model="newItem.flavour" :placeholder="newItem.flavour">
+                  </div>
+              </div>
+          </div>
+  
+          <div class="flex w-full justify-center">
+                <ButtonCss v-bind:disabled="!isFormFilled" hoverColor='#00FF00' type="submit" style="width: 100%;">
+                  <p>
+                    Aggiungi bevanda
+                  </p>
+                </ButtonCss>
+              </div>
+        </form> -->
     </div>
   </ModalAction>
 
   <ModalAction :showModal="showDeleteModal">
+
       <div class="modal">
-          <h2 class="h-20 font-bold text-2xl text-center">
-              Sei sicuro di voler eliminare questa categoria?
-              <p class="text-base">la cancellazione della categoria provvederà a cancellare TUTTI i piatti abbinati</p>
+          <h2 class="font-bold text-center">
+              <p class="pb-5 text-xl">
+                Sei sicuro di voler eliminare la categoria {{ subjectModal.name }}
+              </p>
+              <p class="border border-red-600 border-2 p-2 mb-5 bg-red-200 w-98">
+                <strong>Attenzione:</strong>
+                l'azione è <strong class="uppercase">irreversibile</strong>
+              </p>
           </h2>
           <div class="flex w-100 justify-between p-5">
-              <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete()">Conferma</button>
-              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
+              <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmDelete(subjectModal)">Conferma</button>
+              <button class="bg-green border-black border-2 rounded text-black p-3 w-32" @click="showDeleteModal = false">Annulla</button>
           </div>
       </div>
   </ModalAction>
@@ -182,28 +316,26 @@ const props = defineProps({
   <ModalAction :showModal="showEditModal">
       <div class="modal">
           <h2 class="h-20 font-bold text-2xl text-center">
-              Modifica categoria
+              Modifica categoria {{ subjectModal.name }}
           </h2>
-          <input type="text" v-model="category_enoteca.name" :placeholder="category_enoteca.name">
-          <div class="flex w-100 justify-between p-5">
-              <button  @click="console.log('Button clicked'); confirmEdit(category_enoteca.name)">edit</button>              
-              <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
+          <input type="text" v-model="subjectModal.name" :placeholder="subjectModal.name" class="w-full">
+          <div class="flex w-full justify-between py-5">
+            <button class="bg-red-600 border-black border-2 rounded text-white p-3 w-32" @click="confirmEdit(subjectModal.name)">Modifica</button>              
+            <button class="bg-white border-black border-2 rounded text-black p-3 w-32" @click="showEditModal = false">Annulla</button>
           </div>
       </div>
   </ModalAction>
   
-  <ModalAction :showModal="showModalDish">
-    <ShowDish 
-    :selectedDish="selectedDish" 
+  <ModalAction :showModal="showModalItem">
+    <ShowItem 
+    :subjectModal="subjectModal"
     :allergens="allergens"
     :allergensDishes="allergensDishes"
-    :category_enoteca="category_enoteca"
-    :dish_enoteca_category="dish_enoteca_category"
     :pairingsEnoteca="pairingsEnoteca"
     :pairings="pairings"
     :drinks="drinks"
     :newDrinko="newDrinko"
-    @showModalDish="showModalDish = false"
+    @showModalItem="showModalItem = false"
     @deleteDish="confirmDeleteDish"
     @matchAllergens="matchAllergens"
     />
@@ -216,23 +348,22 @@ const props = defineProps({
 import axios from 'axios';
 import Switch_button from '@/Components/Switch_button.vue';
 import ModalAction from '@/Components/ModalAction.vue';
-import ShowDish from '@/Components/Sections/ShowEditDish.vue';
+import ShowItem from '@/Components/Sections/ShowEditDish.vue';
 import ButtonCss from '@/Components/ButtonCss.vue';
 import defaultImgDish from '../../../../public/img/defaultDish.jpg';
+import {ref} from 'vue';
 
-export default {
+export default { 
   components: {
     Switch_button,
     ModalAction,
-    ShowDish,
+    ShowItem,
     ButtonCss
   },
   name: 'Category',
-  emits: ['update:category_enoteca'],
+  emits: ['update:venue.categories'],
   props: {
-    category_enoteca: Array,
     selectedVenueColor: String,
-    dish_enoteca_category: Array,
     allergens: Array,
     drinks: Array,
     allergensDishes: Array,
@@ -241,28 +372,31 @@ export default {
       required: true
     },
     pairingsEnoteca: Array,
+    venue: Array,
+    categories: Object,
+    category_relation: Object,
+    category_relations: Array,
+    table_category_name: String,
   },
   data() {
     return {
-      categoryEnoteca: this.category_enoteca,
       keyComponentCategory: 0,
       defaultImgDish,
       selectedAllergens: [],
       selectedDrinks: [],
       file: null,
       componentKeyli: 0,
-      showModalDish: false,
+      showModalItem: false,
       showDeleteModal: false,
-      showModalDeleteDish: false,
+      // showModalDeleteDish: false,
       categoryToDelete: null,
       showEditModal: false,
       categoryToEdit: null,
-      categoryNameToEdit: null,
-      showAddDishesModal: false,
-      dishToCreateId: null,
+      // categoryNameToEdit: null,
+      showAddsubjectModal: false,
+      categoryItemId: null,
       dishTodeleteId: null,
-      localCategory_enoteca: this.category_enoteca,
-      localDishEnotecaCategory: [],
+      localDishCategory: [],
       allergensDishes: this.allergensDishes,
       isMatch: false,
       imagePreview: null,
@@ -270,25 +404,40 @@ export default {
       pairings: [],
       dishActive: [],
       newDrinko: this.newDrink,
+      venue: this.venue,
+      categories: [],
+      newItem: {},
+      newCategory: {
+        dishes :{},
+        drinks :{}
+      },
+      category_relation :this.category_relation,
+      table_category_name: this.table_category_name,
+      category_relations :this.category_relations,
+      subjectModal: {},
     };
   },
   methods: {
 
-        deleteCategory(id) {
-            this.categoryToDelete = id;
+        deleteCategory(_category, _relation) {
+            this.subjectModal = {
+              selectedCategory: _category,
+              relation: _relation
+            }
+            this.categoryToDelete = _category.id;
             this.showDeleteModal = true;
         },
-        confirmDelete() {
-          axios.delete(`/api/categories/${this.categoryToDelete}/dishes`)
+        confirmDelete(_subjectModal) {
+          axios.delete(`/api/categories/${this.categoryToDelete}/${_subjectModal.relation.table_category_name}`)
                 .then(response => {
             
                 axios.delete(`/api/categories/${this.categoryToDelete}`)
                 .then(response => {
-                const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToDelete);
+                const index = this.venue.categories.findIndex(category => category.id === this.categoryToDelete);
                 if (index !== -1) {
-                    this.localCategory_enoteca.splice(index, 1);
+                    this.venue.categories.splice(index, 1);
                 }
-                this.$emit('update:category_enoteca', this.localCategory_enoteca);
+                this.$emit('update:venue.categories', this.venue.categories);
                 })
                 .catch(error => {
                 console.log(error);
@@ -300,40 +449,59 @@ export default {
             
             this.showDeleteModal = false;
         },
-        editCategory(id) {
+        editCategory(category) {
+            this.subjectModal = category;
             this.showEditModal = true;  
-            this.categoryToEdit = id;
-            this.categoryNameToEdit = this.localCategory_enoteca.find(category => category.id === id).name;
-
+            this.categoryIdToEdit = category.id;
+            // this.categoryNameToEdit = this.venue.categories.find(category => category.id === id).name;
+            // console.log('DEBUG CATEGORY NAME TO EDIT', this.categoryNameToEdit);
+            // console.log('DEBUG VALUE CONFIRM EDIT', this.subjectModal);
         },
         confirmEdit(value) {
-            axios.put(`/api/categories/${this.categoryToEdit}`, { name: value })
+            axios.put(`/api/categories/${this.categoryIdToEdit}`, { name: value })
             .then(response => {
-                const index = this.localCategory_enoteca.findIndex(category => category.id === this.categoryToEdit)
-                if (index !== -1) {
-                    this.localCategory_enoteca[index].name = value;
-                } 
-                this.category = response.data;
+                // per aggiornare categoria a FE
+                // if (index !== -1) {
+                  //     this.venue.categories[index] = response.data;
+                  // } 
+                  // TODO: si può riutilizzare per aggiornare qualunque dato?
+                  // console.log('venue.categories', this.venue.categories);
+                  // console.log('venue.categories response', response.data);
+                  // this.venue.categories = response.data;
+                  // console.log('DEBUG RESPONSE', response);
+                  if(response.headers['content-type'] === 'application/json'){
+                    if(response.data.id == this.categoryIdToEdit){
+                      // const index = this.venue.categories.findIndex(category => category.id === this.categoryIdToEdit)
+                      // console.log(response.data, this.venue.categories[index], index, this.venue.categories);
+                      // this.venue.categories[index] = response.data;
+                      // console.log('DEBUG responsedata', response.data)
+                      this.subjectModal['name'] = response.data.name;
+                    } else {
+                      throw new Error('ID RESPONSE NON CORRISPONDENTE');
+                    }
+                  } else {
+                    throw new Error('CONTENT-TYPE ERRATO');
+                  }
                 })
-            .catch(error => {
-                console.log(error);
+                .catch(error => {
+                  console.error(error);
+                  // TODO: creare modale errore globale per mostrare errore 
                 });
 
                 this.showEditModal = false;
         },
         updateIsShowStatus(categoryId, value) {
+          // console.log('DEBUG UPDATE IS SHOW STATUS', categoryId, value);
           axios.put(`/api/categories/${categoryId}`, { is_active: value })
           .then(response => {
-              this.categoryEnoteca = this.categoryEnoteca.map(category => {
-                  if (category.id === categoryId) {
-                      category.is_active = value;
-                  }
-                  return category;
-              });
-            })
-          .catch(error => {
-              console.log(error);
-            });
+            // console.log('DEBUG RESPONSE', response);
+            // this.venue.categories = response.data
+            if(response.data.id != categoryId){
+              console.log('AGGIORNAMENTO NON RIUSCITO');
+              // TODO: creare modale errore globale per mostrare errore 
+            }
+          })
+          .catch(error => console.log(error));
         },
         onFileChange(e) {
           this.files = e.target.files || e.dataTransfer.files;
@@ -361,46 +529,67 @@ export default {
             this.selectedAllergens.splice(index, 1);
           }
         },
-        addDishes(id) {
-          this.showAddDishesModal = true;
-          this.dishToCreateId = id;
+        addItem(_category, _relation) {
+          this.showAddsubjectModal = true;
+          this.subjectModal = _relation
+          this.categoryItemId = _category.id;
+          console.log('_CATEGORY', _category, _relation)
         },
         confirmAddDishes() {
+          console.log('NEW ITEM', this.newItem)
           let formData = new FormData();
-          formData.append('name', this.dish_enoteca_category.name);
-          formData.append('description', this.dish_enoteca_category.description);
-          formData.append('price', this.dish_enoteca_category.price);
-          formData.append('image', this.file);
-          formData.append('category_id', this.dishToCreateId);
-          formData.append('venue_id', 3); 
+          formData.append('name', this.newItem.name);
+          formData.append('description', this.newItem.description ? this.newItem.description : ''); // laravel grazie al kernel.php inviando una stringa vuota lo interpreta come null
+          formData.append('price', this.newItem.price);
+          formData.append('image', this.file ? this.file : ''); // laravel grazie al kernel.php inviando una stringa vuota lo interpreta come null
+          formData.append('category_id', this.categoryItemId);
+          formData.append('venue_id', this.venue.id);
+
+          if(this.subjectModal.table_category_name == 'drinks'){
+            // formData.append('description', this.newItem.description);
+            formData.append('instructions', this.newItem.instructions ? this.newItem.instructions : '');
+            formData.append('color' , this.newItem.color ? this.newItem.color : '');
+            formData.append('degrees' , this.newItem.degrees ? this.newItem.degrees :'');
+            formData.append('origin' , this.newItem.origin ? this.newItem.origin : '');
+            formData.append('production_method' , this.newItem.production_method ? this.newItem.production_method : '');
+            formData.append('flavour' , this.newItem.flavour ? this.newItem.flavour : '');
+          }
+
+          // const newItemSerializedObject = JSON.stringify(this.newItem);
+
+          // console.log('DEBUG FORM NEW ITEM', this.newItem.description);
+          // console.log('DEBUG FORM DATA IMAGE', formData.get('image'));
         
-          axios.post(`/api/dishes/${this.dishToCreateId}`, formData, { 
+          axios.post(`/api/${this.subjectModal.table_category_name}/${this.categoryItemId}`, formData, { 
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type': 'application/json'
             }
           })
           .then(response => {
-            let newDish;
+            // console.log('DEBUG RESPONSE NEW ITEM', response);
+
+            let newItem;
             if (typeof response.data === 'string') {
                 let data = response.data;
                 data = data.substring(data.indexOf('{'));
-                newDish = JSON.parse(data);
+                newItem = JSON.parse(data);
             } else {
-                newDish = response.data;
+                newItem = response.data;
             }
-            let category = this.category_enoteca.find(category => category.id === this.dishToCreateId);
+
+            let category = this.venue.categories.find(category => category.id === this.categoryItemId);
             
 
             if (category) {
-              if (!category.dishes) {
-                category.dishes = [];
+              if (!category[this.subjectModal.table_category_name]) {
+                category[this.subjectModal.table_category_name] = [];
               }
-              category.dishes.push(newDish);
-              this.dishToCreateId = '';
+              category[this.subjectModal.table_category_name].push(newItem);
+              this.categoryItemId = '';
             }
-            this.$emit('dishAdded');
+            this.$emit(`'${this.subjectModal.table_category_name}Added'`);
             this.componentKeyli++;
-            this.showAddDishesModal = false;
+            this.showAddsubjectModal = false;
         
             this.selectedAllergens.forEach(allergenId => {
               this.matchAllergens(newDish.id, allergenId);
@@ -415,11 +604,18 @@ export default {
             this.selectedDrinks = [];
 
 
-            this.dish_enoteca_category.name = '';
-            this.dish_enoteca_category.description = '';
-            this.dish_enoteca_category.price = null;
+            this.newItem.name = '';
+            this.newItem.description = '';
+            this.newItem.price = null;
             this.file = null;
             this.imagePreview = null;
+            // drink
+            this.newItem.instructions ? this.newItem.instructions = null : undefined;
+            this.newItem.color ? this.newItem.color = null : undefined;
+            this.newItem.degrees ? this.newItem.degrees = null : undefined;
+            this.newItem.origin ? this.newItem.origin = null : undefined;
+            this.newItem.production_method ? this.newItem.production_method = null : undefined;
+            this.newItem.flavour ? this.newItem.production_method = null : undefined;
           })
         
           .catch(error => {
@@ -427,6 +623,82 @@ export default {
           });
 
         },
+        // confirmAddDrinks() {
+        //   let formData = new FormData();
+        //   formData.append('name', this.newItem.name);
+        //   formData.append('description', this.newItem.description ? this.newItem.description : ''); // laravel grazie al kernel.php inviando una stringa vuota lo interpreta come null
+        //   formData.append('price', this.newItem.price);
+        //   formData.append('image', this.file? this.file : ''); // laravel grazie al kernel.php inviando una stringa vuota lo interpreta come null
+        //   formData.append('category_id', this.categoryItemId);
+        //   formData.append('venue_id', this.venue.id);
+        //   formData.append('instructions', this.newItem.instructions);
+        //   formData.append('color' , this.newItem.color);
+        //   formData.append('degrees' , this.newItem.degrees);
+        //   formData.append('origin' , this.newItem.origin);
+        //   formData.append('production_method' , this.newItem.production_method);
+        //   formData.append('flavour' , this.newItem.flavour);
+
+        //   // const newItemSerializedObject = JSON.stringify(this.newItem);
+
+        //   // console.log('DEBUG FORM NEW ITEM', this.newItem.description);
+        //   // console.log('DEBUG FORM DATA IMAGE', formData.get('image'));
+        
+        //   axios.post(`/api/drinks/${this.categoryItemId}`, formData, { 
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     }
+        //   })
+        //   .then(response => {
+        //     // console.log('DEBUG RESPONSE NEW ITEM', response);
+
+        //     let newDish;
+        //     if (typeof response.data === 'string') {
+        //         let data = response.data;
+        //         data = data.substring(data.indexOf('{'));
+        //         newDish = JSON.parse(data);
+        //     } else {
+        //         newDish = response.data;
+        //     }
+
+        //     let category = this.venue.categories.find(category => category.id === this.categoryItemId);
+            
+
+        //     if (category) {
+        //       if (!category.dishes) {
+        //         category.dishes = [];
+        //       }
+        //       category.dishes.push(newDish);
+        //       this.categoryItemId = '';
+        //     }
+        //     this.$emit('dishAdded');
+        //     this.componentKeyli++;
+        //     this.showAddsubjectModal = false;
+        
+        //     this.selectedAllergens.forEach(allergenId => {
+        //       this.matchAllergens(newDish.id, allergenId);
+        //     });
+        //     this.selectedAllergens = [];
+        
+            
+        //     this.selectedDrinks.forEach(drinkId => {
+              
+        //       this.matchDrink(newDish.id, drinkId);
+        //     });
+        //     this.selectedDrinks = [];
+
+
+        //     this.newItem.name = '';
+        //     this.newItem.description = '';
+        //     this.newItem.price = null;
+        //     this.file = null;
+        //     this.imagePreview = null;
+        //   })
+        
+        //   .catch(error => {
+        //     console.log('ERRORE AHI AHI AHI: '+ error);
+        //   });
+
+        // },
         matchAllergens(dishId, allergenId) {
 
           const isMatched = this.allergensDishes.some(allergenDish => allergenDish.id === allergenId && allergenDish.dishes.some(dishAbb => dishAbb.pivot.dish_id === dishId));
@@ -465,92 +737,151 @@ export default {
               console.log(error);
             });
         },
-        getDishName(dishId) {
-          for (let category of this.localDishEnotecaCategory) {
-            let foundDish = category.dishes.find(dish => dish.id === dishId);
-            if (foundDish) {
-              return foundDish.name;
-            }
-          }
-          return 'Non trovato';
-        },
-        confirmDeleteDish(dishIdToDelete) {
-          axios.delete(`/api/dishes/${dishIdToDelete}`)
+        confirmDeleteDish(_subjectModal) {
+          console.log('SELECTED DRINK', _subjectModal)
+          axios.delete(`/api/${_subjectModal.relation.table_category_name}/${_subjectModal.selectedItem.id}`)
           .then(() => {
-            for (let category of this.category_enoteca) {
-              let index = category.dishes.findIndex(dish => dish.id === dishIdToDelete);
+            for (let category of this.venue.categories) {
+              let index = category[_subjectModal.relation.table_category_name].findIndex(item => item.id === _subjectModal.selectedItem.id);
               if (index !== -1) {
-                category.dishes.splice(index, 1);
+                category[_subjectModal.relation.table_category_name].splice(index, 1);
               }
             }
-            this.showModalDish = false;
+            this.showModalItem = false;
           })
           .catch(error => {
             console.log(error);
           });
         },
-        openShowDish(dishId) {
-          this.selectedDish = dishId;
-          this.showModalDish = !this.showModalDish;
-        },
-        addDrink(newDrink) {
-          if(newDrink) {
-            let index = this.selectedDrinks.indexOf(newDrink);
-            if (index === -1) {
-              this.selectedDrinks.push(newDrink);
-            } else {
-              this.selectedDrinks.splice(index, 1);
-            }
+        // openShowDish(dishId) {
+        //   console.log('dishId', dishId)
+        //   this.selectedDish = dishId;
+        //   this.showModalitem = !this.showModalitem;
+        // },
+        openShow(item, relation ) {
+          console.log('item', item)
+          console.log('relation', relation)
+          this.selectedItem = item;
+          this.subjectModal = {
+            selectedItem : this.selectedItem,
+            relation: relation
           }
-
+          this.showModalItem = !this.showModalItem;
         },
+        // addDrink(newDrink) {
+        //   if(newDrink) {
+        //     let index = this.selectedDrinks.indexOf(newDrink);
+        //     if (index === -1) {
+        //       this.selectedDrinks.push(newDrink);
+        //     } else {
+        //       this.selectedDrinks.splice(index, 1);
+        //     }
+        //   }
+
+        // },
+        createCategory(_venue_id, relation) {
+          const newCategory =  {
+              name: this.newCategory[relation.table_category_name].name,
+              category_relations_id: relation.id,
+              venue_id: _venue_id
+            };
+          // console.log('DEBUG NEW CATEGORIES', newCategory)
+          axios.post('/api/categories', newCategory)
+          .then(response => {
+            response.data[relation.table_category_name] = [];
+              this.venue.categories.push(response.data)
+
+              this.newCategory[relation.table_category_name].name = '';
+              this.keyComponentCategory++
+          })
+          .catch(error => {
+              console.log(error);
+          });
+        },
+
+        activeDishesCount(category, relation) {
+          // console.log(category, relation);
+          let typeRelation = relation.table_category_name;
+          // console.log('DEBUG TYPE',typeRelation);
+          // console.log(category[typeRelation].filter(item => item.is_active).length)
+
+          return category[typeRelation].filter(item => item.is_active).length;
+
+          // if (this.venue.categories) {
+          //   this.venue.categories.forEach(category => {
+          //     // let activeDishes = category[typeP].filter(dish => dish.is_active);
+          //     let activeDishes = category[typeP].filter(dish => {
+          //       console.log('Checking dish:', dish); // 🔍 Vedi ogni piatto elaborato
+          //       return dish.is_active;
+          //     });
+          //     activeDishesCount[category.id] = activeDishes.length;
+          //   });
+
+          //   // console.log('CATEGORY REF', activeDishesCount);
+          //   return activeDishesCount;
+          // }
+        }
   },
   created() {
-          this.localDishEnotecaCategory = this.category_enoteca.map(category => {
-              let dishes = this.dish_enoteca_category.filter(dish => dish.category_id === category.id);
-              return {
-                  ...category,
-                  dishes: dishes
-              };
-          });
+    // dal venue prendiamo il orderView che coincide con l'indice di category[],dish_category[], etc...
+    // e così otteniamo le categorie corrette rispetto al nostro id
+    // attenzione: facciamo riferimento sempre all'id di orderview e non id della primary key.
+    
+    this.categories = forEach(this.venue, (venue) => {
+      if (venue.orderView === this.category_relation.id) {
+        this.category = venue.categories;
+        this.dish_category = venue.dish_categories;
+        this.drink_category = venue.drink_categories;
+      }
+    });
+    
+    this.localDishCategory = this.category[this.venue.id];
+    this.dish_venue.categories = this.dish_category;
+    // console.error('CATEGORY',this.venue.css);
+    // console.log('VENUE',this.venue);
+    // console.log('LOCAL DISH ENOTECA CATEGORY',this.localDishCategory);
+            
+
+          // console.log(this.localDishCategory);
 
           this.allergenDishes = this.allergensDishes;
   },
   computed: {
         isFormFilled() {
-            return this.dish_enoteca_category.name && this.dish_enoteca_category.price;
+            return this.newItem.name && this.newItem.price;
         },
-
-        activeDishesCount() {
-          let activeDishesCount = {};
-          this.category_enoteca.forEach(category => {
-            let activeDishes = category.dishes ? category.dishes.filter(dish => dish.is_active) : [];
-            activeDishesCount[category.id] = activeDishes.length;
-          });
-          return activeDishesCount;
-        }
   },
   mounted() {
-    console.log(this.newDrink)
+    // console.log(this.newDrink)
   },
   watch: {
     newDrink(newVal) {
       this.newDrinko = newVal // Dovrebbe loggare ogni volta che newDrink cambia
     }
+    // newCategory(newVal) {
+    //   this.xmlns
+    // }
   },
+  created() {
+    // console.log('THIS VENUE IN CATEGORY',this.venue);
+    this.venue.categories = this.venue.categories;
+  }
 };
 </script>
 
 
 <style scoped>
-.bg-olive {
-    background-color: #6b7238;
-}
-.bg-enoteca {
-    background-color: #a51a1a;
-}
-.border-red{
-  border-color: #a51a1a;
+.container-category{
+  margin-bottom: 50px;
+  form{
+    margin: 20px auto 0px;
+    border-bottom: none;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.060);
+  }
 }
 
 .modal-confirm{

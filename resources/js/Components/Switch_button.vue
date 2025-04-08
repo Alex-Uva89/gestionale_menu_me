@@ -6,7 +6,7 @@ export default {
   methods: {
     toggleSwitch(event) {
         this.$emit('input', event.target.checked);
-        this.$emit('switchChanged', event.target.checked);;
+        this.$emit('switchChanged', event.target.checked);
     }
   }
 }

@@ -1,39 +1,87 @@
+<!-- per aggiungere una nuova voce alla dashboard, inserire l'import del componente in dashboardComponents -->
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
 import Sidebar from '@/Partials/Sidebar.vue';
 import Header from '@/Partials/Header.vue';
-import Inbox from '@/PartialsHome/Inbox.vue';
-import LaCucina from '@/PartialsHome/Venues/LaCucina.vue';
-import Scante from '@/PartialsHome/Venues/Scante.vue';
-import Enoteca from '@/PartialsHome/Venues/Enoteca.vue';
-import Preview from '@/PartialsHome/Preview.vue';
-import Allergens from '@/PartialsHome/Allergens.vue';
-import Dashboard from '@/PartialsHome/Dashboard.vue';
-import Welcome from '@/PartialsHome/Welcome.vue';
-import Receips from '@/PartialsHome/Receips.vue';
-import { all } from 'axios';
 
-const selectedVenueName = ref('Benvenuto');
-const selectedVenueColor = ref('blue');
-const selectedValueButton = ref('Dashboard');
+const {components, venues} = defineProps({
+  messages: Array,
+  venues: Array,
+  allergensDishes: Array,
+  allergensDrinks: Array,
+  allergens: Array,
+  receips: Array,
+  drinks: Array,
+  pairingsEnoteca: Array,
+  dishes: Array,
+  venue: Object,
+  dish_categories: Object,
+  drink_categories: Object,
+  category_relations: Array,
+  components: Array,
+  default_id: Number,
+});
+
+
+// const componentsTable = { // dispatch table
+//   '\'Scante':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Venues/Scante.vue')),
+//   },
+//   'La Cucina':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Venues/LaCucina.vue')),
+//   },
+//   'Enoteca':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Enoteca.vue')),
+//   },
+//   'Welcome':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Welcome.vue')),
+//   },
+//   'Dashboard':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Dashboard.vue')),
+//   },
+//   'Anteprima':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Preview.vue')),
+//   },
+//   'Allergeni':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Allergens.vue')),
+//   },
+//   // { 
+//   //   pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Receips.vue')),
+//   // },
+//   'Messaggi':{
+//     pathComponent: defineAsyncComponent(() => import('@/PartialsHome/Inbox.vue')),
+//   }
+// };
+
+
+// Usa la funzione per creare la dashboardMap
+// const dashboardMap = dashboardComponents.reduce((map, comp) => {
+//   const dashboardMap = dashboardComponents.reduce((map, comp) => {
+//   map[comp.name] = comp;
+//   return map;
+// }, {});
+// const pippo = ref('PartialsHome/Welcome.vue');
+// const pluto = defineAsyncComponent(() => import(`@/${pippo.value}`));
+
+let selectedVenue = ref(null);
+let selectedValueButton = {};
+let openModalInstruction = ref(false);
 const newMessage = ref(false);
-let currentPageComponent = '';
+let currentPageComponent = ref(null);
 
-function updateSelectedVenueName(name) {
-  selectedValueButton.value = '';
-  selectedVenueName.value = name;
-  updateCurrentPageComponent(name);
+function updateSelectedVenue(venue) {
+  // console.log('DEBUG VALE HOME SIDEBAR', venue);// object
+  selectedVenue = venue;
+  // selectedValueButton.value = '';
+  updateCurrentPageComponent(venue);
 }
 
-function updateSelectedVenueColor(color) {
-  selectedVenueColor.value = color;
-}
 
 function updateSelectedValueButton(value) {
-  selectedValueButton.value = value;
-  selectedVenueName.value = '';
-  selectedVenueColor.value = 'blue';
+  // console.log('DEBUG VALE HOME SIDEBAR', value); // string
+  selectedValueButton = value;
+  // selectedVenue = null;
   updateCurrentPageComponent(value);
 }
 
@@ -41,21 +89,53 @@ function updateNewMessage(value) {
   return newMessage.value = value;
 }
 
-function updateCurrentPageComponent(value) {
-    return currentPageComponent = value === "'Scante" ? Scante : value === 'La Cucina' ? LaCucina : value === 'Enoteca' ? Enoteca : value === 'Anteprima menù' ? Preview : value === 'Allergeni' ? Allergens : value === 'Dashboard' ? Dashboard : value === 'Ricette' ? Receips : value === 'Home' ? Welcome : '';
+function updateCurrentPageComponent(component) {
+  // currentPageComponent.value = dashboardMap[nameComponent].component;
+  // currentPageComponent.value = defineAsyncComponent(() => import(component.pathComponent));
+  // const myfunc = new Function(`return ${component.pathComponent}`);
+  
+  // currentPageComponent.value = eval(myfunc()); //`"${defineAsyncComponent(() => import('@/PartialsHome/Venues/Enoteca.vue'))}"`;
+  // console.log(component)
+  // currentPageComponent.value = componentsTable[component].pathComponent;
+  console.log(component)
+  const pathComponent = `/resources/js/Dashboard/${component.componentName}.vue`;
+  // const pathComponentVenues = `/resources/js/PartialsHome/Venues/${component.componentName}.vue`;
+
+  const partials = import.meta.glob(`@/Dashboard/*.vue`, {eager: false});  
+
+  // const partialsVenue = import.meta.glob(`@/PartialsHome/Venues/*.vue`, {eager: false})
+  // currentPageComponent.value = defineAsyncComponent(async () => await partials[path]())
+  currentPageComponent.value = defineAsyncComponent(async () => await partials[pathComponent]())
+  // console.log('ciccio', currentPageComponent)
+  // eval(currentPageComponent.value);
 }
-   
+
+function toggleModalInstruction() {
+      openModalInstruction = !openModalInstruction;
+}
+
+// onMounted(function(){
+//   components.reduce((map, comp) => {
+//     componentTable[comp.name] = comp.pathComponent;
+//   });
+
+//   venues.reduce((map, comp) => {
+//     componentTable[comp.name] = comp.pathComponent;
+//   });
+//   console.log(12, componentTable);
+// })
 </script>
 
 <template>
     <Head title="Mamma Elvira" />
     <div class="relative">
       <div class="bg-gray-50 flex dark:bg-gray-800 h-screen">
-        <Sidebar :messages="messages" @venue-name="updateSelectedVenueName" @venue-color="updateSelectedVenueColor" @value-button="updateSelectedValueButton" />
+        <Sidebar :dashboardMap="dashboardMap" :messages="messages" :components="components" @venue="updateSelectedVenue" @value-button="updateSelectedValueButton" />
 
         <div class="main-app flex">
-          <Header class="col-9" v-if="selectedVenueName? selectedVenueName : selectedValueButton" :selectedVenueName="selectedVenueName" :selectedVenueColor="selectedVenueColor" :selectedValueButton="selectedValueButton" :newMessage="newMessage"/>
+          <Header class="col-9" v-if="selectedVenue? selectedVenue : selectedValueButton" :selectedVenue="selectedVenue" :selectedValueButton="selectedValueButton" :components="components" :default_id="default_id" :newMessage="newMessage"/>
           <Inbox :messages="messages" v-if="selectedValueButton === 'inbox'" @message-not-read="updateNewMessage"/>
+          <!-- {{ console.log('HOME',venue) }} -->
           <Welcome 
             v-if="currentPageComponent === ''"
             @open-modal-instruction="toggleModalInstruction"
@@ -68,13 +148,10 @@ function updateCurrentPageComponent(value) {
             :is="currentPageComponent" 
             :selectedVenueName="selectedVenueName" 
             :selectedVenueColor="selectedVenueColor" 
-            :category_laCucina="category_laCucina" 
-            :category_scante="category_scante"
-            @update:category_enoteca="category_enoteca=$event"
-            :category_enoteca="category_enoteca"
             :categories="categories" 
-            :dish_enoteca_category="dish_enoteca_category"
-            :drink_enoteca_category="drink_enoteca_category"
+            @update:categories="categories=$event"
+            :dish_categories="dish_categories"
+            :drink_categories="drink_categories"
             :messages="messages"
             @dishAdded="componentKey += 1"
             @drinkAdded="componentKey += 1"
@@ -85,7 +162,9 @@ function updateCurrentPageComponent(value) {
             @changeHeader="updateSelectedValueButton"
             :drinks="drinks"
             :dishes="dishes"
-            :pairingsEnoteca="pairingsEnoteca"
+            :pairings="pairings"
+            :venue="selectedVenue"
+            :category_relations="category_relations"
             />     
         </div>
   
@@ -175,36 +254,3 @@ function updateCurrentPageComponent(value) {
 }
 
 </style>
-
-<script>
-export default {
-  props: {
-    messages: Array,
-    categories: Array,
-    category_laCucina: Array,
-    category_scante: Array,
-    category_enoteca: Array,
-    dish_enoteca_category: Array,
-    drink_enoteca_category: Array,
-    allergensDishes: Array,
-    allergensDrinks: Array,
-    allergens: Array,
-    receips: Array,
-    drinks: Array,
-    pairingsEnoteca: Array,
-    dishes: Array,
-  },
-  data() {
-    return {
-      componentKey: 0,
-      openModalInstruction: false,
-    };
-  },
-  methods: {
-    toggleModalInstruction() {
-      this.openModalInstruction = !this.openModalInstruction;
-    },
-  },
-}
-
-</script>

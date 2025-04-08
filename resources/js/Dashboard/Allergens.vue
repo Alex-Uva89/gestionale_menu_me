@@ -1,6 +1,6 @@
 <template>
     
-    <div :key="componenetAllergen">
+    <div class="mx-auto" :key="componenetAllergen">
         <h2 class="text-2xl title text-blue-600 font-bold">Aggiungi, Modifica o Elimina un Allergene</h2>
         <nav>
             <ul class="table-allergens flex pb-5">
@@ -29,7 +29,7 @@
                 </h2>
             </div>
     
-            <table class="table-auto table-allergens" v-if="allergens.length > 0">
+            <table class="table-auto" v-if="allergens.length > 0">
                 <thead class="bg-gray-200 text-gray-600 border border-gray-300">
                     <tr class="grid grid-cols-6">
                         <th class="border-2 border-black p-4">Icona</th>
@@ -38,11 +38,11 @@
                     </tr>
                 </thead>
                 <div class="list-allergen"  id="allergenList">
-                    <tbody>
+                    <tbody class="w-full">
                         <tr v-for="allergen in allergens" class="grid grid-cols-6">
                             <td class="flex items-center border border-4 p-5">
                                 <div class="w-full  flex justify-center">
-                                    <img v-if="allergen.icon" :src="'/storage/' + allergen.icon" :alt="'icona '+ allergen.name + ' non trovata' "  >
+                                    <img v-if="allergen.icon" :src="allergen.icon" :alt="'icona '+ allergen.name + ' non trovata' "  >
                                 </div>
                             </td>
                             <td class="flex items-center gap-4 border border-4 border-s-0 p-4 col-span-3">
@@ -259,7 +259,7 @@ export default {
                 const newAllergen = JSON.parse(data);
         
                 const checkFile = () => {
-                    axios.get('/storage/' + newAllergen.icon)
+                    axios.get(newAllergen.icon)
                     .then(response => {
                         this.allergens.push(newAllergen);
                         this.componenetAllergen++;
@@ -337,7 +337,7 @@ export default {
                 const index = this.allergens.findIndex(allergen => allergen.id === this.allergenId)
                 if (index !== -1) {
                     const checkFile = () => {
-                        axios.get('/storage/' + editedAllergen.icon)
+                        axios.get(editedAllergen.icon)
                         .then(response => {
                             this.allergens[index] = editedAllergen; 
                             this.componenetAllergen++;
@@ -405,9 +405,10 @@ export default {
 }
 .list-allergen{
     min-height: 0;
-    max-height: 400px;
+    max-height: 60vh;
     overflow-y: scroll;
     scrollbar-width: none;
+    margin-bottom: 10px;
 }
 
 .section-create-allergen, .section-delete-allergen, .section-edit-allergen{

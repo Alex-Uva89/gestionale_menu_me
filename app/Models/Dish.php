@@ -10,11 +10,13 @@ use App\Models\Allergen;
 use App\Models\Ingredient;
 use App\Models\Drink;
 use App\Models\Recipe;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Dish extends Model
 {
     use HasFactory;
 
+    use SoftDeletes;
 
     protected $fillable = ['name','description','price','image','is_active','venue_id','category_id'];
 

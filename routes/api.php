@@ -55,11 +55,13 @@ Route::delete('/', [HomeController::class, 'destroy'])->name('destroy');
 Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 Route::delete('/categories/{categoryId}/dishes', [DishController::class, 'destroyByCategory']);
+Route::delete('/categories/{categoryId}/drinks', [DrinkController::class, 'destroyByCategory']);
 Route::delete('/allergens/{id}', [AllergenController::class, 'destroy']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 Route::delete('/allergens/{allergenId}/dishes/{dishId}', [AllergenController::class,'detachDish']);
 Route::delete('/allergens/{allergenId}/drinks/{drinkId}', [AllergenController::class,'detachDrink']);
 Route::delete('/dishes/{id}', [DishController::class, 'destroy']);
+Route::delete('/drinks/{id}',[DrinkController::class, 'destroy']);
 Route::delete('/drinks', [DrinkController::class, 'deleteByCategory']);
 
 require __DIR__.'/auth.php';

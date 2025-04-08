@@ -11,10 +11,11 @@ use App\Models\Ingredient;
 use App\Models\Dish;
 use App\Models\Winery;
 use App\Models\Vineyard;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Drink extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'image','price', 'description', 'instructions', 'degrees','origin'];
 
