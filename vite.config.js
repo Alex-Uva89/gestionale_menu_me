@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 
 
 export default defineConfig({
-    // base: '/',
+    base: 'https://gestionale-menu-mamma-elvira-1bd41f37f5f9.herokuapp.com/',
     // base: 'https://majestic-isle-royale-01245-f4e167ad8dbf.herokuapp.com/', // Assicurati di impostare l'URL di base qui
     plugins: [
         laravel({
