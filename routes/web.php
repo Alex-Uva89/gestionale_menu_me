@@ -29,9 +29,8 @@ Route::get('/storage/immagini/{filename}', function ($filename) {
 
 
 // Route with Inertia.js
-Route::get('/{any}', function () {
-    return Inertia::render('Home');
-})->where('any', '.*');
+Route::get('/{any}', fn () => Inertia::render('Home'))
+    ->where('any', '^(?!api|build|assets|storage|favicon\.ico|robots\.txt).*$');
 
 Route::put('/messages/{id}', [MessageController::class, 'update']);
 Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
