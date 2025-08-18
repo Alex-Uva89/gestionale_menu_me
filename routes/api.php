@@ -16,7 +16,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // GET
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index']);
 Route::get('/dishes/{Id}/drinks', [PairingsController::class, 'index']);
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/dishes/{id}', [DishController::class, 'show']);
